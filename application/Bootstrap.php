@@ -11,6 +11,11 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 		return $modelLoader;
 	}
 
+	protected function _initLibraryAcl() {
+		$acl = new Model_LibraryAcl;
+		$auth = Zend_Auth::getInstance();
+		$fc = Zend_Controller_Front::getInstance();
+		$fc->registerPlugin(new Plugin_AccessCheck($acl, $auth));
+	}
 
 }
-

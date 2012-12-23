@@ -7,8 +7,8 @@ class Form_LoginForm extends Zend_Form
 
 		$mail = new Zend_Form_Element_Text('mail');
 		$mail->setLabel('mail: ')
-			 ->setRequired()
-			 ->addValidator('EmailAddress');
+			 ->setRequired();
+			 // ->addValidator('EmailAddress');
 
 		$password = new Zend_Form_Element_Password('password');
 		$password->setLabel('Lösenord: ')

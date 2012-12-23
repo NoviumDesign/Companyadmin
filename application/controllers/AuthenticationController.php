@@ -43,14 +43,13 @@ class AuthenticationController extends Zend_Controller_Action
 
                     $this->_redirect('');
                 } else {
-                    $invalid = 'Invalid mail or password';
+                    $this->view->invalidLogin = 'Invalid mail or password';
                 }
             }
         }
 
 
-        $this->view->form = $form;  
-        echo $invalid;      
+        $this->view->form = $form;     
     }
 
     public function logoutAction()
@@ -73,8 +72,3 @@ class AuthenticationController extends Zend_Controller_Action
 
 
 }
-
-
-
-
-
