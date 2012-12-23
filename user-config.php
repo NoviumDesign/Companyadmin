@@ -1,0 +1,11 @@
+<div id="pageoptions">
+	<ul>
+		<li><a href="login.html">Logout</a></li>
+		<li><a href="#" id="wl_config">Configuration</a></li>
+		<li><a href="#">Settings</a></li>
+	</ul>
+	<div>
+		<h3>Place for some configs</h3>
+		<p>Li Europan lingues es membres del sam familie. Lor separat existentie es un myth. Por scientie, musica, sport etc, litot Europa usa li sam vocabular. Li lingues differe solmen in li grammatica, li pronunciation e li plu commun vocabules. Omnicos directe al desirabilite de un nov lingua franca: On refusa continuar payar custosi traductores.</p>
+	</div>
+</div>
