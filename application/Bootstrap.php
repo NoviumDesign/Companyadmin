@@ -18,4 +18,12 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 		$fc->registerPlugin(new Plugin_AccessCheck($acl, $auth));
 	}
 
+	protected function _initViewHelpers() {
+		$this->bootstrap('layout');
+		$layout = $this->getResource('layout');
+		$view = $layout->getView();
+
+		$view->headTitle('123');
+	}
+
 }
