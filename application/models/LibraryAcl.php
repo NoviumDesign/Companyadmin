@@ -16,11 +16,14 @@ class Model_LibraryAcl extends Zend_Acl
 		$this->add(new Zend_Acl_Resource('login', 'authentication'));
 		$this->add(new Zend_Acl_Resource('logout', 'authentication'));
 
+		$this->add(new Zend_Acl_Resource('orders'));
+		// $this->add(new Zend_Acl_Resource('login', 'authentication'));
+
 
 		// rättigheter
 		$this->allow(null, array('authentication', 'error'));
 
-		$this->allow('user', array('index', 'logout'));
+		$this->allow('user', array('index', 'orders', 'logout'));
 		$this->deny('user', 'login');
 	}
 }

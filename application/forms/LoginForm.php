@@ -15,7 +15,7 @@ class Form_LoginForm extends Zend_Form
 				 ->setRequired();
 
 		$login = new Zend_Form_Element_Submit('login');
-		$login->setLabel('Login: ');
+		$login->setLabel('Login');
 
 
 		$this->setName('login')

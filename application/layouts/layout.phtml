@@ -1,13 +1,31 @@
-<html>
-<head>
-	<?php echo $this->headTitle(); ?>
-	<link rel="stylesheet" type="text/css" href="/css/style.css">
-</head>
-<body>
-	123
+<!doctype html>
+<html lang="en-us">
+	<head>
 
-	<?php echo $this->layout()->content; ?>
+		<?php
 
-	456
-</body>
+			echo $this->headTitle();
+
+			include "html/head.html";
+
+		?>
+
+	</head>
+	<body>
+
+		<?php
+
+			if($this->user) {
+				include "html/top.html";
+				include "html/nav.html";
+			}
+
+			echo $this->layout()->content;
+
+			include "html/foot.html";
+
+		?>
+
+	</body>
 </html>
+

@@ -23,7 +23,25 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 		$layout = $this->getResource('layout');
 		$view = $layout->getView();
 
-		$view->headTitle('123');
+		$view->headTitle('Companyadmin');
+		$view->user = Zend_Auth::getInstance()->getStorage()->read()->mail;
 	}
 
+	protected function _initDatabaseConnection() {
+		$db = null;
+
+		$company_id = Zend_Auth::getInstance()->getStorage()->read()->company;
+		if($company_id) {
+			$array = parse_ini_file("../application/companies/" . $company_id . "/config.ini", true);
+
+			$db = new Zend_Db_Adapter_Pdo_Mysql(array(
+			    'host'     => $array[db][host],
+			    'username' => $array[db][username],
+			    'password' => $array[db][password],
+			    'dbname'   => $array[db][dbname]
+			));
+		}
+
+		Zend_Registry::set('db', $db);
+	}
 }
