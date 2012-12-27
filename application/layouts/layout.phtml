@@ -3,19 +3,26 @@
 	<head>
 
 		<?php
-
 			echo $this->headTitle();
 
 			include "html/head.html";
-
 		?>
 
 	</head>
 	<body>
 
 		<?php
+			if($this->user->mail) {
+				$db = Zend_Db_Table::getDefaultAdapter();
 
-			if($this->user) {
+				$companyId = $this->user->company;
+				$select = $db->select()
+							 ->from('companies', 'company')
+							 ->where('company_id = ' . $companyId);
+
+				$companyName = $db->fetchAll($select);
+				$companyName = $companyName[0]['company'];
+
 				include "html/top.html";
 				include "html/nav.html";
 			}
@@ -23,7 +30,6 @@
 			echo $this->layout()->content;
 
 			include "html/foot.html";
-
 		?>
 
 	</body>

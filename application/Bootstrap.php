@@ -24,7 +24,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 		$view = $layout->getView();
 
 		$view->headTitle('Companyadmin');
-		$view->user = Zend_Auth::getInstance()->getStorage()->read()->mail;
+		$view->user = Zend_Auth::getInstance()->getStorage()->read();
 	}
 
 	protected function _initDatabaseConnection() {

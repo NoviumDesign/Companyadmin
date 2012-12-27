@@ -1,32 +1,39 @@
 <section id="content">
+
+	<?php if($this->isAdmin) { ?>
+
+		<a href="/order/add">skapa ny order</a>
+
+	<?php } ?>
+
 	<div class="g12">
-	<h1>DataTable</h1>
-	
-	<table class="datatable">
-		<thead>
-			<tr>
-				<th>Order_id</th><th>Date</th><th>Type</th><th>Items</th><th>Location</th><th>Delivery</th><th>Delivery_date</th><th>Completed</th><th>By</th>
-			</tr>
-		</thead>
-		<tbody>
-
-			<?php foreach($this->orders as $value) { ?>
-
-				<tr class="gradeX">
-					<td><?= $value['order_id'] ?></td>
-					<td><?= date('Y-m-d H:i', $value['date']) ?></td>
-					<td><?= $value['type'] ?></td>
-					<td><?= $value['items'] ?></td>
-					<td><?= $value['location'] ?></td>
-					<td><?= $value['delivery'] ?></td>
-					<td><?= date('Y-m-d', $value['delivery_date']) ?></td>
-					<td><?= $value['completed'] ?></td>
-					<td><?= $value['by'] ?></td>
+		<h1>DataTable</h1>
+		
+		<table class="datatable">
+			<thead>
+				<tr>
+					<th>Order_id</th><th>Date</th><th>Type</th><th>Items</th><th>Location</th><th>Delivery</th><th>Delivery_date</th><th>Completed</th><th>By</th>
 				</tr>
+			</thead>
+			<tbody>
 
-			<?php } ?>
+				<?php foreach($this->orders as $value) { ?>
 
-		</tbody>
-	</table>
-</div>	
+					<tr class="gradeX">
+						<td><?= $value['order_id'] ?></td>
+						<td><?= date('Y-m-d H:i', $value['date']) ?></td>
+						<td><?= $value['type'] ?></td>
+						<td><?= $value['items'] ?></td>
+						<td><?= $value['location'] ?></td>
+						<td><?= $value['delivery'] ?></td>
+						<td><?= date('Y-m-d', $value['delivery_date']) ?></td>
+						<td><?= $value['completed'] ?></td>
+						<td><?= $value['by'] ?></td>
+					</tr>
+
+				<?php } ?>
+
+			</tbody>
+		</table>
+	</div>	
 </section>
