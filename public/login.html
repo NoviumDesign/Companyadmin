@@ -18,9 +18,8 @@
 	<link rel="stylesheet" href="http://fonts.googleapis.com/css?family=PT+Sans:regular,bold">
 	<link rel="stylesheet" href="css/application.css">
 	
-	<!-- include the skins (change to dark if you like) -->
+	<!-- include the skins -->
 	<link rel="stylesheet" href="css/themes/light/theme.css" id="themestyle">
-	<!-- <link rel="stylesheet" href="css/dark/theme.css" id="themestyle"> -->
 	
 	<!--[if lt IE 9]>
 	<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
@@ -50,12 +49,14 @@
 	<!-- the script which handles all the access to plugins etc... -->
 	<script src="js/login.js"></script>
 </head>
-<body id="login">
-		<header>
-			<div id="logo">
-			</div>
-		</header>
-		<section id="content">
+<body class="authentication">
+
+	<header>
+		<div id="logo">
+		</div>
+	</header>
+
+	<section id="content">
 		<div class="alert info">Please fill in your email and we will reset your password.</div>
 		<form action="#" id="loginform">
 			<fieldset>
@@ -71,8 +72,9 @@
 				</section>
 			</fieldset>
 		</form>
-		</section>
-		<footer>Companyadmin 2012 build 90e1963ab1</footer>
+	</section>
+	
+	<footer>Companyadmin 2012 build 90e1963ab1</footer>
 		
 </body>
 </html>
