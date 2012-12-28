@@ -20,6 +20,8 @@ class Model_LibraryAcl extends Zend_Acl
 
 		$this->add(new Zend_Acl_Resource('orders'));
 
+		$this->add(new Zend_Acl_Resource('products'));
+
 		$this->add(new Zend_Acl_Resource('order'));
 		$this->add(new Zend_Acl_Resource('add'), 'order');
 
@@ -27,7 +29,7 @@ class Model_LibraryAcl extends Zend_Acl
 		// authority
 		$this->allow(null, array('authentication', 'error'));
 
-		$this->allow('user', array('index', 'orders', 'logout'));
+		$this->allow('user', array('index', 'orders', 'products', 'logout'));
 		$this->deny('user', 'login');
 
 		$this->allow('admin', 'order');		

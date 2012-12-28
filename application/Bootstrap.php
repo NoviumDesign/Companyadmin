@@ -11,6 +11,13 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 		return $modelLoader;
 	}
 
+	protected function _initRoutes() {
+		$frontController = Zend_Controller_Front::getInstance(); 
+		$config = new Zend_Config_Ini(APPLICATION_PATH . '/configs/routes.ini');
+		$router = $frontController->getRouter();
+		$router->addConfig($config, 'routes');
+	}
+
 	protected function _initLibraryAcl() {
 		$acl = new Model_LibraryAcl;
 		$auth = Zend_Auth::getInstance();
@@ -32,13 +39,13 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 
 		$company_id = Zend_Auth::getInstance()->getStorage()->read()->company;
 		if($company_id) {
-			$array = parse_ini_file("../application/companies/" . $company_id . "/config.ini", true);
+			$config = new Zend_Config_Ini(APPLICATION_PATH . '/companies/' . $company_id . '/config.ini');
 
 			$db = new Zend_Db_Adapter_Pdo_Mysql(array(
-			    'host'     => $array[db][host],
-			    'username' => $array[db][username],
-			    'password' => $array[db][password],
-			    'dbname'   => $array[db][dbname]
+			    'host'     => $config->db->host,
+			    'username' => $config->db->username,
+			    'password' => $config->db->password,
+			    'dbname'   => $config->db->dbname
 			));
 		}
 

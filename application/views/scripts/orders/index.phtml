@@ -1,0 +1,94 @@
+<section id="content">
+
+	<?php if($this->isAdmin) { ?>
+		<a href="/order/add"><button>Add order</button></a>
+	<?php } ?>
+
+	<div class="g12">
+
+		<?php if($this->showAll){ ?>
+			<h1>All</h1>
+		<?php } else { ?>
+			<h1><?= $this->orders[0]['business'] ?></h1>
+		<?php } ?>
+		
+		<table class="datatable">
+			<thead>
+				<tr>
+					<th>Order number</th>
+					<th>Order date</th>
+					<th>By</th>
+
+					<?php if($this->showAll){ ?>
+						<th>Business</th>
+					<?php } ?>
+
+					<th>Status</th>
+					<th>Delivery</th>
+
+					<?php
+						if(!$this->showAll){
+							if($this->customs[0]['custom_field_1']) {
+					?>
+						<th><?= $this->customs[0]['custom_field_1'] ?></th>
+					<?php
+							}
+							if($this->customs[0]['custom_field_2']) {
+					?>
+						<th><?= $this->customs[0]['custom_field_2'] ?></th>
+					<?php
+							}
+							if($this->customs[0]['custom_field_3']) {
+					?>
+						<th><?= $this->customs[0]['custom_field_3'] ?></th>
+					<?php
+							}
+						}
+					?>
+
+				</tr>
+			</thead>
+			<tbody>
+
+				<?php foreach($this->orders as $order) { ?>
+
+					<tr class="gradeX">
+						<td><?= $order['order_id'] ?></td>
+						<td><?= date('Y-m-d', $order['delivery_date']) ?></td>
+						<td><?= $order['by'] ?></td>
+
+						<?php if($this->showAll){ ?>
+							<td><?= $order['business'] ?></td>
+						<?php } ?>
+
+						<td><?= $order['status'] ?></td>
+						<td><?= $order['delivery'] ?></td>
+
+						<?php
+							if(!$this->showAll){
+								if($this->customs[0]['custom_field_1']) {
+						?>
+							<td><?= $order['custom_1'] ?></td>
+						<?php
+								}
+								if($this->customs[0]['custom_field_2']) {
+						?>
+							<td><?= $order['custom_2'] ?></td>
+						<?php
+								}
+								if($this->customs[0]['custom_field_3']) {
+						?>
+							<td><?= $order['custom_3'] ?></td>
+						<?php
+								}
+							}
+						?>
+
+					</tr>
+
+				<?php } ?>
+
+			</tbody>
+		</table>
+	</div>	
+</section>

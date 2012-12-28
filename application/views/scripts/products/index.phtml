@@ -1,0 +1,48 @@
+<section id="content">
+	<div class="g12">
+
+		<?php if($this->showAll){ ?>
+			<h1>All</h1>
+		<?php } else { ?>
+			<h1><?= $this->products[0]['business'] ?></h1>
+		<?php } ?>
+		
+		<table class="datatable">
+			<thead>
+				<tr>
+					<th>Product number</th>
+
+					<?php if($this->showAll){ ?>
+						<th>Business</th>
+					<?php } ?>
+
+					<th>Product</th>
+					<th>Price</th>
+					<th>Unit</th>
+					<th>Status</th>
+
+				</tr>
+			</thead>
+			<tbody>
+
+				<?php foreach($this->products as $product) { ?>
+
+					<tr class="gradeX">
+						<td><?= $product['product_id'] ?></td>
+
+						<?php if($this->showAll){ ?>
+							<td><?= $product['business'] ?></td>
+						<?php } ?>
+
+						<td><?= $product['product'] ?></td>
+						<td><?= $product['price'] ?></td>
+						<td><?= $product['unit'] ?></td>
+						<td><?= $product['status'] ?></td>
+					</tr>
+
+				<?php } ?>
+
+			</tbody>
+		</table>
+	</div>	
+</section>

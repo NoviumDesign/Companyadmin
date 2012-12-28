@@ -1,20 +1,21 @@
+<?php
+	$controllerName = Zend_Controller_Front::getInstance()->getRequest()->getControllerName();
+	$actionName = Zend_Controller_Front::getInstance()->getRequest()->getActionName();
+?>
+
 <!doctype html>
 <html lang="en-us">
 	<head>
 
-		<?php
-			echo $this->headTitle();
-
-			include "html/head.html";
-		?>
+		<?php include "html/head.php" ?>
 
 	</head>
-	<body>
+	<body class="<?= $controllerName ?> <?= $actionName ?>">
 
 		<?php
 			if($this->user->mail) {
+				// company name
 				$db = Zend_Db_Table::getDefaultAdapter();
-
 				$companyId = $this->user->company;
 				$select = $db->select()
 							 ->from('companies', 'company')
@@ -23,8 +24,25 @@
 				$companyName = $db->fetchAll($select);
 				$companyName = $companyName[0]['company'];
 
+				// businesses
+				$db = Zend_Registry::get('db');
+				$select = $db->select()
+							 ->from('businesses', array('business_id', 'business',
+							 		'(SELECT COUNT(business) FROM orders WHERE business = businesses.business_id) as orders',
+							 		'(SELECT COUNT(business) FROM products WHERE business = businesses.business_id) as products',
+							 	)
+							 );
+
+				$businesses = $db->fetchAll($select);
+
+				$num = array();
+				foreach ($businesses as $business) {
+					$num['orders'] += $business['orders'];
+					$num['products'] += $business['products'];
+				}
+
 				include "html/top.html";
-				include "html/nav.html";
+				include "html/nav.php";
 			}
 
 			echo $this->layout()->content;
