@@ -7,9 +7,9 @@
 	<div class="g12">
 
 		<?php if($this->showAll){ ?>
-			<h1>All</h1>
+			<h1>All orders</h1>
 		<?php } else { ?>
-			<h1><?= $this->orders[0]['business'] ?></h1>
+			<h1>Orders from <?= $this->orders[0]['business'] ?></h1>
 		<?php } ?>
 		
 		<table class="datatable">
@@ -17,7 +17,7 @@
 				<tr>
 					<th>Order number</th>
 					<th>Order date</th>
-					<th>By</th>
+					<th>Customer</th>
 
 					<?php if($this->showAll){ ?>
 						<th>Business</th>
@@ -55,7 +55,7 @@
 					<tr class="gradeX">
 						<td><a href="/order/<?= $order['order_id'] ?>"><?= $order['order_id'] ?></a></td>
 						<td><?= date('Y-m-d', $order['delivery_date']) ?></td>
-						<td><?= $order['by'] ?></td>
+						<td><a href="/customer/<?= $order['customer_id'] ?>"><?= $order['name'] ?></a></td>
 
 						<?php if($this->showAll){ ?>
 							<td><?= $order['business'] ?></td>

@@ -2,12 +2,6 @@
 
 class OrderController extends Zend_Controller_Action
 {
-
-    public function init()
-    {
-        /* Initialize action controller here */
-    }
-
     public function indexAction()
     {
         $db = Zend_Registry::get('db');
@@ -17,6 +11,7 @@ class OrderController extends Zend_Controller_Action
         $select = $db->select()
                      ->from('orders', '*')
                      ->joinLeft('businesses', 'orders.business = businesses.business_id', array('business_id', 'business'))
+                     ->joinLeft('customers', 'orders.customer = customers.customer_id', '*')
                      ->where('orders.order_id =' . $id);
 
         $order = $db->fetchAll($select);
@@ -34,7 +29,8 @@ class OrderController extends Zend_Controller_Action
         // items
         $select = $db->select()
                      ->from('items', 'quantity')
-                     ->joinLeft('products', 'items.product = products.product_id', array('product_id', 'product', 'price', 'unit'))
+                     ->joinLeft('products', 'items.product = products.product_id', array('product_id', 'product', 'unit'))
+                     ->joinLeft('prices', 'items.price = prices.price_id', 'price')
                      ->where('items.order =' . $id);
 
         $items = $db->fetchAll($select);

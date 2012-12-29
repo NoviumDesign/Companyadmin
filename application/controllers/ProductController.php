@@ -11,6 +11,7 @@ class ProductController extends Zend_Controller_Action
         $select = $db->select()
                      ->from('products', '*')
                      ->joinLeft('businesses', 'products.business = businesses.business_id', 'business')
+                     ->joinLeft('prices', 'products.price = prices.price_id', array('price', 'prices.date as price_date'))
                      ->where('products.product_id =' . $id);
 
         $product = $db->fetchAll($select);

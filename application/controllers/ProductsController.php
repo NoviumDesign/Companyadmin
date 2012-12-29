@@ -8,8 +8,9 @@ class ProductsController extends Zend_Controller_Action
         
         // select
         $select = $db->select()
-                     ->from('products', array('product_id', 'product', 'price', 'unit', 'status'))
-                     ->joinLeft('businesses', 'products.business = businesses.business_id', array('business', 'business_id'));
+                     ->from('products', array('product_id', 'product', 'unit', 'status'))
+                     ->joinLeft('businesses', 'products.business = businesses.business_id', array('business', 'business_id'))
+                     ->joinLeft('prices', 'products.price = prices.price_id', 'price');
 
         // if "all"
         $business = $this->_request->getParam('business');
@@ -21,8 +22,13 @@ class ProductsController extends Zend_Controller_Action
         }
 
         // fetch data
-        $result = $db->fetchAll($select);
-        $this->view->products = $result;
+        $products = $db->fetchAll($select);
+        $this->view->products = $products;
+
+        // empty so redirect
+        if(!count($products)) {
+            $this->_redirect('/products/all');
+        }
 
         //  link to add
         $role = Zend_Auth::getInstance()->getStorage()->read()->role;
@@ -30,8 +36,6 @@ class ProductsController extends Zend_Controller_Action
 
         if($acl->isAllowed($role, 'product', 'add')) {
             $this->view->isAdmin = true;
-            $result = $db->fetchAll($select);
-            $this->view->customs = $result;
         }
     }
 }

@@ -1,0 +1,34 @@
+<section id="content">
+
+	<?php if($this->isAdmin) { ?>
+		<a href="/business/add"><button>Add business</button></a>
+	<?php } ?>
+
+	<div class="g12">
+		<h1>Businesses</h1>
+		<table class="datatable">
+			<thead>
+				<tr>
+					<th>Business</th>
+					<th>Custom field 1</th>
+					<th>Custom field 2</th>
+					<th>Custom field 3</th>
+				</tr>
+			</thead>
+			<tbody>
+
+				<?php foreach($this->businesses as $business) { ?>
+
+					<tr class="gradeX">
+						<td><a href="/business/<?= $business['business_id'] ?>"><?= $business['business'] ?></a></td>
+						<td><?= $business['custom_field_1'] ?></td>
+						<td><?= $business['custom_field_2'] ?></td>
+						<td><?= $business['custom_field_3'] ?></td>
+					</tr>
+
+				<?php } ?>
+
+			</tbody>
+		</table>
+	</div>	
+</section>

@@ -21,12 +21,15 @@
 
 			</ul>
 		</li>
-		<li class="i_user"><a href="/?nav=customer"><span>Customers</span></a></li>
+		<li class="i_user"><a href="/customers/all"><span>Customers</span></a></li>
+		<li class="i_user"><a href="/businesses/all"><span>Businesses</span></a></li>
+<!-- 
 		<li class="i_truck"><a href="/?nav=delivery"><span>Deliveries</span></a></li>
 		<li class="i_folder_love"><a href="/?nav=crm"><span>CRM</span></a></li>
 		<li class="i_cash_register"><a href="/?nav=invoice"><span>Invoices</span></a></li>
 		<li class="i_question"><a href="/?nav=quote"><span>Quotes</span></a></li>
 		<li class="i_calendar_day"><a href="/?nav=calendar"><span>Calendar</span></a></li>
 		<li class="i_graph"><a href="/?nav=monitor"><span>Monitoring</span></a></li>
+		 -->
 	</ul>
 </nav>

@@ -174,10 +174,10 @@ if($.fn.wl_Fileexplorer) $.fn.wl_Fileexplorer.defaults = {
 };
 
 if($.fn.wl_Form) $.fn.wl_Form.defaults = {
-	submitButton: 'button.submit',
-	resetButton: 'button.reset',
+	submitButton: 'button.submitt',
+	resetButton: 'button.resett',
 	method: 'post',
-	action: null,
+	action: true,
 	ajax: false,
 	serialize: false,
 	parseQuery: true,
@@ -248,8 +248,8 @@ if($.fn.wl_Number) $.fn.wl_Number.defaults = {
 };
 
 if($.fn.wl_Password) $.fn.wl_Password.defaults = {
-	confirm: true,
-	showStrength: true,
+	confirm: false,
+	showStrength: false,
 	words: ['too short', 'bad', 'medium', 'good', 'very good', 'excellent'],
 	minLength: 3,
 	text: {

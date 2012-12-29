@@ -8,8 +8,9 @@ class OrdersController extends Zend_Controller_Action
         
         // select
         $select = $db->select()
-                     ->from('orders', array('order_id', 'delivery_date', 'by', 'status', 'delivery', 'custom_1', 'custom_2', 'custom_3'))
-                     ->joinLeft('businesses', 'orders.business = businesses.business_id', array('business', 'business_id'));
+                     ->from('orders', array('order_id', 'delivery_date', 'status', 'delivery', 'custom_1', 'custom_2', 'custom_3'))
+                     ->joinLeft('businesses', 'orders.business = businesses.business_id', array('business', 'business_id'))
+                     ->joinLeft('customers', 'orders.customer = customers.customer_id', array('name', 'customer_id'));
 
         // if "all"
         $business = $this->_request->getParam('business');
@@ -21,17 +22,22 @@ class OrdersController extends Zend_Controller_Action
         }
 
         // fetch data
-        $result = $db->fetchAll($select);
-        $this->view->orders = $result;
+        $orders = $db->fetchAll($select);
+        $this->view->orders = $orders;
+
+        // empty so redirect
+        if(!count($orders)) {
+            $this->_redirect('/orders/all');
+        }
 
         // custom fields
-        if(!$showAll && $result[0]['business_id']) {
+        if(!$showAll && $orders[0]['business_id']) {
             $select = $db->select()
                          ->from('businesses', array('custom_field_1', 'custom_field_2', 'custom_field_3'))
-                         ->where('business_id = ' . $result[0]['business_id']);
+                         ->where('business_id = ' . $orders[0]['business_id']);
 
-            $result = $db->fetchAll($select);
-            $this->view->customs = $result;
+            $customs = $db->fetchAll($select);
+            $this->view->customs = $customs;
         }
 
         //  link to add
@@ -40,8 +46,6 @@ class OrdersController extends Zend_Controller_Action
 
         if($acl->isAllowed($role, 'order', 'add')) {
             $this->view->isAdmin = true;
-            $result = $db->fetchAll($select);
-            $this->view->customs = $result;
         }
     }
 }
