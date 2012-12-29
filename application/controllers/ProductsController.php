@@ -2,11 +2,6 @@
 
 class ProductsController extends Zend_Controller_Action
 {
-
-    public function init()
-    {
-    }
-
     public function indexAction()
     {
         $db = Zend_Registry::get('db');
@@ -28,5 +23,15 @@ class ProductsController extends Zend_Controller_Action
         // fetch data
         $result = $db->fetchAll($select);
         $this->view->products = $result;
+
+        //  link to add
+        $role = Zend_Auth::getInstance()->getStorage()->read()->role;
+        $acl = new Model_LibraryAcl;
+
+        if($acl->isAllowed($role, 'product', 'add')) {
+            $this->view->isAdmin = true;
+            $result = $db->fetchAll($select);
+            $this->view->customs = $result;
+        }
     }
 }

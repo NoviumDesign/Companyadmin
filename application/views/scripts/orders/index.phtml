@@ -53,7 +53,7 @@
 				<?php foreach($this->orders as $order) { ?>
 
 					<tr class="gradeX">
-						<td><?= $order['order_id'] ?></td>
+						<td><a href="/order/<?= $order['order_id'] ?>"><?= $order['order_id'] ?></a></td>
 						<td><?= date('Y-m-d', $order['delivery_date']) ?></td>
 						<td><?= $order['by'] ?></td>
 

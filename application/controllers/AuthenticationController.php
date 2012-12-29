@@ -2,12 +2,6 @@
 
 class AuthenticationController extends Zend_Controller_Action
 {
-
-    public function init()
-    {
-        /* Initialize action controller here */
-    }
-
     public function loginAction()
     {
         if(Zend_Auth::getInstance()->hasIdentity()) {
@@ -53,8 +47,8 @@ class AuthenticationController extends Zend_Controller_Action
         $this->_redirect('authentication/login');
     }
 
-    private function getAuthAdapter() {
-
+    private function getAuthAdapter()
+    {
         $authAdapter = new Zend_Auth_Adapter_DbTable(Zend_Db_Table::getDefaultAdapter());
         $authAdapter->setTableName('users')
                     ->setIdentityColumn('mail')
@@ -62,8 +56,5 @@ class AuthenticationController extends Zend_Controller_Action
                     // ->setCredentialTreatmen();
 
         return $authAdapter;
-
     }
-
-
 }

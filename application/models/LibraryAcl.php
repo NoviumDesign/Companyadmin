@@ -10,28 +10,23 @@ class Model_LibraryAcl extends Zend_Acl
 		$this->addRole(new Zend_Acl_Role('god'), 'master');
 
 
-		// resources
-		$this->add(new Zend_Acl_Resource('index'));
+		// controllers
 		$this->add(new Zend_Acl_Resource('error'));
-
 		$this->add(new Zend_Acl_Resource('authentication'));
-		$this->add(new Zend_Acl_Resource('login', 'authentication'));
-		$this->add(new Zend_Acl_Resource('logout', 'authentication'));
-
+		$this->add(new Zend_Acl_Resource('index'));
 		$this->add(new Zend_Acl_Resource('orders'));
-
-		$this->add(new Zend_Acl_Resource('products'));
-
 		$this->add(new Zend_Acl_Resource('order'));
-		$this->add(new Zend_Acl_Resource('add'), 'order');
+		$this->add(new Zend_Acl_Resource('products'));
+		$this->add(new Zend_Acl_Resource('product'));
+
+		// $this->add(new Zend_Acl_Resource('order', 'add'), 'order');
 
 
 		// authority
-		$this->allow(null, array('authentication', 'error'));
+		$this->allow(null, array('error', 'authentication'));
 
-		$this->allow('user', array('index', 'orders', 'products', 'logout'));
-		$this->deny('user', 'login');
+		$this->allow('user', array('index', 'orders', 'order', 'products', 'product'));
 
-		$this->allow('admin', 'order');		
+		// $this->allow('admin', array('add'));		
 	}
 }

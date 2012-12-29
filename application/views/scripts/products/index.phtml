@@ -1,4 +1,9 @@
 <section id="content">
+
+	<?php if($this->isAdmin) { ?>
+		<a href="/product/add"><button>Add product</button></a>
+	<?php } ?>
+
 	<div class="g12">
 
 		<?php if($this->showAll){ ?>
@@ -28,7 +33,7 @@
 				<?php foreach($this->products as $product) { ?>
 
 					<tr class="gradeX">
-						<td><?= $product['product_id'] ?></td>
+						<td><a href="/product/<?= $product['product_id'] ?>"><?= $product['product_id'] ?></a></td>
 
 						<?php if($this->showAll){ ?>
 							<td><?= $product['business'] ?></td>
