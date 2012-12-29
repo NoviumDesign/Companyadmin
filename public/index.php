@@ -11,6 +11,9 @@
 			case "order":
 				include("modules/order.php");
 				break;
+				case "addorder":
+					include("modules/addorder.php");
+					break;
 			case "customer":
 				include("modules/customer.php");
 				break;
