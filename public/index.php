@@ -17,6 +17,9 @@
 			case "customer":
 				include("modules/customer.php");
 				break;
+				case "viewcustomer":
+					include("modules/view-edit-customer.php");
+					break;
 			case "delivery":
 				include("modules/delivery.php");
 				break;
