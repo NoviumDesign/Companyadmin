@@ -3,7 +3,8 @@
 class Emilk_Form_Element_Element
 {
 	public $name = null;
-	public $value = null;
+	public $value = array('');
+	public $error = array();
 	public $attributes = array();
 	public $validation = array();
 
@@ -15,7 +16,7 @@ class Emilk_Form_Element_Element
 
 	public function setValue($value)
 	{
-		$this->value = $value;
+		$this->value[0] = $value;
 
 		return $this;
 	}

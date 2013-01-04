@@ -23,9 +23,9 @@ class Emilk_Form
 
 	public function validate()
 	{
-		$validation = new Emilk_Form_Validate($this->elements);
+		$validation = new Emilk_Form_Validate($this->elements, $this->name);
 
-		return $validation;	  // true or false
+		return $validation->valid;
 	}
 
 	public function getValues()
@@ -51,16 +51,32 @@ class Emilk_Form
 		foreach($this->attributes as $key => $value) {
 			$html .= $key . '="' . $value . '" ';
 		}
-		$hmtl .= '>';
+		$html .= '>';
 
+		$formIdentifier = '<input type="hidden" name="formIdentifier" value="' . $this->name . '">';
 
-		echo $html;
+		echo $html . $formIdentifier;
 		require_once APPLICATION_PATH . '/forms/html/' . $this->name . '.php';
 		echo '</form>';
 	}
 
 	public function element($name)
 	{
-		return $this->elements[$name]->render();
+		$this->elements[$name]->render();
+	}
+	public function elementError($name, $htmlBefore = '', $htmlAfter = '')
+	{
+		if(count($this->elements[$name]->error)) {
+
+			echo $htmlBefore;
+			echo '<ul>';
+
+			foreach ($this->elements[$name]->error as $error) {
+				echo '<li>' . $error . '</li>';
+			}
+
+			echo '</ul>';
+			echo $htmlAfter;
+		}
 	}
 }

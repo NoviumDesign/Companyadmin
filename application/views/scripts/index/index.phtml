@@ -1,34 +1,32 @@
-<section id="content">
+<section id="conttent" style='padding-left: 230px;'>
 <?php
-
 
     $form = new Emilk_Form();
     $form->setAttr('class', 123)
          ->setAttr('method', 'post');
 
     $element1 = new Emilk_Form_Element_Text('namn1');
-    $element1->setValue('värde')
-             ->setAttr('id', 'idet')
+    $element1->setAttr('id', 'idet')
              ->setAttr('class', 'class1 class2')
+             ->setValidation('required', 'måste fyllas i')
              ->setValidation('integer', 'måste vara ett heltal');
 
     $element2 = new Emilk_Form_Element_Text('namn2');
+    $element2->setValidation('mail', 'fel svar faan...');
 
-    $form->add(array($element1, $element2));
+    $textarea = new Emilk_Form_Element_Textarea('textarea1');
+    $textarea->setValidation('required', 'måste fyllas i');
 
+    $submit = new Emilk_Form_Element_Submit('submit');
 
+    $form->add(array($element1, $element2, $submit, $textarea));
 
-
-
-
-    print_r($form);
 
     echo '<br><br>';
+    echo 'form->validate() : ' . $form->validate();
+
 
     $form->render();
-
-    $form->validate();
-
 
 ?>
 </section>

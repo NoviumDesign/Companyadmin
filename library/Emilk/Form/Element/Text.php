@@ -10,10 +10,8 @@ class Emilk_Form_Element_Text extends Emilk_Form_Element_Element
 			$html .= $key . '="' . $value . '" ';
 		}
 
-		if($this->value)
-			$html .= 'value="' . $this->value . '"';
-
-		$hmtl .= '>';
+		$html .= 'value="' . $this->value[0] . '"';
+		$html .= '>';
 
 
 		echo $html;
