@@ -12,6 +12,8 @@ class Emilk_Form
 		// get render file name
     	$start = strrpos(get_class($this), '_', -1);
     	$this->name = lcFirst(substr(get_class($this), $start + 1));
+
+    	$this->build();
 	}
 
 	public function setAttr($attr, $val)
@@ -43,10 +45,14 @@ class Emilk_Form
 		foreach($elements as $element) {
 			$this->elements[$element->name] = $element;
 		}
+
+		return $this;
 	}
 
 	public function render()
 	{
+		$this->validate();
+
 		$html = '<form name="' . $this->name . '" ';
 		foreach($this->attributes as $key => $value) {
 			$html .= $key . '="' . $value . '" ';

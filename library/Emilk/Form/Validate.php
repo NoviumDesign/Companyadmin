@@ -13,8 +13,9 @@ class Emilk_Form_Validate {
         $this->formName = $formName;
 
         // form identifier
-        if($this->parseRequest())
+        if($this->parseRequest()) {
             $this->validate();
+        }
     }
 
     public function parseRequest()
@@ -65,7 +66,12 @@ class Emilk_Form_Validate {
                     if($error != false) {   // error does not exist
 
                         $element->error[$validation] = $error;
-                        $element->attributes['class'] .= ' error';
+
+                        if(isset($element->attributes['class'])) {
+                            $element->attributes['class'] .= ' error';
+                        } else {
+                            $element->attributes['class'] = ' error';
+                        }
 
                         $this->valid = false;
                     }
