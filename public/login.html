@@ -49,32 +49,30 @@
 	<!-- the script which handles all the access to plugins etc... -->
 	<script src="js/login.js"></script>
 </head>
-<body class="authentication">
+<body id="authentication">
 
 	<header>
 		<div id="logo">
+			<a href="login.html">whitelabel</a>
 		</div>
 	</header>
-
 	<section id="content">
-		<div class="alert info">Please fill in your email and we will reset your password.</div>
-		<form action="#" id="loginform">
-			<fieldset>
-				<section><label for="username">Email</label>
-					<div><input type="email" id="username" name="username" autofocus></div>
-				</section>
-				<section><label for="password">Password <a href="#">lost password?</a></label>
-					<div><input type="password" id="password" name="password"></div>
-					<div><input type="checkbox" id="remember" name="remember"><label for="remember" class="checkbox">remember me</label></div>
-				</section>
-				<section>
-					<div><button class="fr submit">Login</button></div>
-				</section>
-			</fieldset>
-		</form>
+	<form action="submit.php" id="loginform">
+		<fieldset>
+			<section><label for="username">Username</label>
+				<div><input type="text" id="username" name="username" autofocus></div>
+			</section>
+			<section><label for="password">Password <a href="#">lost password?</a></label>
+				<div><input type="password" id="password" name="password"></div>
+				<div><input type="checkbox" id="remember" name="remember"><label for="remember" class="checkbox">remember me</label></div>
+			</section>
+			<section>
+				<div><button class="fr submit">Login</button></div>
+			</section>
+		</fieldset>
+	</form>
 	</section>
-	
-	<footer>Companyadmin 2012 build 90e1963ab1</footer>
+	<footer>Copyright Companyadmin Build xxx</footer>
 		
 </body>
 </html>
