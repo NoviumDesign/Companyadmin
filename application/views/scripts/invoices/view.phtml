@@ -1,1 +1,135 @@
-view.phtml
+<div class="g11">
+   <a href="/invoices/edit"><button class="yellow i_create_write icon">Edit invoice</button></a>
+   <h1>Invoice #0000</h1>
+</div>
+<div class="g3">
+	<h6>FROM</h6>
+	<span><strong>Novium Designbyrå</strong></span>
+	<span>Solrosgatan 2A</span>
+	<span>582 49 Linköping</span>
+	<span>Sverige</span>
+</div>
+<div class="g3">
+	<h6>TO</h6>
+	<span><strong>Novium Designbyrå</strong></span>
+	<span>Solrosgatan 2A</span>
+	<span>582 49 Linköping</span>
+	<span>Sverige</span>
+</div>
+<div class="g5">
+	<table class="table-unstyled">
+		<tbody>
+			<tr>
+				<th class="align-right">Invoice no.</th>
+				<td class="align-left">#250</td>
+			</tr>
+			<tr>
+				<th class="align-right">Invoice date</th>
+				<td class="align-left">2012-01-05</td>
+			</tr>
+			<tr>
+				<th class="align-right">Invoice due</th>
+				<td class="align-left">2012-02-04</td>
+			</tr>
+		</tbody>
+	</table>
+</div>
+
+<div class="g11">
+
+   <table class="invoice-table table-unstyled">
+       <tbody>
+
+         <tr class="header">
+            <th width="70%">Item Description</th>
+            <th width="8%">Qty</th>
+            <th width="11%">Price per unit</th>
+            <th width="11%" class="invoice-column-price">Total Price</th>
+         </tr>
+           
+         <tr class="invoice-item">
+            <td class="invoice-column-desc">
+               Julgranar 6-8 meter
+            </td>
+            <td class="invoice-column-quantity">
+               5
+            </td>
+            <td class="invoice-column-price">
+               kr500.00
+            </td>
+            <td class="invoice-column-total">
+               kr2,500.00
+            </td>
+         </tr>
+
+         <tr class="invoice-item">
+            <td class="invoice-column-desc">
+               Leverans
+            </td>
+            <td class="invoice-column-quantity">
+               1
+            </td>
+            <td class="invoice-column-price">
+               kr299.00
+            </td>
+            <td class="invoice-column-total">
+               kr897.00
+            </td>
+         </tr>
+
+         <tr class="space">
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+         </tr>
+
+         <tr>
+            <td>
+              
+            </td>
+            <td>
+               
+            </td>
+            <td>
+               <strong>Delsumma</strong>
+            </td>
+            <td>
+               3 450:-
+            </td>
+         </tr>
+
+         <tr>
+            <td>
+              
+            </td>
+            <td>
+               
+            </td>
+            <td>
+               <strong>Moms 25%</strong>
+            </td>
+            <td>
+               3 450:-
+            </td>
+         </tr>
+
+         <tr class="total">
+            <td>
+              
+            </td>
+            <td>
+               
+            </td>
+            <td>
+               <strong>Totalt</strong>
+            </td>
+            <td>
+               <strong>3 450:-</strong>
+            </td>
+         </tr>
+       
+      </tbody>
+   </table>
+
+</div>

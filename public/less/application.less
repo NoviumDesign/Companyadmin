@@ -12,6 +12,31 @@ body {
 	padding-top: 20px;
 }
 
+.table-unstyled {
+
+	td, th {
+		border: none;
+		background: none;
+		text-align: left;
+	}
+}
+
+.pull-right {
+	float: right;
+}
+
+.align-left {
+	text-align: left !important;
+}
+
+.align-right {
+	text-align: right !important;
+}
+
+.align-center {
+	text-align: center !important;
+}
+
 #logo {
 	background: none;
 }
@@ -71,6 +96,36 @@ body {
 	}
 	form section a {
 		float: right;
+	}
+}
+
+.total_due {
+	border-top: 1px solid;
+}
+
+/*----------------------------------------------------------------------*/
+/* View invoice
+/*----------------------------------------------------------------------*/
+
+#invoices.view {
+	span {
+		display: block;
+	}
+
+	.invoice-table {
+		.header {
+			border-bottom: 1px solid;
+		}
+
+		.space {
+			td {
+				padding-top: 100px;
+			}
+		}
+
+		.total {
+			border-top: 1px solid;
+		}
 	}
 }
 
