@@ -8,11 +8,11 @@ class AuthenticationController extends Zend_Controller_Action
             $this->_redirect('');
         }
 
-
         $form = new Form_LoginForm();
+
         $request = $this->getRequest();
         if($request->isPost()) {
-            if($form->isValid($this->_request->getPost())) {
+            if($form->isValid()) {
 
                 $mail = $form->getValue('mail');
                 $password = $form->getValue('password');
@@ -37,8 +37,7 @@ class AuthenticationController extends Zend_Controller_Action
             }
         }
 
-
-        $this->view->form = $form;     
+        $this->view->form = $form;
     }
 
     public function logoutAction()

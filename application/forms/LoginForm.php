@@ -1,26 +1,29 @@
 <?php
 
-class Form_LoginForm extends Zend_Form
+class Form_LoginForm extends Emilk_Form
 {
-	public function __construct($option = null) {
-		parent::__construct($option);
+	public function build()
+	{
+		$mail = new Emilk_Form_Element_Text('mail');
+		$mail->setAttr('type', 'email')
+			 ->setAttr('autofocus', '')
+			 ->setValidation('required', 'This field is required!');
 
-		$mail = new Zend_Form_Element_Text('mail');
-		$mail->setLabel('mail: ')
-			 ->setRequired();
-			 // ->addValidator('EmailAddress');
+		$password = new Emilk_Form_Element_Password('password');
+		$password->setAttr('type', 'password')
+				 ->setValidation('required', 'This field is required!');
 
-		$password = new Zend_Form_Element_Password('password');
-		$password->setLabel('Lösenord: ')
-				 ->setRequired();
+		$login = new Emilk_Form_Element_Button('login');
+		$login->setAttr('class', 'fr submit')
+			  ->setValue('submit')
+			  ->setText('Login');
 
-		$login = new Zend_Form_Element_Submit('login');
-		$login->setLabel('Login');
-
-
-		$this->setName('login')
-			 ->setMethod('post')
-			 ->setAction('/authentication/login') /* Zend_Controller_Front::getInstance()->getBaseUrl() */
-			 ->addElements(array($mail, $password, $login));
+		$this->setAttr('method', 'post')
+			 ->setAttr('action', '/authentication/login')
+			 ->add(array(
+				 $mail,
+				 $password,
+				 $login
+			 ));
 	}
 }

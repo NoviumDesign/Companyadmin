@@ -23,21 +23,20 @@ class Emilk_Form
 		return $this;
 	}
 
-	public function validate()
+	public function isValid()
 	{
 		$validation = new Emilk_Form_Validate($this->elements, $this->name);
 
 		return $validation->valid;
 	}
 
-	public function getValues()
+	public function getValue($name)
 	{
-		$values = array();
-		foreach($this->elements as $element) {
-			$values[$element->name] = $element->value;
+		if(count($this->elements[$name]->value) == 1) {
+			return $this->elements[$name]->value[0];
+		} else {
+			return $this->elements[$name]->value;
 		}
-
-		return $values;
 	}
 
 	public function add($elements)
@@ -51,7 +50,7 @@ class Emilk_Form
 
 	public function render()
 	{
-		$this->validate();
+		$this->isValid();
 
 		$html = '<form name="' . $this->name . '" ';
 		foreach($this->attributes as $key => $value) {
@@ -66,9 +65,13 @@ class Emilk_Form
 		echo '</form>';
 	}
 
-	public function element($name)
+	public function element($name, $choise = 0)
 	{
-		$this->elements[$name]->render();
+		if($this->elements[$name]->type == 'radio') {
+			$this->elements[$name]->render($choise);
+		} else {
+			$this->elements[$name]->render();
+		}
 	}
 	public function elementError($name, $htmlBefore = '', $htmlAfter = '')
 	{

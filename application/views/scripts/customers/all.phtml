@@ -1,36 +1,33 @@
-<section id="content">
+<?php if($this->isAdmin) { ?>
+   <a href="/customer/add"><button>Add customer</button></a>
+<?php } ?>
 
-	<?php if($this->isAdmin) { ?>
-		<a href="/customer/add"><button>Add customer</button></a>
-	<?php } ?>
+<div class="g12">
+   <h1>Customers</h1>
+   <table class="datatable">
+      <thead>
+         <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Registered</th>
+            <th>Phone</th>
+            <th>Mail</th>
+         </tr>
+      </thead>
+      <tbody>
 
-	<div class="g12">
-		<h1>Customers</h1>
-		<table class="datatable">
-			<thead>
-				<tr>
-					<th>Name</th>
-					<th>Type</th>
-					<th>Registered</th>
-					<th>Phone</th>
-					<th>Mail</th>
-				</tr>
-			</thead>
-			<tbody>
+         <?php foreach($this->customers as $customer) { ?>
 
-				<?php foreach($this->customers as $customer) { ?>
+            <tr class="gradeX">
+               <td><a href="/customer/<?= $customer['customer_id'] ?>"><?= $customer['name'] ?></a></td>
+               <td><?= $customer['type'] ?></td>
+               <td><?= $customer['registered'] ?></td>
+               <td><?= $customer['phone'] ?></td>
+               <td><?= $customer['mail'] ?></td>
+            </tr>
 
-					<tr class="gradeX">
-						<td><a href="/customer/<?= $customer['customer_id'] ?>"><?= $customer['name'] ?></a></td>
-						<td><?= $customer['type'] ?></td>
-						<td><?= $customer['registered'] ?></td>
-						<td><?= $customer['phone'] ?></td>
-						<td><?= $customer['mail'] ?></td>
-					</tr>
+         <?php } ?>
 
-				<?php } ?>
-
-			</tbody>
-		</table>
-	</div>	
-</section>
+      </tbody>
+   </table>
+</div>

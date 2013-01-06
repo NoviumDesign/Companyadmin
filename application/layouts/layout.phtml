@@ -8,10 +8,10 @@
 <html lang="en-us">
 	<head>
 
-		<?php include "html/head.php" ?>
+		<?php include "html/head.php"; ?>
 
 	</head>
-	<body class="<?= $controllerName ?> <?= $actionName ?>">
+	<body id="<?= $controllerName ?>" class="<?= $actionName ?>">
 
 		<?php
 			if($this->user->mail) {
@@ -49,11 +49,15 @@
 				include "html/top.html";
 				include "html/nav.php";
 			}
-
-			echo $this->layout()->content;
-
-			include "html/foot.html";
 		?>
+
+		<section id="content">
+
+			<?php echo $this->layout()->content; ?>
+
+		</section>
+
+		<?php include "html/foot.html"; ?>
 
 	</body>
 </html>

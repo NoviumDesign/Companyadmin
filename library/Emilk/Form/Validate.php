@@ -47,11 +47,10 @@ class Emilk_Form_Validate {
                         $element->value = array('');
                     }
                 }
-
             }
-
             return true;
         }
+        $this->valid = 'undefined';
     }
 
     public function validate()

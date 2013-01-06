@@ -1,73 +1,73 @@
 <?php
 
-class Form_AddOrderForm extends Zend_Form
+class Form_AddOrderForm extends Emilk_Form
 {
-	public function __construct($option = null) {
-		parent::__construct($option);
-		$db = Zend_Registry::get('db');
+	public function build()
+	{
 
-		// type
-		$select = $db->select()
-					 ->from('types', '*');
-
-		$result = $db->fetchAll($select);
-
-		$options = array();
-		foreach($result as $i) {
-			$options[$i['type_id'] . 'key'] = $i['type'];
-		}
-
-		$type = new Zend_Form_Element_Select('type');
-		$type->setLabel('Type: ')
-			 ->addMultiOptions($options);
+		$customerId = new Emilk_Form_Element_Text('customerId');
+		$customerId->setAttr('class', 'autocomplete')
+				   // ->setAttr('data-source', '[abc,def,ghi,jkl,mno,pqr,stu,vwx,yz]')
+				   ->setAttr('required', '')
+				   ->setAttr('data-errortext', 'You can\'t add a new order without a customer');
 
 
-		// items
-		$items = new Zend_Form_Element_Text('items');
-		$items->setLabel('items: ')
-			  ->setRequired();
+		$orderContent = new Emilk_Form_Element_Number('orderContent');
+		$orderContent->setAttr('class', 'decimal')
+					 ->setAttr('data-min', '0');
 
-		// location
-		$location = new Zend_Form_Element_Text('location');
-		$location->setLabel('location: ')
-				 ->setRequired();
 
-		// delivery
-		$delivery = new Zend_Form_Element_Select('delivery');
-		$delivery->setLabel('delivery: ')
-				 ->addMultiOptions(array(
-				 	'requested' => 'requested',
-				 	'approved' => 'approved'
+		$delivery = new Emilk_Form_Element_Radio('delivery');
+		$delivery->setAttr('required', '')
+				 ->addChoises(array(
+					'yes',
+					'no'
 				 ));
 
-		// deliveryDate
-		$deliveryDate = new Zend_Form_Element_Text('deliveryDate');
-		$deliveryDate->setLabel('delivery date')
-					 ->addValidator('Digits')
-					 ->setRequired();
 
-		// completed
-		$completed = new Zend_Form_Element_Select('completed');
-		$completed->setLabel('completed: ')
-				  ->addMultiOptions(array(
-				 	 'yes' => 'yes',
-				 	 'no' => 'no',
-				 	 'active' => 'active'
-				  ));
-
-		// by
-		$by = new Zend_Form_Element_Text('by');
-		$by->setLabel('by: ')
-		   ->setRequired();
-
-		// create
-		$submit = new Zend_Form_Element_Submit('submit');
-		$submit->setLabel('submit');
+		$deliveryDate = new Emilk_Form_Element_Text('deliveryDate');
+		$deliveryDate->setAttr('class', 'date')
+					 ->setAttr('data-value', '+7');
 
 
-		$this->setName('addOrder')
-			 ->setMethod('post')
-			 ->setAction('/order/add')
-			 ->addElements(array($type, $items, $location, $delivery, $deliveryDate, $completed, $by, $submit));
+		$deliveryTime = new Emilk_Form_Element_Text('deliveryTime');
+		$deliveryTime->setAttr('class', 'time')
+					 ->setAttr('data-value', 'now');
+
+
+		$orderNotes = new Emilk_Form_Element_Textarea('orderNotes');
+		$orderNotes->setAttr('data-autogrow', 'true');
+
+
+		$deliveryStatus = new Emilk_Form_Element_Radio('deliveryStatus');
+		$deliveryStatus->setAttr('required', '')
+					   ->addChoises(array(
+					      'active',
+					      'completed'
+					   ));
+
+		$addOrder = new Emilk_Form_Element_Button('addOrder');
+		$addOrder->setAttr('class', 'submit')
+				 ->setValue('submit')
+				 ->setText('Add order');
+
+
+
+
+		$this->setAttr('id', 'form')
+			 ->setAttr('method', 'post')
+			 ->setAttr('autocomplete', 'off')
+			 ->setAttr('action', '/order/add')
+			 ->add(array(
+			 	$customerId,
+			 	$orderContent,
+			 	$delivery,
+			 	$deliveryDate,
+			 	$deliveryTime,
+			 	$orderNotes,
+			 	$deliveryStatus,
+			 	$addOrder
+			 ));
+
 	}
 }

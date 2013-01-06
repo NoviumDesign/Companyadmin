@@ -136,7 +136,7 @@ $.fn.wl_Form.defaults = {
 	resetButton: 'button.reset',
 	method: 'post',
 	action: null,
-	ajax: true,
+	ajax: false,
 	serialize: false,
 	parseQuery: true,
 	dataType: 'text',

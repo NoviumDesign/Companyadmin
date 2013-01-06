@@ -2,16 +2,12 @@
 
 class Emilk_Form_Element_Textarea extends Emilk_Form_Element_Element
 {
-	
 	public function render() {
-		$html = '<textarea name="' . $this->name . '" ';
-
+		$html = '<' . $this->type . ' name="' . $this->name . '" ';
 		foreach($this->attributes as $key => $value) {
 			$html .= $key . '="' . $value . '" ';
 		}
-
-		$html .= '>' . $this->value[0] . '</textarea>';
-
+		$html .= '>' . $this->value[0] . '</' . $this->type . '>';
 		
 		echo $html;
 	}

@@ -62,9 +62,9 @@
 <script src="/js/wl_Valid.js"></script>
 <script src="/js/wl_Widget.js"></script>
 <script src="/js/login.js"></script>
-
-<!-- configuration to overwrite settings -->
-<script src="/js/config.js"></script>
 	
 <!-- the script which handles all the access to plugins etc... -->
 <script src="/js/script.js"></script>
+
+<!-- configuration to overwrite settings -->
+<script src="/js/config.js"></script>

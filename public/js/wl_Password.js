@@ -146,8 +146,8 @@ $.fn.wl_Password = function (method) {
 };
 
 $.fn.wl_Password.defaults = {
-	confirm: true,
-	showStrength: true,
+	confirm: false,
+	showStrength: false,
 	words: ['too short', 'bad', 'medium', 'good', 'very good', 'excellent'],
 	minLength: 3,
 	text: {
