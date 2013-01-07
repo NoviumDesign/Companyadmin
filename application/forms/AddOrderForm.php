@@ -20,8 +20,9 @@ class Form_AddOrderForm extends Emilk_Form
 		$delivery = new Emilk_Form_Element_Radio('delivery');
 		$delivery->setAttr('required', '')
 				 ->addChoises(array(
-					'yes',
-					'no'
+					'approved',
+					'requested',
+					'none'
 				 ));
 
 
@@ -35,6 +36,9 @@ class Form_AddOrderForm extends Emilk_Form
 					 ->setAttr('data-value', 'now');
 
 
+		$deliveryAdress = new Emilk_Form_Element_Text('deliveryAdress');
+
+
 		$orderNotes = new Emilk_Form_Element_Textarea('orderNotes');
 		$orderNotes->setAttr('data-autogrow', 'true');
 
@@ -46,10 +50,16 @@ class Form_AddOrderForm extends Emilk_Form
 					      'completed'
 					   ));
 
+
 		$addOrder = new Emilk_Form_Element_Button('addOrder');
 		$addOrder->setAttr('class', 'submit')
 				 ->setValue('submit')
 				 ->setText('Add order');
+
+
+		$custom1 = new Emilk_Form_Element_Text('custom1');
+		$custom2 = new Emilk_Form_Element_Text('custom2');
+		$custom3 = new Emilk_Form_Element_Text('custom3');
 
 
 
@@ -64,9 +74,13 @@ class Form_AddOrderForm extends Emilk_Form
 			 	$delivery,
 			 	$deliveryDate,
 			 	$deliveryTime,
+			 	$deliveryAdress,
 			 	$orderNotes,
 			 	$deliveryStatus,
-			 	$addOrder
+			 	$addOrder,
+			 	$custom1,
+			 	$custom2,
+			 	$custom3,
 			 ));
 
 	}

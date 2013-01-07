@@ -1,3 +1,18 @@
+
+<h3>
+
+index => edit
+<br>
+unable to se other business
+<br>
+Insert/update item 
+
+
+
+</h3>
+
+
+
 <fieldset>
 	<label>Customer</label>
 	<section>
@@ -11,18 +26,30 @@
 </fieldset>
 
 <fieldset>
-	<label>Order content</label>
-	<section>
-		<label for="orderContent">Crayfish</label>
-		<div>
 
-			<?= $this->element('orderContent'); ?>
+	<?php
+		$products = $this->array[1];
+		foreach ($products as $product) {
+	?>
 
-			<?php /* get unit from db */ ?>
+		<section>
+			<label><?= $product['product']; ?></label>
+			<div>
 
-			<span> kg</span>
-		</div>
-	</section>
+				<?= $this->element($product['product_id']); ?>
+
+				<span>
+					<b><?= ($product['unit'] ? $product['unit'] : $product['momentary_unit']); ?></b>
+					á
+					<?= ($product['price'] ? $product['price'] : $product['momentary_price']); ?>
+					kr/
+					<?= ($product['unit'] ? $product['unit'] : $product['momentary_unit']); ?>
+				</span>
+			</div>
+		</section>
+
+	<?php } ?>
+
 </fieldset>
 
 <fieldset>
@@ -77,30 +104,45 @@
 
 <fieldset>
 	<label>Custom fields</label>
+
+	<?php
+        $customFields = $this->array[2];
+		if($customFields['custom_field_1']) {
+	?>
+
 	<section>
-		<label for="custom1">Custom1</label>
+		<label for="custom1"><?= $customFields['custom_field_1']; ?></label>
 		<div>
 
 			<?= $this->element('custom1'); ?>
 
 		</div>
 	</section>
+
+	<?php } if($customFields['custom_field_2']) { ?>
+
 	<section>
-		<label for="custom2">Custom2</label>
+		<label for="custom2"><?= $customFields['custom_field_2']; ?></label>
 		<div>
 
 			<?= $this->element('custom2'); ?>
 
 		</div>
 	</section>
+
+	<?php } if($customFields['custom_field_3']) { ?>
+
 	<section>
-		<label for="custom3">Custom3</label>
+		<label for="custom3"><?= $customFields['custom_field_3']; ?></label>
 		<div>
 
 			<?= $this->element('custom3'); ?>
 
 		</div>
 	</section>
+
+	<?php } ?>
+
 </fieldset>
 
 <fieldset>

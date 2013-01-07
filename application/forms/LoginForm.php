@@ -7,10 +7,12 @@ class Form_LoginForm extends Emilk_Form
 		$mail = new Emilk_Form_Element_Text('mail');
 		$mail->setAttr('type', 'email')
 			 ->setAttr('autofocus', '')
+			 ->setAttr('tabindex', '1')
 			 ->setValidation('required', 'This field is required!');
 
 		$password = new Emilk_Form_Element_Password('password');
 		$password->setAttr('type', 'password')
+				 ->setAttr('tabindex', '2')
 				 ->setValidation('required', 'This field is required!');
 
 		$login = new Emilk_Form_Element_Button('login');

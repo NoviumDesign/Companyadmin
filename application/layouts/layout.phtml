@@ -14,37 +14,21 @@
 	<body id="<?= $controllerName ?>" class="<?= $actionName ?>">
 
 		<?php
-			if($this->user->mail) {
-				// company name
-				$db = Zend_Db_Table::getDefaultAdapter();
-				$companyId = $this->user->company;
-				$select = $db->select()
-							 ->from('companies', 'company')
-							 ->where('company_id = ' . $companyId);
-
-				$companyName = $db->fetchAll($select);
-				$companyName = $companyName[0]['company'];
-
+			if(isset($this->user->mail)) {
 				// businesses
 				$db = Zend_Registry::get('db');
-				$select = $db->select()
-							 ->from('businesses', array('business_id', 'business',
-							 		'(SELECT COUNT(business) FROM orders WHERE business = businesses.business_id) as orders',
-							 		'(SELECT COUNT(business) FROM products WHERE business = businesses.business_id) as products'
-							 	))
-							 ->order('business ASC');
 
+				$select = $db->select()
+							 ->from('user_access', 'business as business_id')
+							 ->joinLeft('businesses', 'businesses.business_id = user_access.business', 'business')
+							 ->where('user_access.user = ' . $this->user->id)
+							 ->order('business ASC');
 				$businesses = $db->fetchAll($select);
 
-				$num = array();
-				$_businesses = array();
-				foreach ($businesses as $business) {
-					$num['orders'] += $business['orders'];
-					$num['products'] += $business['products'];
-
-					$_businesses[$business['business_id']] = $business['business'];
-				}
-				Zend_Registry::set('businesses', $_businesses);
+				// num things
+				$num_orders = $db->fetchAll('SELECT COUNT(order_id) as "0" FROM orders WHERE business = ' . $_SESSION['business']);
+				$num_products = $db->fetchAll('SELECT COUNT(product_id) as "0" FROM products WHERE business = ' . $_SESSION['business']);
+				$num_customers = $db->fetchAll('SELECT COUNT(customer_id) as "0" FROM customers WHERE business = ' . $_SESSION['business']);
 
 				include "html/top.html";
 				include "html/nav.php";

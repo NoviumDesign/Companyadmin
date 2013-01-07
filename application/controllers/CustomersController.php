@@ -2,15 +2,16 @@
 
 class CustomersController extends Zend_Controller_Action
 {
-    public function allAction()
+    public function viewAction()
     {
         $db = Zend_Registry::get('db');
 
         // customers
         $select = $db->select()
-                     ->from('customers', array('customer_id', 'name', 'type', 'registered', 'phone', 'mail'));
-
+                     ->from('customers', array('customer_id', 'name', 'type', 'registered', 'phone', 'mail'))
+                     ->where('customers.business = ' . $_SESSION['business']);
         $customers = $db->fetchAll($select);
+
         $this->view->customers = $customers;
 
         //  link to add

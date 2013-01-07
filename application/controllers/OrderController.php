@@ -2,53 +2,104 @@
 
 class OrderController extends Zend_Controller_Action
 {
-  public function indexAction()
-  {
-      $db = Zend_Registry::get('db');
-      $id = $this->_request->getParam('id');
+    public function indexAction()
+    {
+        $id = $this->_request->getParam('id');
+        $db = Zend_Registry::get('db');
 
-      // order
-      $select = $db->select()
-                   ->from('orders', '*')
-                   ->joinLeft('businesses', 'orders.business = businesses.business_id', array('business_id', 'business'))
-                   ->joinLeft('customers', 'orders.customer = customers.customer_id', '*')
-                   ->where('orders.order_id =' . $id);
+        // receiving data for form
+        $select = $db->select()
+                     ->from('orders', array('order_id', 'delivery_adress', 'delivery', 'delivery_date', 'status', 'customer', 'notes', 'custom_1', 'custom_2', 'custom_3'))
+                     ->joinLeft('customers', 'orders.customer = customers.customer_id', 'name')
+                     ->where('orders.order_id = ' . $id . ' AND orders.business = ' . $_SESSION['business']);
+        $result = $db->fetchAll($select);
+        $order = $result[0];
 
-      $order = $db->fetchAll($select);
-      $this->view->order = $order[0];
+        $form = new Form_EditOrderForm(array($order, $this->getProducts(), $this->getCustomFields()));
+        $this->view->form = $form;
 
-      // custom fields
-      $business_id = $order[0]['business_id'];
-      $select = $db->select()
-                   ->from('businesses', array('custom_field_1', 'custom_field_2', 'custom_field_3'))
-                   ->where('businesses.business_id =' . $business_id);
+        if($form->isValid() === true) {
+            // update
+            Zend_Db_Table::setDefaultAdapter($db);
+            $orders = new Zend_Db_Table('orders');
+            $orders->update(array(
+                        'delivery_adress' => $form->getValue('deliveryAdress'),
+                        'delivery' => $form->getValue('delivery'),
+                        'delivery_date' => strtotime($form->getValue('deliveryDate') . ' ' . $form->getValue('deliveryTime')),
+                        'status' => $form->getValue('deliveryStatus'),
+                        'customer' => $form->getValue('customerId'),
+                        'notes' => $form->getValue('orderNotes'),
+                        'custom_1' => $form->getValue('custom1'),
+                        'custom_2' => $form->getValue('custom2'),
+                        'custom_3' => $form->getValue('custom3')
+                    ), 'order_id = ' . $id . ' AND  business' . $_SESSION['business']);
 
-      $custom_fields = $db->fetchAll($select);
-      $this->view->custom_fields = $custom_fields[0];
+            $this->_redirect('/orders/view');
+        }
+    } 
 
-      // items
-      $select = $db->select()
-                   ->from('items', 'quantity')
-                   ->joinLeft('products', 'items.product = products.product_id', array('product_id', 'product', 'unit'))
-                   ->joinLeft('prices', 'items.price = prices.price_id', 'price')
-                   ->where('items.order =' . $id);
+    public function addAction()
+    {
+        $db = Zend_Registry::get('db');
 
-      $items = $db->fetchAll($select);
-      $this->view->items = $items;
+        $form = new Form_AddOrderForm();
+        $this->view->form = $form;
 
+        if($form->isValid() === true) {
+            // order number
+            $select = $db->select()
+                         ->from('orders', 'COUNT(order_id) + 1 as orderNumber')
+                         ->where('orders.business =' . $_SESSION['business']);
+            $result= $db->fetchAll($select);
+            $orderNumber = $result[0]['orderNumber'];
 
-  }
+            // insert
+            $db->insert('orders', array(
+                    'order_number' => $orderNumber,
+                    'date' => time(),
+                    'business' => $_SESSION['business'],
+                    'delivery_adress' => $form->getValue('deliveryAdress'),
+                    'delivery' => $form->getValue('delivery'),
+                    'delivery_date' => strtotime($form->getValue('deliveryDate') . ' ' . $form->getValue('deliveryTime')),
+                    'status' => $form->getValue('deliveryStatus'),
+                    'customer' => $form->getValue('customerId'),
+                    'notes' => $form->getValue('orderNotes'),
+                    'custom_1' => $form->getValue('custom1'),
+                    'custom_2' => $form->getValue('custom2'),
+                    'custom_3' => $form->getValue('custom3')
+                ));
 
-  public function addAction()
-  {
-	  $db = Zend_Registry::get('db');
-
-	  $form = new Form_AddOrderForm();
-    $this->view->form = $form;
-
-    if($form->isValid() == true) {
-      echo 'klart!';
+            $this->_redirect('/orders/view');
+        }
     }
-  }
-  
+
+    public function getProducts()
+    {
+        $db = Zend_Registry::get('db');
+        $id = $this->_request->getParam('id');
+
+        $select = $db->select()
+                     ->from('products', array('product_id', 'product',
+                        '(SELECT price FROM prices WHERE products.price = prices.price_id) as momentary_price',
+                        '(SELECT unit FROM prices WHERE products.price = prices.price_id) as momentary_unit'))
+                     ->joinLeft('items', 'items.product = products.product_id AND items.order = '. $id, 'quantity')
+                     ->joinLeft('prices', 'prices.price_id = items.price', array('price', 'unit'))
+                     ->where('products.business = ' . $_SESSION['business'])
+                     ->order('product ASC');
+        $result = $db->fetchAll($select);
+
+        return $result;
+    }
+
+    public function getCustomFields() {
+        $db = Zend_Registry::get('db');
+        $id = $this->_request->getParam('id');
+
+        $select = $db->select()
+                     ->from('businesses', array('custom_field_1', 'custom_field_2', 'custom_field_3'))
+                     ->where('business_id = ' . $_SESSION['business']);
+        $result = $db->fetchAll($select);
+
+        return $result[0];
+    }
 }

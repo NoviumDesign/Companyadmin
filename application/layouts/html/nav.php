@@ -1,28 +1,9 @@
 <nav>
 	<ul id="nav">
 		<li class="i_house"><a href="/"><span>Dashboard</span></a></li>
-		<li class="i_create_write"><a><span>Orders</span></a>
-			<ul>
-				<li><a href="/orders/all"><span><b>All <i style="float:right"><?= $num['orders'] ?></i></b></span></a></li>
-
-				<?php foreach($businesses as $business) { ?>
-					<li><a href="/orders/<?= $business['business_id'] ?>"><span><?= $business['business'] ?> <i style="float:right"><?= $business['orders'] ?></i></span></a></li>	
-				<?php } ?>
-
-			</ul>
-		</li>
-		<li class="i_create_write"><a><span>Products</span></a>
-			<ul>
-				<li><a href="/products/all"><span><b>All <i style="float:right"><?= $num['products'] ?></i></b></span></a></li>
-
-				<?php foreach($businesses as $business) { ?>
-					<li><a href="/products/<?= $business['business_id'] ?>"><span><?= $business['business'] ?> <i style="float:right"><?= $business['products'] ?></i></span></a></li>	
-				<?php } ?>
-
-			</ul>
-		</li>
-		<li class="i_user"><a href="/customers/all"><span>Customers</span></a></li>
-		<li class="i_user"><a href="/businesses/all"><span>Businesses</span></a></li>
+		<li class="i_create_write"><a href="/orders/view"><span>Orders<i class="fr"><?= $num_orders[0][0]; ?></i></span></a></li>
+		<li class="i_create_write"><a href="/products/view"><span>Products<i class="fr"><?= $num_products[0][0]; ?></i></span></a></li>
+		<li class="i_user"><a href="/customers/view"><span>Customers<i class="fr"><?= $num_customers[0][0]; ?></i></span></a></li>
 <!-- 
 		<li class="i_truck"><a href="/?nav=delivery"><span>Deliveries</span></a></li>
 		<li class="i_folder_love"><a href="/?nav=crm"><span>CRM</span></a></li>

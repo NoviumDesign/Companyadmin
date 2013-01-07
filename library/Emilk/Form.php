@@ -12,8 +12,6 @@ class Emilk_Form
 		// get render file name
     	$start = strrpos(get_class($this), '_', -1);
     	$this->name = lcFirst(substr(get_class($this), $start + 1));
-
-    	$this->build();
 	}
 
 	public function setAttr($attr, $val)
@@ -25,6 +23,8 @@ class Emilk_Form
 
 	public function isValid()
 	{
+    	$this->build();
+    	
 		$validation = new Emilk_Form_Validate($this->elements, $this->name);
 
 		return $validation->valid;

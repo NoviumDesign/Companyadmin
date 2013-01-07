@@ -15,6 +15,22 @@
 		<a href="/">Logo Here</a>
 	</div>
 	<div id="header">
-		<h1><?= $companyName ?></h1>
+
+		<?php 
+			foreach($businesses as $business) { 
+				if($business['business_id'] == $_SESSION['business']) {
+		?>
+			<h2 class="fl"><a href="/authentication/business/<?= $business['business_id']; ?>"><?= $business['business']; ?></a></h2>
+
+		<?php
+				} else {
+		?>
+			<h3 class="fl"><a href="/authentication/business/<?= $business['business_id']; ?>"><?= $business['business']; ?></a></h3>
+
+		<?php
+				}
+			}
+		?>
+
 	</div>
 </header>

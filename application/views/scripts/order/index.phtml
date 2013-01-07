@@ -1,23 +1,6 @@
-<?php
+<div class="g12">
+	<h1>Edit order</h1>
+	
+	<?= $this->form->render(); ?>
 
-foreach ($this->order as $key => $value) {
-	echo $key . ' : ' . $value . '<br>';
-}
-
-echo '<br><i>where</i><br><br>';
-
-foreach ($this->custom_fields as $key => $value) {
-	echo $key . ' : ' . $value . '<br>';
-}
-
-echo '<br>';
-
-foreach ($this->items as $key => $value) {
-	echo '<br><b>item ' . ++$key  . '</b><br>';
-
-	foreach ($value as $key => $value) {
-  	echo $key . ' : ' . $value . '<br>';
-  }
-}
-
-?>
+</div>	

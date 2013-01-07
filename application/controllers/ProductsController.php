@@ -2,33 +2,18 @@
 
 class ProductsController extends Zend_Controller_Action
 {
-    public function indexAction()
+    public function viewAction()
     {
         $db = Zend_Registry::get('db');
         
         // select
         $select = $db->select()
-                     ->from('products', array('product_id', 'product', 'unit', 'status'))
-                     ->joinLeft('businesses', 'products.business = businesses.business_id', array('business', 'business_id'))
-                     ->joinLeft('prices', 'products.price = prices.price_id', 'price');
-
-        // if "all"
-        $business = $this->_request->getParam('business');
-        if($business == 'all') {
-            $this->view->showAll = true;
-        } else {
-            $business = (int)$business;
-            $select->where('products.business = ' . $business);
-        }
-
-        // fetch data
+                     ->from('products', array('product_id', 'product_number', 'product', 'unit', 'status'))
+                     ->joinLeft('prices', 'products.price = prices.price_id', 'price')
+                     ->where('products.business = ' . $_SESSION['business']);
         $products = $db->fetchAll($select);
-        $this->view->products = $products;
 
-        // empty so redirect
-        if(!count($products)) {
-            $this->_redirect('/products/all');
-        }
+        $this->view->products = $products;
 
         //  link to add
         $role = Zend_Auth::getInstance()->getStorage()->read()->role;
