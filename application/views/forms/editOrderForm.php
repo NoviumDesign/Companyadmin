@@ -1,9 +1,6 @@
 
 <h3>
 
-index => edit
-<br>
-unable to se other business
 <br>
 Insert/update item 
 
@@ -16,7 +13,7 @@ Insert/update item
 <fieldset>
 	<label>Customer</label>
 	<section>
-		<label for="customerId">Customer<br><span>Enter customer name or ID</span></label>
+		<label for="customerId">Customer<br><span>Enter customer ID</span></label>
 		<div>
 
 			<?= $this->element('customerId'); ?>
@@ -27,10 +24,7 @@ Insert/update item
 
 <fieldset>
 
-	<?php
-		$products = $this->array[1];
-		foreach ($products as $product) {
-	?>
+	<?php foreach ($this->products as $product) { ?>
 
 		<section>
 			<label><?= $product['product']; ?></label>
@@ -106,7 +100,7 @@ Insert/update item
 	<label>Custom fields</label>
 
 	<?php
-        $customFields = $this->array[2];
+        $customFields = $this->customFields;
 		if($customFields['custom_field_1']) {
 	?>
 

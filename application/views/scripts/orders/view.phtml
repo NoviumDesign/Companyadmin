@@ -40,7 +40,7 @@
 			<?php foreach($this->orders as $order) { ?>
 
 				<tr class="gradeX">
-					<td><a href="/order/<?= $order['order_id'] ?>"><?= $order['order_number'] ?></a></td>
+					<td><a href="/order/view/<?= $order['order_id'] ?>"><?= $order['order_number'] ?></a></td>
 					<td><?= date('Y-m-d', $order['delivery_date']) ?></td>
 					<td><a href="/customer/<?= $order['customer_id'] ?>"><?= $order['name'] ?></a></td>
 					<td><?= $order['status'] ?></td>

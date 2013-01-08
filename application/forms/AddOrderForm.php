@@ -2,8 +2,34 @@
 
 class Form_AddOrderForm extends Emilk_Form
 {
+	public $products = null;
+	public $customFields = null;
+
 	public function build()
 	{
+        $db = Zend_Registry::get('db');
+		$business = $_SESSION['business'];
+
+		// products data
+        $select = $db->select()
+                     ->from('products', array('product_id', 'product'))
+                     ->joinLeft('prices', 'prices.price_id = products.price', array('price', 'unit'))
+                     ->where('products.business = ' . $business)
+                     ->order('product ASC');
+        $result = $db->fetchAll($select);
+        $this->products = $result;
+
+        // custom fields
+        $select = $db->select()
+                     ->from('businesses', array('custom_field_1', 'custom_field_2', 'custom_field_3'))
+                     ->where('business_id = ' . $business);
+        $result = $db->fetchAll($select);
+        $this->customFields =  $result[0];
+
+
+
+
+
 
 		$customerId = new Emilk_Form_Element_Text('customerId');
 		$customerId->setAttr('class', 'autocomplete')
@@ -12,9 +38,15 @@ class Form_AddOrderForm extends Emilk_Form
 				   ->setAttr('data-errortext', 'You can\'t add a new order without a customer');
 
 
-		$orderContent = new Emilk_Form_Element_Number('orderContent');
-		$orderContent->setAttr('class', 'decimal')
-					 ->setAttr('data-min', '0');
+		// products
+		$products = array();
+		foreach($this->products as $product) {
+
+			$products[$product['product_id']] = new Emilk_Form_Element_Number('item[' . $product['product_id'] . ']');
+			$products[$product['product_id']]->setAttr('class', 'decimal')
+						 					 ->setAttr('data-min', '0');
+
+		}
 
 
 		$delivery = new Emilk_Form_Element_Radio('delivery');
@@ -70,7 +102,6 @@ class Form_AddOrderForm extends Emilk_Form
 			 ->setAttr('action', '/order/add')
 			 ->add(array(
 			 	$customerId,
-			 	$orderContent,
 			 	$delivery,
 			 	$deliveryDate,
 			 	$deliveryTime,
@@ -81,7 +112,7 @@ class Form_AddOrderForm extends Emilk_Form
 			 	$custom1,
 			 	$custom2,
 			 	$custom3,
-			 ));
-
+			 ))
+			 ->add($products);
 	}
 }

@@ -29,17 +29,13 @@ class Emilk_Form_Validate {
                         if(is_array($_POST[$element->name])) {
 
                             foreach ($_POST[$element->name] as $key => $value) {
-                                $_POST[$element->name][$key] = htmlentities(
-                                    nl2br($value)
-                                    , ENT_QUOTES, "UTF-8");
+                                $_POST[$element->name][$key] = htmlentities($value, ENT_QUOTES, "UTF-8");
                             }
                             $element->value = $_POST[$element->name];
 
                         } else {
 
-                            $element->value = array(htmlentities(
-                                nl2br($_POST[$element->name])
-                                , ENT_QUOTES, "UTF-8"));
+                            $element->value = array(htmlentities($_POST[$element->name], ENT_QUOTES, "UTF-8"));
 
                         }
 

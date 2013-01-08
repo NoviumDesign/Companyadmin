@@ -8,7 +8,7 @@
 <html lang="en-us">
 	<head>
 
-		<?php include "html/head.php"; ?>
+		<?php include APPLICATION_PATH . '/views/layout/head.php'; ?>
 
 	</head>
 	<body id="<?= $controllerName ?>" class="<?= $actionName ?>">
@@ -30,18 +30,18 @@
 				$num_products = $db->fetchAll('SELECT COUNT(product_id) as "0" FROM products WHERE business = ' . $_SESSION['business']);
 				$num_customers = $db->fetchAll('SELECT COUNT(customer_id) as "0" FROM customers WHERE business = ' . $_SESSION['business']);
 
-				include "html/top.html";
-				include "html/nav.php";
+				include APPLICATION_PATH . '/views/layout/top.html';
+				include APPLICATION_PATH . '/views/layout/nav.php';
 			}
 		?>
 
 		<section id="content">
 
-			<?php echo $this->layout()->content; ?>
+			<?= $this->layout()->content; ?>
 
 		</section>
 
-		<?php include "html/foot.html"; ?>
+		<?php include APPLICATION_PATH . '/views/layout/foot.html'; ?>
 
 	</body>
 </html>

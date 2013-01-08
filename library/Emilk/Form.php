@@ -61,7 +61,7 @@ class Emilk_Form
 		$formIdentifier = '<input type="hidden" name="formIdentifier" value="' . $this->name . '">';
 
 		echo $html . $formIdentifier;
-		require_once APPLICATION_PATH . '/forms/html/' . $this->name . '.php';
+		require_once APPLICATION_PATH . '/views/forms/' . $this->name . '.php';
 		echo '</form>';
 	}
 

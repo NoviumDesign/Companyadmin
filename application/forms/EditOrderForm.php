@@ -2,17 +2,56 @@
 
 class Form_EditOrderForm extends Emilk_Form
 {
-	public $array = array();
+	public $id = 0;
+	public $products = null;
+	public $order = null;
+	public $customFields = null;
 
-	function __construct($array) {
+	function __construct($id) {
         parent::__construct();
 
-        $this->array = $array;
+        $this->id = $id;
     }
 
 	public function build()
 	{
-        $order = $this->array[0];
+        $db = Zend_Registry::get('db');
+		$id = $this->id;
+		$business = $_SESSION['business'];
+
+		// order data
+		$select = $db->select()
+                     ->from('orders', array('order_id', 'delivery_adress', 'delivery', 'delivery_date', 'status', 'customer', 'notes', 'custom_1', 'custom_2', 'custom_3'))
+                     ->joinLeft('customers', 'orders.customer = customers.customer_id', 'name')
+                     ->where('orders.order_id = ' . $id . ' AND orders.business = ' . $business);
+        $result = $db->fetchAll($select);
+        $this->order = $result[0];
+
+        if(!$this->order) {
+			header('Location: /orders/view');
+        }
+
+        // products data
+        $select = $db->select()
+                     ->from('products', array('product_id', 'product',
+                        '(SELECT price FROM prices WHERE products.price = prices.price_id) as momentary_price',
+                        '(SELECT unit FROM prices WHERE products.price = prices.price_id) as momentary_unit'))
+                     ->joinLeft('items', 'items.product = products.product_id AND items.order = '. $id, 'quantity')
+                     ->joinLeft('prices', 'prices.price_id = items.price', array('price', 'unit'))
+                     ->where('products.business = ' . $business)
+                     ->order('product ASC');
+        $result = $db->fetchAll($select);
+        $this->products = $result;
+
+        // custom fields
+        $select = $db->select()
+                     ->from('businesses', array('custom_field_1', 'custom_field_2', 'custom_field_3'))
+                     ->where('business_id = ' . $business);
+        $result = $db->fetchAll($select);
+        $this->customFields =  $result[0];
+
+
+        $order = $this->order;
 
 
 		$customerId = new Emilk_Form_Element_Text('customerId');
@@ -25,7 +64,7 @@ class Form_EditOrderForm extends Emilk_Form
 
 		// products
 		$products = array();
-		foreach($this->array[1] as $product) {
+		foreach($this->products as $product) {
 
 			$products[$product['product_id']] = new Emilk_Form_Element_Number($product['product_id']);
 			$products[$product['product_id']]->setAttr('class', 'decimal')
@@ -46,13 +85,11 @@ class Form_EditOrderForm extends Emilk_Form
 
 		$deliveryDate = new Emilk_Form_Element_Text('deliveryDate');
 		$deliveryDate->setAttr('class', 'date')
-					 ->setAttr('data-value', '+7')
 				     ->setValue(date('d/m/Y', $order['delivery_date']));	// GMT?
 
 
 		$deliveryTime = new Emilk_Form_Element_Text('deliveryTime');
 		$deliveryTime->setAttr('class', 'time')
-					 ->setAttr('data-value', 'now')
 				   	 ->setValue(date('H:i', $order['delivery_date']));		// GMT?
 
 
@@ -92,7 +129,7 @@ class Form_EditOrderForm extends Emilk_Form
 		$this->setAttr('id', 'form')
 			 ->setAttr('method', 'post')
 			 ->setAttr('autocomplete', 'off')
-			 ->setAttr('action', '/order/' . $order['order_id'])
+			 ->setAttr('action', '/order/view/' . $id)
 			 ->add(array(
 			 	$customerId,
 			 	$delivery,
