@@ -11,13 +11,6 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 		return $modelLoader;
 	}
 
-	protected function _initRoutes() {
-		$frontController = Zend_Controller_Front::getInstance(); 
-		$config = new Zend_Config_Ini(APPLICATION_PATH . '/configs/routes.ini');
-		$router = $frontController->getRouter();
-		$router->addConfig($config, 'routes');
-	}
-
 	protected function _initLibraryAcl() {
 		$acl = new Model_LibraryAcl;
 		$auth = Zend_Auth::getInstance();
@@ -35,7 +28,6 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 	}
 
 	protected function _initDatabaseConnection() {
-		$db = null;
 
 		if(isset(Zend_Auth::getInstance()->getStorage()->read()->company)) {
 			$company_id = Zend_Auth::getInstance()->getStorage()->read()->company;
@@ -47,8 +39,8 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 			    'password' => $config->db->password,
 			    'dbname'   => $config->db->dbname
 			));
-		}
 
-		Zend_Registry::set('db', $db);
+			Zend_Registry::set('db', $db);
+		}
 	}
 }

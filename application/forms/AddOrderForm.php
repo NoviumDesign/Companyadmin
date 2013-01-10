@@ -26,9 +26,18 @@ class Form_AddOrderForm extends Emilk_Form
         $result = $db->fetchAll($select);
         $this->customFields =  $result[0];
 
+        // order number
+        $select = $db->select()
+                     ->from('orders', '(COALESCE(MAX(order_number), 0) + 1) as orderNumber')
+                     ->where('orders.business =' . $_SESSION['business']);
+        $result= $db->fetchAll($select);
+        $_orderNumber = $result[0]['orderNumber'];
 
-
-
+		$orderNumber = new Emilk_Form_Element_Text('orderNumber');
+		$orderNumber->setAttr('class', 'autocomplete')
+				   ->setAttr('required', '')
+				   ->setAttr('data-errortext', 'You can\'t add a new order without a order number')
+				   ->setValue($_orderNumber);
 
 
 		$customerId = new Emilk_Form_Element_Text('customerId');
@@ -101,6 +110,7 @@ class Form_AddOrderForm extends Emilk_Form
 			 ->setAttr('autocomplete', 'off')
 			 ->setAttr('action', '/order/add')
 			 ->add(array(
+			 	$orderNumber,
 			 	$customerId,
 			 	$delivery,
 			 	$deliveryDate,

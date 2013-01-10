@@ -1,4 +1,16 @@
 <fieldset>
+	<label>Order number</label>
+	<section>
+		<label for="orderNumber">Order number</label>
+		<div>
+
+			<?= $this->element('orderNumber'); ?>
+
+		</div>
+	</section>
+</fieldset>
+
+<fieldset>
 	<label>Customer</label>
 	<section>
 		<label for="customerId">Customer<br><span>Enter customer ID</span></label>

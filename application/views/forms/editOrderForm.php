@@ -1,14 +1,14 @@
+<fieldset>
+	<label>Order number</label>
+	<section>
+		<label for="orderNumber">Order number</label>
+		<div>
 
-<h3>
+			<?= $this->element('orderNumber'); ?>
 
-<br>
-Insert/update item 
-
-
-
-</h3>
-
-
+		</div>
+	</section>
+</fieldset>
 
 <fieldset>
 	<label>Customer</label>
@@ -24,13 +24,13 @@ Insert/update item
 
 <fieldset>
 
-	<?php foreach ($this->products as $product) { ?>
+	<?php foreach($this->products as $product) { ?>
 
 		<section>
 			<label><?= $product['product']; ?></label>
 			<div>
 
-				<?= $this->element($product['product_id']); ?>
+				<?= $this->element('item[' . $product['product_id'] . ']'); ?>
 
 				<span>
 					<b><?= ($product['unit'] ? $product['unit'] : $product['momentary_unit']); ?></b>

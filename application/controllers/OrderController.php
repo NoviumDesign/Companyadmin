@@ -2,34 +2,6 @@
 
 class OrderController extends Zend_Controller_Action
 {
-    public function viewAction()
-    {
-        $id = $this->_request->getParam('id');
-        $db = Zend_Registry::get('db');
-
-        $form = new Form_EditOrderForm($id);
-        $this->view->form = $form;
-
-        if($form->isValid() === true) {
-            // update
-            Zend_Db_Table::setDefaultAdapter($db);
-            $orders = new Zend_Db_Table('orders');
-            $orders->update(array(
-                        'delivery_adress' => $form->getValue('deliveryAdress'),
-                        'delivery' => $form->getValue('delivery'),
-                        'delivery_date' => strtotime($form->getValue('deliveryDate') . ' ' . $form->getValue('deliveryTime')),
-                        'status' => $form->getValue('deliveryStatus'),
-                        'customer' => $form->getValue('customerId'),
-                        'notes' => $form->getValue('orderNotes'),
-                        'custom_1' => $form->getValue('custom1'),
-                        'custom_2' => $form->getValue('custom2'),
-                        'custom_3' => $form->getValue('custom3')
-                    ), 'order_id = ' . $id . ' AND  business = ' . $_SESSION['business']);
-
-            $this->_redirect('/orders/view');
-        }
-    } 
-
     public function addAction()
     {
         $db = Zend_Registry::get('db');
@@ -38,17 +10,11 @@ class OrderController extends Zend_Controller_Action
         $this->view->form = $form;
 
         if($form->isValid() === true) {
-            // order number
-            $select = $db->select()
-                         ->from('orders', 'COUNT(order_id) + 1 as orderNumber')
-                         ->where('orders.business =' . $_SESSION['business']);
-            $result= $db->fetchAll($select);
-            $orderNumber = $result[0]['orderNumber'];
 
             // insert
             $table = new Model_Db_Orders(array('db' => $db));
             $orderId = $table->insert(array(
-                    'order_number' => $orderNumber,
+                    'order_number' => $form->getValue('orderNumber'),
                     'date' => time(),
                     'business' => $_SESSION['business'],
                     'delivery_adress' => $form->getValue('deliveryAdress'),
@@ -85,5 +51,104 @@ class OrderController extends Zend_Controller_Action
             }
             $this->_redirect('/orders/view/');
         }
+    }
+
+    public function viewAction()
+    {
+        $db = Zend_Registry::get('db');
+
+        $parameters = new Emilk_Request_Parameters();
+        list($orderId) = $parameters->get();
+        $this->view->orderId = $orderId;
+
+        $form = new Form_EditOrderForm($orderId);
+        $this->view->form = $form;
+
+        if($form->isValid() === true) {
+
+            // update order
+            $table = new Model_Db_Orders(array('db' => $db));
+            $table->update(array(
+                    'order_number' => $form->getValue('orderNumber'),
+                    'delivery_adress' => $form->getValue('deliveryAdress'),
+                    'delivery' => $form->getValue('delivery'),
+                    'delivery_date' => strtotime($form->getValue('deliveryDate') . ' ' . $form->getValue('deliveryTime')),
+                    'status' => $form->getValue('deliveryStatus'),
+                    'customer' => $form->getValue('customerId'),
+                    'notes' => $form->getValue('orderNotes'),
+                    'custom_1' => $form->getValue('custom1'),
+                    'custom_2' => $form->getValue('custom2'),
+                    'custom_3' => $form->getValue('custom3')
+                    ),
+                    'order_id = ' . $orderId . ' AND  business = ' . $_SESSION['business']
+                );
+
+            // update items
+            foreach($_POST['item'] as $productId => $quantity) {
+
+                // item exist
+                $select = $db->select()
+                             ->from('items', 'item_id')
+                             ->where('items.product = ' . $productId . ' AND items.order = ' . $orderId);
+                $result= $db->fetchAll($select);
+
+                if($result) {
+                    $itemExist = ($result[0]['item_id'] ? true : false);
+                } else {
+                    $itemExist = false;
+                }
+
+                if($quantity > 0) {
+                    if($itemExist) {
+
+                        // update
+                        $table = new Model_Db_Items(array('db' => $db));
+                        $table->update(array(
+                            'quantity' => $quantity
+                            ), 'items.order = ' . $orderId . ' AND items.product = ' . $productId);
+                    } else {
+
+                        // get price
+                        $select = $db->select()
+                                     ->from('products', 'price')
+                                     ->where('product_id = ' . $productId);
+                        $result= $db->fetchAll($select);
+                        $price = $result[0]['price'];
+
+                        // insert
+                        $table = new Model_Db_Items(array('db' => $db));
+                        $table->insert(array(
+                                'product' => $productId,
+                                'order' => $orderId,
+                                'quantity' => $quantity,
+                                'price' => $price
+                            ));
+                    }
+                } else {
+                    if($itemExist) {
+                        // delete
+                        $table = new Model_Db_Items(array('db' => $db));
+                        $table->delete('items.order = ' . $orderId . ' AND items.product = ' . $productId);
+                    }
+                }
+            }
+            $this->_redirect('/orders/view');
+        }
+    }
+
+    public function deleteAction()
+    {
+        $parameters = new Emilk_Request_Parameters();
+        list($orderId) = $parameters->get();
+
+        $db = Zend_Registry::get('db');
+
+        $table = new Model_Db_Orders(array('db' => $db));
+        $table->delete('orders.order_id = ' . $orderId);
+
+        $table = new Model_Db_Items(array('db' => $db));
+        $table->delete('items.order = ' . $orderId);
+
+        $this->_redirect('/orders/view/');
     }
 }

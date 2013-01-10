@@ -14,7 +14,7 @@
 	<body id="<?= $controllerName ?>" class="<?= $actionName ?>">
 
 		<?php
-			if(isset($this->user->mail)) {
+			if(isset($this->user->mail) && isset($_SESSION['business'])) {
 				// businesses
 				$db = Zend_Registry::get('db');
 

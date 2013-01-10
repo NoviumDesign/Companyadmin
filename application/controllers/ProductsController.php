@@ -8,9 +8,9 @@ class ProductsController extends Zend_Controller_Action
         
         // select
         $select = $db->select()
-                     ->from('products', array('product_id', 'product_number', 'product', 'unit', 'status'))
-                     ->joinLeft('prices', 'products.price = prices.price_id', 'price')
-                     ->where('products.business = ' . $_SESSION['business']);
+                     ->from('products', array('product_id', 'product_number', 'product', 'status'))
+                     ->joinLeft('prices', 'products.price = prices.price_id', array('price', 'unit'))
+                     ->where('products.business = ' . $_SESSION['business'] . ' AND products.status <> "deleted"');
         $products = $db->fetchAll($select);
 
         $this->view->products = $products;

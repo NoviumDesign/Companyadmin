@@ -27,18 +27,15 @@ class AuthenticationController extends Zend_Controller_Action
                 if($result->isValid()) {
                     $identity = $authAdapter->getResultRowObject();
 
-
-
                     $authStorage = $auth->getStorage();
                     $authStorage->write($identity);
 
-                    $this->_redirect('');
+                    $this->_redirect('/authentication/business');
                 } else {
                     $this->view->invalidLogin = 'Invalid mail or password';
                 }
             }
         }
-
         $this->view->form = $form;
     }
 
@@ -50,34 +47,51 @@ class AuthenticationController extends Zend_Controller_Action
 
     public function businessAction()
     { 
-        $id = $this->_request->getParam('id');
+        $parameters = new Emilk_Request_Parameters();
+        list($businessId) = $parameters->get();
+
         $user = Zend_Auth::getInstance()->getStorage()->read();
         $db = Zend_Registry::get('db');
 
-        $select = $db->select()
-                     ->from('user_access', 'COUNT(business) as access')
-                     ->where('user = ' . $user->id . ' AND business = ' . $id);
-        $result = $db->fetchAll($select);
-        $access = $result[0]['access'];
+        // sent from login?
+        if($businessId > 1) {
+            $select = $db->select()
+                         ->from('user_access', 'COUNT(business) as access')
+                         ->where('user = ' . $user->id . ' AND business = ' . $businessId);
+            $result = $db->fetchAll($select);
+            $access = $result[0]['access'];
 
-        if($access) {
-            $_SESSION['business']  = $id;
+            if($access) {
+                $_SESSION['business']  = $businessId;
 
-            $path = parse_url($_SERVER['HTTP_REFERER'])['path'];
-            $path = explode('/', $path);
+                $path = parse_url($_SERVER['HTTP_REFERER'])['path'];
+                $path = explode('/', $path);
 
-            $_url = '';
-            if(isset($path[1])) {
-                $_url .= '/' . $path[1];
+                $_url = '';
+                if(isset($path[1])) {
+                    $_url .= '/' . $path[1];
 
-                if(isset($path[2])) {
-                    $_url .= '/' . $path[2];
+                    if(isset($path[2])) {
+                        $_url .= '/' . $path[2];
+                    }
                 }
-            }
 
-            $this->_redirect($_url);
+                $this->_redirect($_url);
+            } else {
+                $this->_redirect('/authentication/logout');
+            }
         } else {
-            $this->_redirect('/authentication/logout');
+            $select = $db->select()
+                         ->from('user_access', 'MIN(business) as business')
+                         ->where('user_access.user = ' . $user->id);
+            $result = $db->fetchAll($select);
+
+            if($result[0]['business']) {
+                $_SESSION['business'] = $result[0]['business'];
+                $this->_redirect('/');
+            } else {
+                $this->_redirect('/authentication/logout');
+            }
         }
     }
 

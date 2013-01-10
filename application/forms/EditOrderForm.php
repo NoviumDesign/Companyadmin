@@ -19,9 +19,11 @@ class Form_EditOrderForm extends Emilk_Form
 		$id = $this->id;
 		$business = $_SESSION['business'];
 
+
+
 		// order data
 		$select = $db->select()
-                     ->from('orders', array('order_id', 'delivery_adress', 'delivery', 'delivery_date', 'status', 'customer', 'notes', 'custom_1', 'custom_2', 'custom_3'))
+                     ->from('orders', array('order_id', 'order_number', 'delivery_adress', 'delivery', 'delivery_date', 'status', 'customer', 'notes', 'custom_1', 'custom_2', 'custom_3'))
                      ->joinLeft('customers', 'orders.customer = customers.customer_id', 'name')
                      ->where('orders.order_id = ' . $id . ' AND orders.business = ' . $business);
         $result = $db->fetchAll($select);
@@ -30,6 +32,8 @@ class Form_EditOrderForm extends Emilk_Form
         if(!$this->order) {
 			header('Location: /orders/view');
         }
+        
+        $order = $this->order;
 
         // products data
         $select = $db->select()
@@ -50,8 +54,11 @@ class Form_EditOrderForm extends Emilk_Form
         $result = $db->fetchAll($select);
         $this->customFields =  $result[0];
 
-
-        $order = $this->order;
+		$orderNumber = new Emilk_Form_Element_Text('orderNumber');
+		$orderNumber->setAttr('class', 'autocomplete')
+				   ->setAttr('required', '')
+				   ->setAttr('data-errortext', 'You can\'t add a new order without a order number')
+				   ->setValue($order['order_number']);
 
 
 		$customerId = new Emilk_Form_Element_Text('customerId');
@@ -66,7 +73,7 @@ class Form_EditOrderForm extends Emilk_Form
 		$products = array();
 		foreach($this->products as $product) {
 
-			$products[$product['product_id']] = new Emilk_Form_Element_Number($product['product_id']);
+			$products[$product['product_id']] = new Emilk_Form_Element_Number('item[' . $product['product_id'] . ']');
 			$products[$product['product_id']]->setAttr('class', 'decimal')
 						 					 ->setAttr('data-min', '0')
 					     					 ->setValue($product['quantity']);
@@ -131,6 +138,7 @@ class Form_EditOrderForm extends Emilk_Form
 			 ->setAttr('autocomplete', 'off')
 			 ->setAttr('action', '/order/view/' . $id)
 			 ->add(array(
+			 	$orderNumber,
 			 	$customerId,
 			 	$delivery,
 			 	$deliveryDate,
