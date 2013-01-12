@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Värd: 127.0.0.1
--- Skapad: 11 jan 2013 kl 00:42
+-- Skapad: 12 jan 2013 kl 02:14
 -- Serverversion: 5.5.27
 -- PHP-version: 5.4.7
 
@@ -55,24 +55,29 @@ INSERT INTO `businesses` (`business_id`, `business`, `custom_field_1`, `custom_f
 CREATE TABLE IF NOT EXISTS `customers` (
   `customer_id` int(11) NOT NULL AUTO_INCREMENT,
   `business` int(10) NOT NULL,
-  `customer_number` int(10) NOT NULL,
   `registered` varchar(10) NOT NULL,
   `name` varchar(50) NOT NULL,
   `type` varchar(20) NOT NULL,
   `mail` varchar(50) NOT NULL,
   `phone` varchar(30) NOT NULL,
-  `adress` varchar(50) NOT NULL,
+  `customer_adress` varchar(50) NOT NULL,
+  `box` text NOT NULL,
+  `zip_code` text NOT NULL,
+  `city` text NOT NULL,
+  `country` text NOT NULL,
+  `notes` text NOT NULL,
   PRIMARY KEY (`customer_id`),
-  UNIQUE KEY `customer_number` (`customer_number`),
   KEY `registered` (`registered`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=4 ;
 
 --
 -- Dumpning av Data i tabell `customers`
 --
 
-INSERT INTO `customers` (`customer_id`, `business`, `customer_number`, `registered`, `name`, `type`, `mail`, `phone`, `adress`) VALUES
-(1, 3, 123456, 'no', 'Gunde Svan', 'private', 'gunde@svan.se', '0701234567', 'Snöbollskrigsvägen 3');
+INSERT INTO `customers` (`customer_id`, `business`, `registered`, `name`, `type`, `mail`, `phone`, `customer_adress`, `box`, `zip_code`, `city`, `country`, `notes`) VALUES
+(1, 3, 'false', 'Gunde Svan', 'private', 'gunde@svan.se', '0701234567', 'Snöbollskrigsvägen 3', '', '', '', '', ''),
+(2, 3, 'true', 'Novium Design', 'company', 'mail@noviumdesign.se', '0704910203', 'N&aring;gonstans i link&ouml;ping', 'Ocks&aring; i link&ouml;ping?', 'link&ouml;pings', 'Link&ouml;ping', 'SCHWEDEN baby!', 'We&#039;re to good for notes... ;)'),
+(3, 3, 'true', 'Spin media', 'company', '', '', '', '', '', '', '', 'TROLOLOLOLOLO!!');
 
 -- --------------------------------------------------------
 
@@ -131,7 +136,7 @@ CREATE TABLE IF NOT EXISTS `orders` (
 
 INSERT INTO `orders` (`order_id`, `order_number`, `date`, `business`, `delivery_adress`, `delivery`, `delivery_date`, `status`, `customer`, `notes`, `custom_1`, `custom_2`, `custom_3`) VALUES
 (1, 1, 1357861024, 3, 'Hit', 'approved', 1358465760, 'active', 1, 'inga n&ouml;tter', 'Vasaloppet', 'Elit, som en gladiator', ''),
-(2, 2, 1357861125, 3, 'Hit', 'requested', 1358293080, 'active', 1, 'Skidorna gick s&ouml;nder, men sk&ouml;nt att man kan k&ouml;pa dem om 3!', 'Vasaloppet', '1', '');
+(2, 2, 1357861125, 3, 'Hit', 'requested', 1357947480, 'active', 2, 'Skidorna gick s&ouml;nder, men sk&ouml;nt att man kan k&ouml;pa dem om 3!', 'Vasaloppet', '1', '');
 
 -- --------------------------------------------------------
 

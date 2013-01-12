@@ -8,11 +8,26 @@ class CustomersController extends Zend_Controller_Action
 
         // customers
         $select = $db->select()
-                     ->from('customers', array('customer_id', 'name', 'type', 'registered', 'phone', 'mail'))
-                     ->where('customers.business = ' . $_SESSION['business']);
-        $customers = $db->fetchAll($select);
+                     ->from('customers', array('customer_id', 'name', 'type', 'customer_adress', 'phone', 'mail'))
+                     ->where('customers.business = ' . $_SESSION['business'] . ' AND customers.registered = "true"');
+        $registeredCustomers = $db->fetchAll($select);
 
-        $this->view->customers = $customers;
+        $select = $db->select()
+                     ->from('customers', array('customer_id', 'name', 'type', 'customer_adress', 'phone', 'mail'))
+                     ->where('customers.business = ' . $_SESSION['business'] . ' AND customers.registered = "false"');
+        $noneRegisteredCustomers = $db->fetchAll($select);
+
+        // pass to view
+        if(count($registeredCustomers) > 0) {
+            $this->view->registeredCustomers = $registeredCustomers;
+        }
+        if(count($noneRegisteredCustomers) > 0) {
+            $this->view->noneRegisteredCustomers = $noneRegisteredCustomers;
+        }
+
+
+
+
 
         //  link to add
         $role = Zend_Auth::getInstance()->getStorage()->read()->role;
