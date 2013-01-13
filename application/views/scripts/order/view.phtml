@@ -3,6 +3,9 @@
 	
 	<?= $this->form->render(); ?>
 
-	<a href="/order/delete/<?= $this->orderId; ?>"><button>Delete Order</button></a>
+	<?php if($this->isAdmin) { ?>
+		<a href="/order/delete/<?= $this->orderId; ?>"><button class="red">Delete Order</button></a>
+		<a href="/invoice/add/<?= $this->orderId; ?>"><button class="blue">Create invoice</button></a>
+	<?php } ?>
 
 </div>	

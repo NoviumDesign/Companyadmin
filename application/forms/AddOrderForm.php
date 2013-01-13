@@ -93,7 +93,7 @@ class Form_AddOrderForm extends Emilk_Form
 
 
 		$addOrder = new Emilk_Form_Element_Button('addOrder');
-		$addOrder->setAttr('class', 'submit')
+		$addOrder->setAttr('class', 'submit green')
 				 ->setValue('submit')
 				 ->setText('Add order');
 

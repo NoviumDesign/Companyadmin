@@ -13,12 +13,8 @@ class BusinessesController extends Zend_Controller_Action
         $businesses = $db->fetchAll($select);
         $this->view->businesses = $businesses;
 
-        //  link to add
-        $role = Zend_Auth::getInstance()->getStorage()->read()->role;
+        // is admin
         $acl = new Model_LibraryAcl;
-
-        if($acl->isAllowed($role, 'business', 'add')) {
-            $this->view->isAdmin = true;
-        }
+        $this->view->isAdmin = $acl->access(Zend_Auth::getInstance()->getStorage()->read()->role, 'order', 'add');
     }
 }

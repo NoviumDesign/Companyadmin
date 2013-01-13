@@ -11,11 +11,17 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 		return $modelLoader;
 	}
 
-	protected function _initLibraryAcl() {
+	protected function _initAcl() {
 		$acl = new Model_LibraryAcl;
-		$auth = Zend_Auth::getInstance();
+		
+		if(isset(Zend_Auth::getInstance()->getStorage()->read()->role)) {
+			$role = Zend_Auth::getInstance()->getStorage()->read()->role;
+		} else {
+			$role = null;
+		}
+
 		$fc = Zend_Controller_Front::getInstance();
-		$fc->registerPlugin(new Plugin_AccessCheck($acl, $auth));
+		$fc->registerPlugin(new Plugin_AccessCheck($acl, $role));
 	}
 
 	protected function _initViewHelpers() {

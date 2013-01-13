@@ -98,7 +98,7 @@ class Form_EditCustomerForm extends Emilk_Form
 
 
 		$editCustomer = new Emilk_Form_Element_Button('editCustomer');
-		$editCustomer->setAttr('class', 'submit blue')
+		$editCustomer->setAttr('class', 'submit green')
 				    ->setValue('submit')
 				    ->setText('Edit Customer');
 

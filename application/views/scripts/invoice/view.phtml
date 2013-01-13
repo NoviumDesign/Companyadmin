@@ -1,18 +1,22 @@
 <div class="g11">
-   <a href="/invoice/edit/<?= $this->invoice['invoice_id'] ?>">
-      <button class="i_create_write icon">Edit invoice</button>
-   </a>
-   <a href="/invoice/delete/<?= $this->invoice['invoice_id'] ?>">
-      <button class="red">Delete invoice</button>
-   </a>
-
+   
+   <?php if($this->isAdmin) { ?>
+      <a href="/invoice/edit/<?= $this->invoice['invoice_id'] ?>">
+         <button class="i_create_write icon">Edit invoice</button>
+      </a>
+      <a href="/invoice/delete/<?= $this->invoice['invoice_id'] ?>">
+         <button class="red">Delete invoice</button>
+      </a>
+   <?php } ?>
 
    <h1>Invoice #<?= $this->invoice['invoice_number']; ?></h1>
 </div>
 <div class="g3">
 	<h6>From</h6>
-	<p>Vad ska det stå här anton?
-      <marquee behavior="alternate" scrollamount="10"><u><b style="color:green"> ANTON KOLLA!!! :D:D:D</b></u></marquee>
+      <span><strong><?= ucfirst($this->businessComapny['company_name']); ?></strong></span>
+      <span><?= ucfirst($this->businessComapny['company_adress']); ?></span>
+      <span><?= $this->businessComapny['company_zip_code']; ?> <?= ucfirst($this->businessComapny['company_city']); ?>,</span>
+      <span><?= ucfirst($this->businessComapny['company_country']); ?></span>
    </p>
 </div>
 <div class="g3">
@@ -102,12 +106,12 @@
          </tr>
 
          <tr>
-            <td colspan="2">TÄNKER JAG RÄTT ELLER ÄR PRISERN EXL MOMS?</td>
+            <td colspan="2"></td>
             <td>
                <strong>Sum</strong>
             </td>
             <td>
-               <?= number_format($totPrice*0.8, 2, '.', ''); ?> :-
+               <?= number_format($totPrice, 2, '.', ''); ?> :-
             </td>
          </tr>
 
@@ -117,7 +121,7 @@
                <strong>VAT 25%</strong>
             </td>
             <td>
-               <?= number_format($totPrice*0.2, 2, '.', ''); ?> :-
+               <?= number_format($totPrice*0.25, 2, '.', ''); ?> :-
             </td>
          </tr>
 
@@ -127,7 +131,7 @@
                <strong>To pay</strong>
             </td>
             <td>
-               <strong><?= number_format($totPrice, 2, '.', ''); ?> :-</strong>
+               <strong><?= number_format($totPrice*1.25, 2, '.', ''); ?> :-</strong>
             </td>
          </tr>
        

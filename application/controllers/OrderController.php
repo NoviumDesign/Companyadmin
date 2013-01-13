@@ -2,6 +2,19 @@
 
 class OrderController extends Zend_Controller_Action
 {
+    public function init()
+    {
+        $role = Zend_Auth::getInstance()->getStorage()->read()->role;
+        $acl = new Model_LibraryAcl;
+        $adminVal =  array_search('admin', $acl::$roles);
+        $roleVal =  array_search($role, $acl::$roles);
+
+        $this->view->isAdmin = false;
+        if($roleVal >= $adminVal) {
+            $this->view->isAdmin = true;
+        }
+    }
+    
     public function addAction()
     {
         $db = Zend_Registry::get('db');

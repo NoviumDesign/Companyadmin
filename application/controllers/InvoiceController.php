@@ -2,11 +2,28 @@
 
 class InvoiceController extends Zend_Controller_Action
 {
+    public function init()
+    {
+        $role = Zend_Auth::getInstance()->getStorage()->read()->role;
+        $acl = new Model_LibraryAcl;
+        $adminVal =  array_search('admin', $acl::$roles);
+        $roleVal =  array_search($role, $acl::$roles);
+
+        $this->view->isAdmin = false;
+        if($roleVal >= $adminVal) {
+            $this->view->isAdmin = true;
+        }
+    }
+
     public function addAction()
     {
         $db = Zend_Registry::get('db');
 
-        $form = new Form_AddInvoiceForm();
+        // if create from order
+        $parameters = new Emilk_Request_Parameters();
+        list($orderId) = $parameters->get();
+
+        $form = new Form_AddInvoiceForm($orderId);
         $this->view->form = $form;
 
         if($form->isValid() === true) {
@@ -145,7 +162,6 @@ class InvoiceController extends Zend_Controller_Action
         $this->view->invoice = $result[0];
 
         // items
-        // products data
         $select = $db->select()
                      ->from('items', 'quantity')
                      ->joinLeft('products','items.product = products.product_id', array('product_id', 'product'))
@@ -153,7 +169,15 @@ class InvoiceController extends Zend_Controller_Action
                      ->where('items.invoice = ' . $invoiceId . ' AND products.business = ' . $_SESSION['business'])
                      ->order('product ASC');
         $result = $db->fetchAll($select);
-        $this->view->items = $result;        
+        $this->view->items = $result;
+
+        // business company
+        $select = $db->select()
+                     ->from('businesses', array('company_name', 'company_adress', 'company_zip_code', 'company_city', 'company_country'))
+                     ->where('businesses.business_id = ' . $_SESSION['business']);
+        $result = $db->fetchAll($select);
+
+        $this->view->businessComapny = $result[0];
     }
 
     public function deleteAction()

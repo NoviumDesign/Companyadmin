@@ -11,7 +11,7 @@ class Emilk_Request_Parameters
 
 		$path = parse_url($_SERVER['REQUEST_URI'])['path'];
 
-		$parameters =  str_replace('/' . $controller . '/' . $action . '/', '', $path);
+		$parameters =  substr(str_replace('/' . $controller . '/' . $action, '', $path), 1);
 
 		if(is_array($parameters)) {
 			$this->paramaters = explode('/', $parameters);

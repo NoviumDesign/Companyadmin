@@ -1,3 +1,5 @@
 <?= $this->form->render(); ?>
 
-<a href="/product/delete/<?= $this->productId; ?>"><button>Delete Product</button></a>
+<?php if($this->isAdmin) { ?>
+<a href="/product/delete/<?= $this->productId; ?>"><button class="red">Delete Product</button></a>
+<?php } ?>

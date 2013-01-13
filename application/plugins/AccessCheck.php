@@ -2,27 +2,28 @@
 
 class Plugin_AccessCheck extends Zend_Controller_Plugin_Abstract
 {
-	private $_acl = null;
-	private $_auth = null; 
+	private $acl = null;
+	private $role = null; 
 
-	public function __construct(Zend_Acl $acl, Zend_Auth $auth) {
-		$this->_acl = $acl;
-		$this->_auth = $auth;
+	public function __construct($acl, $role) {
+		$this->acl = $acl;
+		$this->role = $role;
 	}
 
 	public function preDispatch(Zend_Controller_Request_Abstract $request) {
-		$resource = $request->getControllerName();
+		$controller = $request->getControllerName();
 		$action = $request->getActionName();
 
-		$identity = $this->_auth->getStorage()->read();
 
-		if(isset($identity->role)) {
-			$role = $identity->role;
+		if(isset($this->role)) {
 
-			if(!$this->_acl->isAllowed($role, $resource, $action)) {
+			if(!$this->acl->access($this->role, $controller, $action)) {
 				$request->setControllerName('authentication')
 						->setActionName('logout');
 			}
+		} else {
+			$request->setControllerName('authentication')
+					->setActionName('login');
 		}
 	}
 }

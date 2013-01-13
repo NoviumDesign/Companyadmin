@@ -1,38 +1,60 @@
 <?php
 
-class Model_LibraryAcl extends Zend_Acl
+class Model_LibraryAcl extends Emilk_Acl_Library
 {
-	public function __construct() {
+	public function build()
+	{
 		// roles
-		$this->addRole(new Zend_Acl_Role('user'));
-		$this->addRole(new Zend_Acl_Role('admin'), 'user');
-		$this->addRole(new Zend_Acl_Role('master'), 'admin');
-		$this->addRole(new Zend_Acl_Role('god'), 'master');
+		$this->addRoles(array(null, 'user', 'admin', 'master', 'god'));
 
+		// resources
+		$resources = array(
+			'error' => null,
+			
+			'authentication' => array
+				(
+					'login' => null,
+					'logout' => 'user',
+					'business' => 'user'
+				),
 
-		// controllers
-		$this->add(new Zend_Acl_Resource('error'));
-		$this->add(new Zend_Acl_Resource('authentication'));
-		$this->add(new Zend_Acl_Resource('index'));
-		$this->add(new Zend_Acl_Resource('orders'));
-		$this->add(new Zend_Acl_Resource('order'));
-		$this->add(new Zend_Acl_Resource('products'));
-		$this->add(new Zend_Acl_Resource('product'));
-		$this->add(new Zend_Acl_Resource('customers'));
-		$this->add(new Zend_Acl_Resource('customer'));
-		$this->add(new Zend_Acl_Resource('businesses'));
-		$this->add(new Zend_Acl_Resource('business'));
-		$this->add(new Zend_Acl_Resource('invoices'));
-		$this->add(new Zend_Acl_Resource('invoice'));
+			'index' => 'user',
 
-		// $this->add(new Zend_Acl_Resource('order', 'add'), 'order');
+			'orders' => 'user',
+			'order' => array
+				(
+					'view' => 'user',
+					'add' => 'admin',
+					'delete' => 'admin'
+				),
 
+			'products' => 'user',
+			'product' => array
+				(
+					'view' => 'user',
+					'add' => 'admin',
+					'delete' => 'admin'
+				),
 
-		// authority
-		$this->allow(null, array('error', 'authentication'));
+			'customers' => 'user',
+			'customer' => array
+				(
+					'view' => 'user',
+					'add' => 'admin',
+					'delete' => 'admin'
+				),
 
-		$this->allow('user', array('index', 'orders', 'order', 'products', 'product', 'customers', 'customer', 'businesses', 'business', 'invoices', 'invoice'));
+			'invoices' => 'user',
+			'invoice' => array
+				(
+					'view' => 'user',
+					'add' => 'admin',
+					'edit' => 'admin',
+					'delete' => 'admin'
+				),
 
-		// $this->allow('admin', array('add'));		
+		);
+		$this->addResources($resources);
+
 	}
 }

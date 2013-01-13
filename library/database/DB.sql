@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Värd: 127.0.0.1
--- Skapad: 13 jan 2013 kl 01:10
+-- Skapad: 13 jan 2013 kl 18:31
 -- Serverversion: 5.5.27
 -- PHP-version: 5.4.7
 
@@ -34,6 +34,14 @@ CREATE TABLE IF NOT EXISTS `businesses` (
   `custom_field_1` varchar(30) NOT NULL,
   `custom_field_2` varchar(30) NOT NULL,
   `custom_field_3` varchar(30) NOT NULL,
+  `company_name` text NOT NULL,
+  `company_adress` text NOT NULL,
+  `company_box` text NOT NULL,
+  `company_zip_code` int(11) NOT NULL,
+  `company_city` text NOT NULL,
+  `company_country` text NOT NULL,
+  `company_phone` int(11) NOT NULL,
+  `company_mail` text NOT NULL,
   UNIQUE KEY `type_id` (`business_id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=5 ;
 
@@ -41,10 +49,10 @@ CREATE TABLE IF NOT EXISTS `businesses` (
 -- Dumpning av Data i tabell `businesses`
 --
 
-INSERT INTO `businesses` (`business_id`, `business`, `custom_field_1`, `custom_field_2`, `custom_field_3`) VALUES
-(1, 'Kr&#228;ftor', '', '', ''),
-(2, 'Julgranar', '', '', ''),
-(3, 'Skidor', 'Lopp', 'Startled', '');
+INSERT INTO `businesses` (`business_id`, `business`, `custom_field_1`, `custom_field_2`, `custom_field_3`, `company_name`, `company_adress`, `company_box`, `company_zip_code`, `company_city`, `company_country`, `company_phone`, `company_mail`) VALUES
+(1, 'Kr&#228;ftor', '', '', '', '', '', '', 0, '', '', 0, ''),
+(2, 'Julgranar', '', '', '', '', '', '', 0, '', '', 0, ''),
+(3, 'Skidor', 'Lopp', 'Startled', '', 'MaRob Aktiviteter AB', 'Klockarbol', '', 64393, 'Vingåker', 'Sverige', 0, '');
 
 -- --------------------------------------------------------
 
@@ -102,7 +110,7 @@ CREATE TABLE IF NOT EXISTS `invoices` (
   `notes` text NOT NULL,
   PRIMARY KEY (`invoice_id`),
   KEY `customer` (`customer`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=12 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=13 ;
 
 --
 -- Dumpning av Data i tabell `invoices`
@@ -126,7 +134,7 @@ CREATE TABLE IF NOT EXISTS `items` (
   `price` int(10) NOT NULL,
   PRIMARY KEY (`item_id`),
   KEY `order` (`order`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=63 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=69 ;
 
 --
 -- Dumpning av Data i tabell `items`
@@ -137,8 +145,11 @@ INSERT INTO `items` (`item_id`, `product`, `order`, `invoice`, `quantity`, `pric
 (41, 2, 1, 0, 1, 3),
 (42, 1, 2, 0, 1, 4),
 (43, 2, 2, 0, 2, 3),
+(64, 2, 7, 0, 5.5, 3),
 (62, 3, 0, 11, 13, 15),
-(60, 2, 0, 11, 2, 3);
+(60, 2, 0, 11, 2, 3),
+(63, 1, 7, 0, 5, 4),
+(65, 3, 7, 0, 6, 15);
 
 -- --------------------------------------------------------
 
@@ -163,7 +174,7 @@ CREATE TABLE IF NOT EXISTS `orders` (
   UNIQUE KEY `order_id` (`order_id`),
   KEY `business` (`business`),
   KEY `order_number` (`order_number`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=7 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=8 ;
 
 --
 -- Dumpning av Data i tabell `orders`
@@ -171,7 +182,8 @@ CREATE TABLE IF NOT EXISTS `orders` (
 
 INSERT INTO `orders` (`order_id`, `order_number`, `date`, `business`, `delivery_adress`, `delivery`, `delivery_date`, `status`, `customer`, `notes`, `custom_1`, `custom_2`, `custom_3`) VALUES
 (1, 1, 1357861024, 3, 'Hit', 'approved', 1357947360, 'active', 1, 'inga n&ouml;tter', 'Vasaloppet', 'Elit, som en gladiator', ''),
-(2, 2, 1357861125, 3, 'Hit', 'requested', 1357947480, 'active', 2, 'Skidorna gick s&ouml;nder, men sk&ouml;nt att man kan k&ouml;pa dem om 3!', 'Vasaloppet', '1', '');
+(2, 2, 1357861125, 3, 'Hit', 'requested', 1357947480, 'active', 2, 'Skidorna gick s&ouml;nder, men sk&ouml;nt att man kan k&ouml;pa dem om 3!', 'Vasaloppet', '1', ''),
+(7, 3, 1358083028, 3, '', 'requested', 1358687760, 'active', 3, 'notes', '', '', '');
 
 -- --------------------------------------------------------
 
@@ -279,7 +291,8 @@ INSERT INTO `user_access` (`user`, `business`) VALUES
 (1, 1),
 (1, 2),
 (1, 3),
-(1, 4);
+(1, 4),
+(2, 3);
 --
 -- Databas: `companyadmin`
 --

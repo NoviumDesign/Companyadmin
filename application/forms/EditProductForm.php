@@ -73,7 +73,7 @@ class Form_EditProductForm extends Emilk_Form
 
 
 		$addProduct = new Emilk_Form_Element_Button('addProduct');
-		$addProduct->setAttr('class', 'submit')
+		$addProduct->setAttr('class', 'submit green')
 				   ->setValue('submit')
 				   ->setText('Edit product');
 

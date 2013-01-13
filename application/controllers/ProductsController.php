@@ -15,12 +15,8 @@ class ProductsController extends Zend_Controller_Action
 
         $this->view->products = $products;
 
-        //  link to add
-        $role = Zend_Auth::getInstance()->getStorage()->read()->role;
+        // is admin
         $acl = new Model_LibraryAcl;
-
-        if($acl->isAllowed($role, 'product', 'add')) {
-            $this->view->isAdmin = true;
-        }
+        $this->view->isAdmin = $acl->access(Zend_Auth::getInstance()->getStorage()->read()->role, 'order', 'add');
     }
 }
