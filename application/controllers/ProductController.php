@@ -84,7 +84,7 @@ class ProductController extends Zend_Controller_Action
         $table = new Model_Db_Products(array('db' => $db));
         $table->update(array(
                 'status' => 'deleted'
-            ), 'products.product_id = ' . $productId);
+            ), 'products.product_id = ' . $productId . ' AND products.business = ' . $_SESSION['business']);
 
         $this->_redirect('/products/view');
     }

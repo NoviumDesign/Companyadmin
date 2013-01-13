@@ -26,9 +26,10 @@
 				$businesses = $db->fetchAll($select);
 
 				// num things
-				$num_orders = $db->fetchAll('SELECT COUNT(order_id) as "0" FROM orders WHERE business = ' . $_SESSION['business']);
-				$num_products = $db->fetchAll('SELECT COUNT(product_id) as "0" FROM products WHERE business = ' . $_SESSION['business']);
-				$num_customers = $db->fetchAll('SELECT COUNT(customer_id) as "0" FROM customers WHERE business = ' . $_SESSION['business']);
+				$numOrders = $db->fetchAll('SELECT COUNT(order_id) as "0" FROM orders WHERE business = ' . $_SESSION['business']);
+				$numProducts = $db->fetchAll('SELECT COUNT(product_id) as "0" FROM products WHERE business = ' . $_SESSION['business']);
+				$numCustomers = $db->fetchAll('SELECT COUNT(customer_id) as "0" FROM customers WHERE business = ' . $_SESSION['business']);
+				$numInvoices = $db->fetchAll('SELECT COUNT(invoice_id) as "0" FROM invoices WHERE business = ' . $_SESSION['business']);
 
 				include APPLICATION_PATH . '/views/layout/top.html';
 				include APPLICATION_PATH . '/views/layout/nav.php';

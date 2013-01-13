@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Värd: 127.0.0.1
--- Skapad: 12 jan 2013 kl 02:14
+-- Skapad: 13 jan 2013 kl 01:10
 -- Serverversion: 5.5.27
 -- PHP-version: 5.4.7
 
@@ -68,16 +68,48 @@ CREATE TABLE IF NOT EXISTS `customers` (
   `notes` text NOT NULL,
   PRIMARY KEY (`customer_id`),
   KEY `registered` (`registered`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=4 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=11 ;
 
 --
 -- Dumpning av Data i tabell `customers`
 --
 
 INSERT INTO `customers` (`customer_id`, `business`, `registered`, `name`, `type`, `mail`, `phone`, `customer_adress`, `box`, `zip_code`, `city`, `country`, `notes`) VALUES
-(1, 3, 'false', 'Gunde Svan', 'private', 'gunde@svan.se', '0701234567', 'Snöbollskrigsvägen 3', '', '', '', '', ''),
-(2, 3, 'true', 'Novium Design', 'company', 'mail@noviumdesign.se', '0704910203', 'N&aring;gonstans i link&ouml;ping', 'Ocks&aring; i link&ouml;ping?', 'link&ouml;pings', 'Link&ouml;ping', 'SCHWEDEN baby!', 'We&#039;re to good for notes... ;)'),
-(3, 3, 'true', 'Spin media', 'company', '', '', '', '', '', '', '', 'TROLOLOLOLOLO!!');
+(1, 3, 'true', 'Gunde Svan', 'private', 'gunde@svan.se', '0701234567', 'Sn&ouml;bollskrigsv&auml;gen 3', '', '', '', '', ''),
+(2, 3, 'true', 'Novium Design', 'company', 'mail@noviumdesign.se', '0704910203', 'Solrosgatan 2A', 'Ocks&aring; i link&ouml;ping?', '616 34', 'Link&ouml;ping', 'Sverige', 'We&#039;re to good for notes... ;)'),
+(3, 3, 'false', 'Spin media', 'company', 'mail', 'Hej jag heter jann...', 'Sture-p', '', '', '', '', 'TROLOLOLOLOLO!!'),
+(5, 0, 'false', 'Novium Design', 'company', 'mail@noviumdesign.se', '0704910203', 'N&aring;gonstans i link&ouml;ping', 'Ocks&aring; i link&ouml;ping?', 'link&ouml;pings', 'Link&ouml;ping', 'SCHWEDEN baby!', 'We&#039;re to good for notes... ;)'),
+(6, 0, 'false', 'Novium Design', 'company', 'mail@noviumdesign.se', '0704910203', 'N&aring;gonstans i link&ouml;ping', 'Ocks&aring; i link&ouml;ping?', 'link&ouml;pings', 'Link&ouml;ping', 'SCHWEDEN baby!', 'We&#039;re to good for notes... ;)'),
+(7, 0, 'true', 'Gunde Svan', 'private', 'gunde@svan.se', '0701234567', 'Sn&ouml;bollskrigsv&auml;gen 3', '', '', '', '', ''),
+(8, 0, 'true', 'Gunde Svan', 'private', 'gunde@svan.se', '0701234567', 'Snï¿½bollskrigsvï¿½gen 3', '', '', '', '', ''),
+(9, 0, 'true', 'Gunde Svan', 'private', 'gunde@svan.se', '0701234567', 'Snï¿½bollskrigsvï¿½gen 3', '', '', '', '', '');
+
+-- --------------------------------------------------------
+
+--
+-- Tabellstruktur `invoices`
+--
+
+CREATE TABLE IF NOT EXISTS `invoices` (
+  `invoice_id` int(11) NOT NULL AUTO_INCREMENT,
+  `invoice_number` int(11) NOT NULL,
+  `business` int(11) NOT NULL,
+  `customer` int(11) NOT NULL,
+  `status` text NOT NULL,
+  `date` int(11) NOT NULL,
+  `due` int(11) NOT NULL,
+  `discount` float NOT NULL,
+  `notes` text NOT NULL,
+  PRIMARY KEY (`invoice_id`),
+  KEY `customer` (`customer`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=12 ;
+
+--
+-- Dumpning av Data i tabell `invoices`
+--
+
+INSERT INTO `invoices` (`invoice_id`, `invoice_number`, `business`, `customer`, `status`, `date`, `due`, `discount`, `notes`) VALUES
+(11, 1, 3, 2, 'paid', 1358032524, 1360623600, 1000, '-100 kronor f&ouml;r dig din j&auml;vel! ');
 
 -- --------------------------------------------------------
 
@@ -89,21 +121,24 @@ CREATE TABLE IF NOT EXISTS `items` (
   `item_id` int(11) NOT NULL AUTO_INCREMENT,
   `product` int(10) NOT NULL,
   `order` int(10) NOT NULL,
+  `invoice` int(11) NOT NULL,
   `quantity` float NOT NULL,
   `price` int(10) NOT NULL,
   PRIMARY KEY (`item_id`),
   KEY `order` (`order`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=44 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=63 ;
 
 --
 -- Dumpning av Data i tabell `items`
 --
 
-INSERT INTO `items` (`item_id`, `product`, `order`, `quantity`, `price`) VALUES
-(40, 1, 1, 1, 1),
-(41, 2, 1, 1, 3),
-(42, 1, 2, 1, 4),
-(43, 2, 2, 2, 3);
+INSERT INTO `items` (`item_id`, `product`, `order`, `invoice`, `quantity`, `price`) VALUES
+(40, 1, 1, 0, 3, 1),
+(41, 2, 1, 0, 1, 3),
+(42, 1, 2, 0, 1, 4),
+(43, 2, 2, 0, 2, 3),
+(62, 3, 0, 11, 13, 15),
+(60, 2, 0, 11, 2, 3);
 
 -- --------------------------------------------------------
 
@@ -128,14 +163,14 @@ CREATE TABLE IF NOT EXISTS `orders` (
   UNIQUE KEY `order_id` (`order_id`),
   KEY `business` (`business`),
   KEY `order_number` (`order_number`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=7 ;
 
 --
 -- Dumpning av Data i tabell `orders`
 --
 
 INSERT INTO `orders` (`order_id`, `order_number`, `date`, `business`, `delivery_adress`, `delivery`, `delivery_date`, `status`, `customer`, `notes`, `custom_1`, `custom_2`, `custom_3`) VALUES
-(1, 1, 1357861024, 3, 'Hit', 'approved', 1358465760, 'active', 1, 'inga n&ouml;tter', 'Vasaloppet', 'Elit, som en gladiator', ''),
+(1, 1, 1357861024, 3, 'Hit', 'approved', 1357947360, 'active', 1, 'inga n&ouml;tter', 'Vasaloppet', 'Elit, som en gladiator', ''),
 (2, 2, 1357861125, 3, 'Hit', 'requested', 1357947480, 'active', 2, 'Skidorna gick s&ouml;nder, men sk&ouml;nt att man kan k&ouml;pa dem om 3!', 'Vasaloppet', '1', '');
 
 -- --------------------------------------------------------
@@ -150,7 +185,7 @@ CREATE TABLE IF NOT EXISTS `prices` (
   `unit` text NOT NULL,
   `date` int(15) NOT NULL,
   PRIMARY KEY (`price_id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=6 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=16 ;
 
 --
 -- Dumpning av Data i tabell `prices`
@@ -161,7 +196,17 @@ INSERT INTO `prices` (`price_id`, `price`, `unit`, `date`) VALUES
 (2, 2000, 'par', 1357860883),
 (3, 2000, 'par', 1357860897),
 (4, 70000, '3 skidor', 1357861073),
-(5, 300, 'styck', 1357861190);
+(5, 300, 'styck', 1357861190),
+(6, 123, '123', 1358000549),
+(7, 123, '123', 1358000561),
+(8, 123, '123', 1358000583),
+(9, 123, '123', 1358000597),
+(10, 123, '123', 1358000746),
+(11, 123, '123', 1358000760),
+(12, 0, '213', 1358000777),
+(13, 0, '213', 1358000829),
+(14, 0, '213', 1358000835),
+(15, 0.5, 'styck', 1358033785);
 
 -- --------------------------------------------------------
 
@@ -171,7 +216,7 @@ INSERT INTO `prices` (`price_id`, `price`, `unit`, `date`) VALUES
 
 CREATE TABLE IF NOT EXISTS `products` (
   `product_id` int(11) NOT NULL AUTO_INCREMENT,
-  `product_number` varchar(30) NOT NULL,
+  `product_number` varchar(30) NOT NULL DEFAULT '0',
   `business` int(10) NOT NULL,
   `product` varchar(50) NOT NULL,
   `price` float NOT NULL,
@@ -181,7 +226,7 @@ CREATE TABLE IF NOT EXISTS `products` (
   `date` int(11) NOT NULL,
   PRIMARY KEY (`product_id`),
   KEY `business` (`business`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=4 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=6 ;
 
 --
 -- Dumpning av Data i tabell `products`
@@ -190,7 +235,9 @@ CREATE TABLE IF NOT EXISTS `products` (
 INSERT INTO `products` (`product_id`, `product_number`, `business`, `product`, `price`, `status`, `description`, `notes`, `date`) VALUES
 (1, '1', 3, 'Skidor', 4, 'available', 'En skateskida fr&aring;n ficsher, om en g&aring;r s&ouml;nder! Smart va! :)', 'Hittas p&aring; hylla 3', 1357860821),
 (2, '2', 3, 'Stavar', 3, 'available', 'Skatestavar fr&aring;n rosignol, men det st&auml;mmer ju inte!!', 'Bryt inte av dem, d&aring; blir pappa arg! :/\r\nnytt stycke', 1357860883),
-(3, '3', 3, 'Valla', 5, 'available', 'kletigt', '&Auml;r egentligen bara stearin, men det s&auml;ljer vi dyrt haha!!', 1357861190);
+(3, '3', 3, 'Valla', 15, 'available', 'kletigt', '&Auml;r egentligen bara stearin, men det s&auml;ljer vi dyrt haha!!', 1357861190),
+(4, '5467', 3, 'trolololo', 11, 'deleted', '123', '3241', 1358000549),
+(5, '7', 3, '213', 14, 'deleted', '1', '', 1358000777);
 
 -- --------------------------------------------------------
 

@@ -23,6 +23,7 @@ class Model_LibraryAcl extends Zend_Acl
 		$this->add(new Zend_Acl_Resource('businesses'));
 		$this->add(new Zend_Acl_Resource('business'));
 		$this->add(new Zend_Acl_Resource('invoices'));
+		$this->add(new Zend_Acl_Resource('invoice'));
 
 		// $this->add(new Zend_Acl_Resource('order', 'add'), 'order');
 
@@ -30,7 +31,7 @@ class Model_LibraryAcl extends Zend_Acl
 		// authority
 		$this->allow(null, array('error', 'authentication'));
 
-		$this->allow('user', array('index', 'orders', 'order', 'products', 'product', 'customers', 'customer', 'businesses', 'business', 'invoices'));
+		$this->allow('user', array('index', 'orders', 'order', 'products', 'product', 'customers', 'customer', 'businesses', 'business', 'invoices', 'invoice'));
 
 		// $this->allow('admin', array('add'));		
 	}

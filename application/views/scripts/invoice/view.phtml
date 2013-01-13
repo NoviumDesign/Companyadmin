@@ -1,0 +1,139 @@
+<div class="g11">
+   <a href="/invoice/edit/<?= $this->invoice['invoice_id'] ?>">
+      <button class="i_create_write icon">Edit invoice</button>
+   </a>
+   <a href="/invoice/delete/<?= $this->invoice['invoice_id'] ?>">
+      <button class="red">Delete invoice</button>
+   </a>
+
+
+   <h1>Invoice #<?= $this->invoice['invoice_number']; ?></h1>
+</div>
+<div class="g3">
+	<h6>From</h6>
+	<p>Vad ska det stå här anton?
+      <marquee behavior="alternate" scrollamount="10"><u><b style="color:green"> ANTON KOLLA!!! :D:D:D</b></u></marquee>
+   </p>
+</div>
+<div class="g3">
+   <a href="/customer/view/<?= $this->invoice['customer_id']; ?>">
+   	<h6>To</h6>
+   	<span><strong><?= ucfirst($this->invoice['customer_name']); ?></strong></span>
+   	<span><?= ucfirst($this->invoice['customer_adress']); ?></span>
+   	<span><?= $this->invoice['zip_code']; ?> <?= ucfirst($this->invoice['city']); ?>,</span>
+   	<span><?= ucfirst($this->invoice['country']); ?></span>
+   </a>
+</div>
+<div class="g5">
+	<table class="table-unstyled">
+		<tbody>
+			<tr>
+				<th class="align-right">Invoice no.</th>
+				<td class="align-left">#<?= $this->invoice['invoice_number']; ?></td>
+			</tr>
+			<tr>
+				<th class="align-right">Invoice date</th>
+				<td class="align-left"><?= date('Y-m-d', $this->invoice['date']); /*ADD 1 HOUR*/ ?></td>
+			</tr>
+			<tr>
+				<th class="align-right">Invoice due</th>
+				<td class="align-left"><?= date('Y-m-d', $this->invoice['due']); ?></td>
+			</tr>
+		</tbody>
+	</table>
+</div>
+
+<div class="g11">
+
+   <table class="invoice-table table-unstyled">
+       <tbody>
+
+         <tr class="header">
+            <th width="70%">Item</th>
+            <th width="8%">Qantity</th>
+            <th width="11%">Price per unit</th>
+            <th width="11%" class="invoice-column-price">Total Price</th>
+         </tr>
+
+         <?php
+            $totPrice = -1*(float)$this->invoice['discount'];
+            foreach ($this->items as $item) {
+               $totPrice += ((float)$item['price']*(int)$item['quantity']);
+         ?>
+
+            <tr class="invoice-item">
+               <td class="invoice-column-desc">
+                  <?= $item['product']; ?>
+               </td>
+               <td class="invoice-column-quantity">
+                  <?= $item['quantity']; ?> <?= $item['unit']; ?>
+               </td>
+               <td class="invoice-column-price">
+                  <?= $item['price']; ?> :-
+               </td>
+               <td class="invoice-column-total">
+                  <?= ((float)$item['price']*(int)$item['quantity']); ?> :-
+               </td>
+            </tr>
+
+         <?php 
+            }  
+            if($this->invoice['discount'] > 0) {
+         ?>
+
+         <tr class="space">
+            <td colspan="4"></td>
+         </tr>
+
+         <tr>
+            <td colspan="2"></td>
+            <td>
+               <strong>Discount</strong>
+            </td>
+            <td>
+               -<?= $this->invoice['discount']; ?> :-
+            </td>
+         </tr>
+
+         <?php } ?>
+
+         <tr class="space">
+            <td colspan="4"></td>
+         </tr>
+
+         <tr>
+            <td colspan="2">TÄNKER JAG RÄTT ELLER ÄR PRISERN EXL MOMS?</td>
+            <td>
+               <strong>Sum</strong>
+            </td>
+            <td>
+               <?= number_format($totPrice*0.8, 2, '.', ''); ?> :-
+            </td>
+         </tr>
+
+         <tr>
+            <td colspan="2"></td>
+            <td>
+               <strong>VAT 25%</strong>
+            </td>
+            <td>
+               <?= number_format($totPrice*0.2, 2, '.', ''); ?> :-
+            </td>
+         </tr>
+
+         <tr class="total">
+            <td colspan="2"></td>
+            <td>
+               <strong>To pay</strong>
+            </td>
+            <td>
+               <strong><?= number_format($totPrice, 2, '.', ''); ?> :-</strong>
+            </td>
+         </tr>
+       
+      </tbody>
+   </table>
+
+   <p><strong>Notes: </strong><br><?= nl2br($this->invoice['notes']); ?></p>
+
+</div>

@@ -8,14 +8,32 @@ class CustomerController extends Zend_Controller_Action
 
         $parameters = new Emilk_Request_Parameters();
         list($customerId) = $parameters->get();
+        $this->view->customerId = $customerId; 
 
-        // customer
-        $select = $db->select()
-                     ->from('customers', '*')
-                     ->where('customer_id = ' . $customerId);
+        $form = new Form_EditCustomerForm($customerId);
+        $this->view->form = $form;
 
-        $customer = $db->fetchAll($select);
-        $this->view->customer = $customer[0];
+        if($this->_request->isPost()) {
+            if($form->isValid()) {
+
+                $table = new Model_Db_Customers(array('db' => $db));
+                $table->update(array(
+                        'registered' => $form->getValue('registered'),
+                        'name' => $form->getValue('customerName'),
+                        'type' => $form->getValue('type'),
+                        'mail' => $form->getValue('mail'),
+                        'phone' => $form->getValue('phone'),
+                        'customer_adress' => $form->getValue('adress'),
+                        'box' => $form->getValue('box'),
+                        'zip_code' => $form->getValue('zipCode'),
+                        'city' => $form->getValue('city'),
+                        'country' => $form->getValue('country'),
+                        'notes' => $form->getValue('notes')
+                    ), 'customers.customer_id = ' . $customerId . ' AND customers.business = ' . $_SESSION['business']);
+
+                $this->_redirect('/customers/view');
+            }
+        }
     }
 
     public function addAction()
@@ -52,6 +70,14 @@ class CustomerController extends Zend_Controller_Action
 
     public function deleteAction()
     {
-        // status = deleted
+        $db = Zend_Registry::get('db');
+
+        $parameters = new Emilk_Request_Parameters();
+        list($customerId) = $parameters->get();
+
+        $table = new Model_Db_Customers(array('db' => $db));
+        $table->delete('customers.customer_id = ' . $customerId . ' AND customers.business = ' . $_SESSION['business']);
+
+        $this->_redirect('/customers/view/');
     }
 }

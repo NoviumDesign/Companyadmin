@@ -1,5 +1,7 @@
-<?php
-	foreach ($this->customer as $key => $value) {
-    	echo $key . ' : ' . $value . '<br>';
-    }
-?>
+<div class="g12">
+    <h1>Edit customer</h1>
+
+    <?= $this->form->render(); ?>   
+
+	<a href="/customer/delete/<?= $this->customerId; ?>"><button class="red">Delete customer</button></a>   
+</div>

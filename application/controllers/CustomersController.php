@@ -26,9 +26,6 @@ class CustomersController extends Zend_Controller_Action
         }
 
 
-
-
-
         //  link to add
         $role = Zend_Auth::getInstance()->getStorage()->read()->role;
         $acl = new Model_LibraryAcl;

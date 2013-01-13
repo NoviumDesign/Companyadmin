@@ -33,11 +33,11 @@
 				<?= $this->element('item[' . $product['product_id'] . ']'); ?>
 
 				<span>
-					<b><?= ($product['unit'] ? $product['unit'] : $product['momentary_unit']); ?></b>
+					<b><?= $product['unit']; ?></b>
 					á
-					<?= ($product['price'] ? $product['price'] : $product['momentary_price']); ?>
+					<?= $product['price']; ?>
 					kr/
-					<?= ($product['unit'] ? $product['unit'] : $product['momentary_unit']); ?>
+					<?= $product['unit']; ?>
 				</span>
 			</div>
 		</section>

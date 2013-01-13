@@ -14,7 +14,7 @@ class Form_AddOrderForm extends Emilk_Form
         $select = $db->select()
                      ->from('products', array('product_id', 'product'))
                      ->joinLeft('prices', 'prices.price_id = products.price', array('price', 'unit'))
-                     ->where('products.business = ' . $business)
+                     ->where('products.business = ' . $business . ' AND products.status <> "deleted"')
                      ->order('product ASC');
         $result = $db->fetchAll($select);
         $this->products = $result;

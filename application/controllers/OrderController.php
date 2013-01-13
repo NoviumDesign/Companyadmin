@@ -144,10 +144,12 @@ class OrderController extends Zend_Controller_Action
         $db = Zend_Registry::get('db');
 
         $table = new Model_Db_Orders(array('db' => $db));
-        $table->delete('orders.order_id = ' . $orderId);
+        $result = $table->delete('orders.order_id = ' . $orderId . ' AND orders.business = ' . $_SESSION['business']);
 
-        $table = new Model_Db_Items(array('db' => $db));
-        $table->delete('items.order = ' . $orderId);
+        if($result) {
+            $table = new Model_Db_Items(array('db' => $db));
+            $table->delete('items.order = ' . $orderId);
+        }
 
         $this->_redirect('/orders/view/');
     }
