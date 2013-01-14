@@ -15,7 +15,7 @@ class AuthenticationController extends Zend_Controller_Action
             if($form->isValid()) {
 
                 $mail = $form->getValue('mail');
-                $password = $form->getValue('password');
+                $password = md5($form->getValue('password'));
 
                 $authAdapter = $this->getAuthAdapter();
                 $authAdapter->setIdentity($mail)

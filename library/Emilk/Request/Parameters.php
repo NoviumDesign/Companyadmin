@@ -13,10 +13,12 @@ class Emilk_Request_Parameters
 
 		$parameters =  substr(str_replace('/' . $controller . '/' . $action, '', $path), 1);
 
-		if(is_array($parameters)) {
-			$this->paramaters = explode('/', $parameters);
+		$parameters = explode('/', $parameters);
+
+		if(count($parameters) > 1) {
+			$this->parameters = $parameters;
 		} else {
-			$this->parameters[0] = $parameters;
+			$this->parameters[0] = $parameters[0];
 		}
     }
 

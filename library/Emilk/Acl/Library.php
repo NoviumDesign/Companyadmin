@@ -36,6 +36,9 @@ class Emilk_Acl_library
 					if(isset($this::$resources[$controller][$view])) {
 						$minEligibility = array_search($this::$resources[$controller][$view], $this::$roles);			
 					} else {
+
+						echo $this::$resources[$controller][$view];
+
 						trigger_error('Resource not found');
 						return false;
 					}

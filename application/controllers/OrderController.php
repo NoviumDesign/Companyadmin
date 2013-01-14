@@ -77,7 +77,7 @@ class OrderController extends Zend_Controller_Action
         $form = new Form_EditOrderForm($orderId);
         $this->view->form = $form;
 
-        if($form->isValid() === true) {
+        if($form->isValid() === true  && $this->view->isAdmin) {
 
             // update order
             $table = new Model_Db_Orders(array('db' => $db));

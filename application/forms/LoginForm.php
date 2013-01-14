@@ -5,13 +5,13 @@ class Form_LoginForm extends Emilk_Form
 	public function build()
 	{
 		$mail = new Emilk_Form_Element_Text('mail');
-		$mail->setAttr('type', 'email')
+		$mail->setAttr('required', '')
 			 ->setAttr('autofocus', '')
 			 ->setAttr('tabindex', '1')
 			 ->setValidation('required', 'This field is required!');
 
 		$password = new Emilk_Form_Element_Password('password');
-		$password->setAttr('type', 'password')
+		$password->setAttr('required', '')
 				 ->setAttr('tabindex', '2')
 				 ->setValidation('required', 'This field is required!');
 

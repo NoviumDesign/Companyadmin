@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Värd: 127.0.0.1
--- Skapad: 13 jan 2013 kl 18:31
+-- Skapad: 14 jan 2013 kl 01:34
 -- Serverversion: 5.5.27
 -- PHP-version: 5.4.7
 
@@ -110,7 +110,7 @@ CREATE TABLE IF NOT EXISTS `invoices` (
   `notes` text NOT NULL,
   PRIMARY KEY (`invoice_id`),
   KEY `customer` (`customer`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=13 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=12 ;
 
 --
 -- Dumpning av Data i tabell `invoices`
@@ -197,7 +197,7 @@ CREATE TABLE IF NOT EXISTS `prices` (
   `unit` text NOT NULL,
   `date` int(15) NOT NULL,
   PRIMARY KEY (`price_id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=16 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=17 ;
 
 --
 -- Dumpning av Data i tabell `prices`
@@ -218,7 +218,8 @@ INSERT INTO `prices` (`price_id`, `price`, `unit`, `date`) VALUES
 (12, 0, '213', 1358000777),
 (13, 0, '213', 1358000829),
 (14, 0, '213', 1358000835),
-(15, 0.5, 'styck', 1358033785);
+(15, 0.5, 'styck', 1358033785),
+(16, 70000, '3 skidor', 1358114307);
 
 -- --------------------------------------------------------
 
@@ -245,7 +246,7 @@ CREATE TABLE IF NOT EXISTS `products` (
 --
 
 INSERT INTO `products` (`product_id`, `product_number`, `business`, `product`, `price`, `status`, `description`, `notes`, `date`) VALUES
-(1, '1', 3, 'Skidor', 4, 'available', 'En skateskida fr&aring;n ficsher, om en g&aring;r s&ouml;nder! Smart va! :)', 'Hittas p&aring; hylla 3', 1357860821),
+(1, '1', 3, 'Skidor brukar det heta... -_-', 16, 'available', 'En skateskida fr&aring;n ficsher, om en g&aring;r s&ouml;nder! Smart va! :)', 'Hittas p&aring; hylla 3', 1357860821),
 (2, '2', 3, 'Stavar', 3, 'available', 'Skatestavar fr&aring;n rosignol, men det st&auml;mmer ju inte!!', 'Bryt inte av dem, d&aring; blir pappa arg! :/\r\nnytt stycke', 1357860883),
 (3, '3', 3, 'Valla', 15, 'available', 'kletigt', '&Auml;r egentligen bara stearin, men det s&auml;ljer vi dyrt haha!!', 1357861190),
 (4, '5467', 3, 'trolololo', 11, 'deleted', '123', '3241', 1358000549),
@@ -339,8 +340,8 @@ CREATE TABLE IF NOT EXISTS `users` (
 --
 
 INSERT INTO `users` (`id`, `mail`, `password`, `role`, `company`, `name`) VALUES
-(1, 'user1', 'pass1', 'admin', 1, 'User One'),
-(2, 'user2', 'pass2', 'user', 1, 'User Two');
+(1, 'user1', 'a722c63db8ec8625af6cf71cb8c2d939', 'admin', 1, 'User One'),
+(2, 'user2', 'c1572d05424d0ecb2a65ec6a82aeacbf', 'user', 1, 'User Two');
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

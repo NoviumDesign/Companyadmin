@@ -5,15 +5,15 @@ class Model_LibraryAcl extends Emilk_Acl_Library
 	public function build()
 	{
 		// roles
-		$this->addRoles(array(null, 'user', 'admin', 'master', 'god'));
+		$this->addRoles(array('none', 'user', 'admin', 'master', 'god'));
 
 		// resources
 		$resources = array(
-			'error' => null,
+			'error' => 'none',
 			
 			'authentication' => array
 				(
-					'login' => null,
+					'login' => 'none',
 					'logout' => 'user',
 					'business' => 'user'
 				),
@@ -52,6 +52,8 @@ class Model_LibraryAcl extends Emilk_Acl_Library
 					'edit' => 'admin',
 					'delete' => 'admin'
 				),
+
+			'request' => 'none'
 
 		);
 		$this->addResources($resources);

@@ -63,7 +63,7 @@ class ProductController extends Zend_Controller_Action
 
         $request = $this->getRequest();
         if($request->isPost()) {
-            if($form->isValid()) {
+            if($form->isValid() && $this->view->isAdmin) {
 
                 $table = new Model_Db_Prices(array('db' => $db));
                 $priceId = $table->insert(array(

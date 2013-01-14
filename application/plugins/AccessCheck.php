@@ -15,15 +15,14 @@ class Plugin_AccessCheck extends Zend_Controller_Plugin_Abstract
 		$action = $request->getActionName();
 
 
-		if(isset($this->role)) {
-
-			if(!$this->acl->access($this->role, $controller, $action)) {
-				$request->setControllerName('authentication')
-						->setActionName('logout');
-			}
-		} else {
-			$request->setControllerName('authentication')
-					->setActionName('login');
+		if(!isset($this->role)) {
+			$this->role = 'none';
 		}
+
+		if(!$this->acl->access($this->role, $controller, $action)) {
+			// $request->setControllerName('authentication')
+			// 		->setActionName('logout');
+		}
+		
 	}
 }

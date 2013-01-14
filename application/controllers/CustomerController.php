@@ -27,7 +27,7 @@ class CustomerController extends Zend_Controller_Action
         $this->view->form = $form;
 
         if($this->_request->isPost()) {
-            if($form->isValid()) {
+            if($form->isValid() && $this->view->isAdmin) {
 
                 $table = new Model_Db_Customers(array('db' => $db));
                 $table->update(array(
