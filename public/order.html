@@ -1,15 +1,83 @@
 <html>
 <head>
 	<title>test form</title>
+	<style type="text/css">
+		form {
+			position: relative;
+			width: 500px;
+			margin: 100px auto 0 auto;
+			box-shadow: 0 0 3px #000;
+		}
+		form fieldset {
+			padding: 10px 5px;
+			border: none;
+			border-bottom: 1px solid rgb(236, 236, 236);
+		}
+		form fieldset > label {
+			font-size: 20px;
+			margin: 10px 0;
+			display: block;
+		}
+		form fieldset section > label {
+			font-size: 16px;
+			margin-top: 7px;
+			display: block;
+		}
+		form fieldset input {
+			width: 300px;
+		}
+	</style>
 </head>
 <body>
 
-	<form method="post" action="/request/post">
-
+	<form id="companyadmin" method="post" action="/request/post">
 		<input name="token" id="token">
 
-		<input type="submit" value="submit">
+		<fieldset class="products">
+			<label>Products</label>
+		</fieldset>
 
+		<fieldset class="customFields">
+			<label>customFields</label>
+		</fieldset>
+
+		<fieldset>
+			<label>Delivery</label>
+
+			<section>
+				<label>Delivery</label>
+				<div>
+					<input type="radio" name="order[delivery]" value="none">none
+					<input type="radio" name="order[delivery]" value="requested">requested
+				</div>
+			</section>
+
+			<section>
+				<label>Delivery adress</label>
+				<div>
+					<input type="text" name="order[deliveryAdress]">
+				</div>
+			</section>
+
+			<section>
+				<label>Delivery date</label>
+				<div>
+					<input type="date" name="order[deliveryDate]">
+				</div>
+			</section>
+
+			<section>
+				<label>Delivery notes</label>
+				<div>
+					<textarea name="order[deliveryNotes]"></textarea>
+				</div>
+			</section>
+
+		</fieldset>
+
+		<fieldset>
+			<input type="submit" value="submit">
+		</fieldset>
 	</form>
 
 
@@ -17,17 +85,18 @@
 
 	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
 	<script type="text/javascript">
-		var url, token, getFormData, getToken, company, business;
+		var url, token, getFormData, getToken, company, business, buildForm, formId;
 		url = '';
-		company = 1;
-		business = 3;
+		company = 'dfg7586ghf';
+		business = '43g5345hj3';
+		formId = '#companyadmin';
 
 		getToken = function() {
 			$.getJSON(
 				url + '/request/token',
 				function(response) {
-					token = response.token
-					$('form #token').val(response.token);
+					token = response.token;
+					$(formId + ' #token').val(response.token);
 
 					getFormData();
 			});
@@ -36,14 +105,67 @@
 			$.getJSON(
 				url + '/request/data/' + company + '/' + business + '/' + token,
 				function(response) {
-					token = response.token
-					$('form #token').val(response.token);
+					token = response.token;
+					$(formId + ' #token').val(response.token);
 
-					console.log(response);
+
+					buildForm(response.data)
 
 			});
 		}
-		
+		buildForm = function(data) {
+
+			var products = '';
+			for(var i = 0; i < data.products.length; i++) {
+				products += 
+					'<section>' + 
+						'<label>' + data.products[i].product + '</label>' + 
+						'<div>' +
+							'<input type="number" name="products[' + data.products[i].product_secret + ']" value="">' +
+							'<span>' + data.products[i].price + ' :- per ' + data.products[i].unit + '</span>' +
+						'</div>' +
+					'</section>';
+			};
+
+			var customFields = '';
+			var i = 0;
+			for(var j in data.customFields) {
+				if(data.customFields[j]) {
+				customFields += 
+					'<section>' + 
+						'<label>' + data.customFields[j] + '</label>' + 
+						'<div>' +
+							'<input type="text" name="customFields[' + i++ + ']" value="">' +
+						'</div>' +
+					'</section>';
+				}
+			};
+
+			$(formId + ' .products').append(products);
+			$(formId + ' .customFields').append(customFields);
+		}
+
+
+
+
+
+
+
+		$(formId).submit(function(event) {
+			event.preventDefault();
+
+	        $.post(url + '/request/post/' + company + '/' + business + '/' + token,
+	        	$(this).serialize(),
+	        	function(response){
+	        		token = response.token;
+					$(formId + ' #token').val(response.token);
+
+
+
+		            console.log(response);                     
+		        });
+	    });
+
 		$(document).ready(function() {
 			getToken();
 		});

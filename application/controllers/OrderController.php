@@ -24,10 +24,13 @@ class OrderController extends Zend_Controller_Action
 
         if($form->isValid() === true) {
 
+            $secret = substr(str_shuffle('abcdefghijlkmnopqrstuvwxyz1234567890abcdefghijlkmnopqrstuvwxyz1234567890abcdefghijlkmnopqrstuvwxyz1234567890'), 0, 10);
+
             // insert
             $table = new Model_Db_Orders(array('db' => $db));
             $orderId = $table->insert(array(
                     'order_number' => $form->getValue('orderNumber'),
+                    'order_secret' => $secret,
                     'date' => time(),
                     'business' => $_SESSION['business'],
                     'delivery_adress' => $form->getValue('deliveryAdress'),

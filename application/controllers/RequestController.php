@@ -12,21 +12,123 @@ class RequestController extends Zend_Controller_Action
 
     public function postAction()
     {
-    	$output = array();
+        $output = array();
 
-    	$token = $_SESSION[$this->sessionName];
-    	if($token === $_POST['token']) {
+        $parameters = new Emilk_Request_Parameters();
+        list($companySecret, $businessSecret, $tokenUrl) = $parameters->get();
 
-    		// when done
-    		$output['success'] = true;
-    	} else {
-    		$output['error'] =  'token';
-    	}
+        if(isset($_SESSION[$this->sessionName]) && isset($tokenUrl) && isset($companySecret) && isset($businessSecret) && isset($tokenUrl)) {
 
-    	// generate new token
-    	$output['token'] = $this->generateToken();
+            $token = $_SESSION[$this->sessionName];
+            if($token === $tokenUrl) {
 
-    	echo json_encode($output);
+                list($businessId, $db) = $this->getBusinessDb($companySecret, $businessSecret);
+
+                // validation for insert
+                $valid = true;
+
+                // get available custom fields
+                $select = $db->select()
+                             ->from('businesses', array('custom_field_1 as "1"', 'custom_field_2 as "2"', 'custom_field_3 as "3"'))
+                             ->where('businesses.business_secret = "' . $businessSecret . '"');
+                $result = $db->fetchAll($select);
+                $_customFields = $result[0];
+
+                // custom fields
+                $customFields = $_POST['customFields'];
+                $i = 0;
+                foreach($_customFields as $key => $value) {
+                    if(!$value) {
+                        $customFields[$i] = null;
+                    }
+                    $i++;
+                }
+
+                // delivery
+                if(isset($_POST['order']['delivery']) && $_POST['order']['delivery'] == 'requested') {
+                    if(!isset($_POST['order']['deliveryAdress']) && !isset($_POST['order']['deliveryDate'])) { 
+                        $output['error'] =  'data';
+                        $valid = false;
+                    }
+                } elseif(isset($_POST['order']['delivery']) && $_POST['order']['delivery'] == 'none') {
+                    $_POST['order']['deliveryAdress'] = null;
+                    $_POST['order']['deliveryDate'] = null;
+                } else {
+                    $output['error'] =  'data';
+                    $valid = false;
+                }
+
+                $select = $db->select()
+                             ->from('orders', '(COALESCE(MAX(order_number), 0) + 1) as orderNumber')
+                             ->where('orders.business =' . $businessId);
+                $result= $db->fetchAll($select);
+                $orderNumber = $result[0]['orderNumber'];
+
+
+
+
+
+                if($valid) {
+                    $secret = substr(str_shuffle('abcdefghijlkmnopqrstuvwxyz1234567890abcdefghijlkmnopqrstuvwxyz1234567890abcdefghijlkmnopqrstuvwxyz1234567890'), 0, 10);
+
+                    // insert
+                    $table = new Model_Db_Orders(array('db' => $db));
+                    $orderId = $table->insert(array(
+                            'order_secret' => $secret,
+                            'order_number' => $orderNumber,
+                            'date' => time(),
+                            'business' => $businessId,
+                            'delivery' => htmlentities($_POST['order']['delivery'], ENT_QUOTES, "UTF-8"),
+                            'delivery_adress' => htmlentities($_POST['order']['deliveryAdress'], ENT_QUOTES, "UTF-8"),
+                            'delivery_date' => strtotime($_POST['order']['deliveryDate']),
+                            'status' => 'active',
+                            'customer' => '3', // create customer
+                            'notes' => htmlentities($_POST['order']['deliveryNotes'], ENT_QUOTES, "UTF-8"),
+                            'custom_1' => htmlentities($customFields[0], ENT_QUOTES, "UTF-8"),
+                            'custom_2' => htmlentities($customFields[1], ENT_QUOTES, "UTF-8"),
+                            'custom_3' => htmlentities($customFields[2], ENT_QUOTES, "UTF-8") 
+                        ));
+
+
+                    // create items
+                    foreach($_POST['products'] as $productSecret => $quantity) {
+                        if($quantity > 0) {
+
+                            // get price and productId
+                            $select = $db->select()
+                                         ->from('products', array('product_id as id', 'price'))
+                                         ->where('product_secret = "' . $productSecret . '"');
+                            $result= $db->fetchAll($select);
+                            $product = $result[0];
+
+                            // insert
+                            $table = new Model_Db_Items(array('db' => $db));
+                            $table->insert(array(
+                                    'product' => $product['id'],
+                                    'order' => $orderId,
+                                    'quantity' => $quantity,
+                                    'price' => $product['price']
+                                ));
+                        }
+                    }
+
+                }
+
+
+
+                // success
+                $output['success'] = true;
+            } else {
+                $output['error'] =  'token';
+            }
+        } else {
+            $output['error'] =  'parameters';
+        }
+
+        // generate new token
+        $output['token'] = $this->generateToken();
+
+        echo json_encode($output);
     }
 
     public function dataAction()
@@ -35,24 +137,19 @@ class RequestController extends Zend_Controller_Action
     	$output = array();
 
     	$parameters = new Emilk_Request_Parameters();
-        list($companyId, $businessId, $tokenUrl) = $parameters->get();
+        list($companySecret, $businessSecret, $tokenUrl) = $parameters->get();
 
-    	if(isset($_SESSION[$this->sessionName]) && isset($tokenUrl)) {
+    	if(isset($_SESSION[$this->sessionName]) && isset($tokenUrl) && isset($companySecret) && isset($businessSecret) && isset($tokenUrl)) {
 
     		$token = $_SESSION[$this->sessionName];
 	    	if($token === $tokenUrl) {
 
-				$config = new Zend_Config_Ini(APPLICATION_PATH . '/companies/' . $companyId . '/config.ini');
-				$db = new Zend_Db_Adapter_Pdo_Mysql(array(
-				    'host'     => $config->db->host,
-				    'username' => $config->db->username,
-				    'password' => $config->db->password,
-				    'dbname'   => $config->db->dbname
-				));
+                list($businessId, $db) = $this->getBusinessDb($companySecret, $businessSecret);
+                
 
 	    		// products data
 		        $select = $db->select()
-		                     ->from('products', array('product_id', 'product'))
+		                     ->from('products', array('product_secret', 'product'))
 		                     ->joinLeft('prices', 'prices.price_id = products.price', array('price', 'unit'))
 		                     ->where('products.business = ' . $businessId . ' AND products.status <> "deleted"')
 		                     ->order('product ASC');
@@ -76,7 +173,7 @@ class RequestController extends Zend_Controller_Action
 	    		$output['error'] =  'token';
 	    	}
     	} else {
-	    	$output['error'] =  'token';
+	    	$output['error'] =  'parameters';
     	}
 
     	// generate new token
@@ -100,5 +197,38 @@ class RequestController extends Zend_Controller_Action
     	$_SESSION[$this->sessionName] = $shuffled;
 
     	return $shuffled;
+    }
+
+    private function getBusinessDb($companySecret, $businessSecret)
+    {
+        $db = Zend_Db_Table::getDefaultAdapter();
+        $select = $db->select()
+                     ->from('companies', 'company_id')
+                     ->where('companies.company_secret = "' . $companySecret . '"');
+        $result = $db->fetchAll($select);
+        $companyId = $result[0]['company_id'];
+
+
+        $config = new Zend_Config_Ini(APPLICATION_PATH . '/companies/' . $companyId . '/config.ini');
+        $db = new Zend_Db_Adapter_Pdo_Mysql(array(
+            'host'     => $config->db->host,
+            'username' => $config->db->username,
+            'password' => $config->db->password,
+            'dbname'   => $config->db->dbname
+        ));
+
+
+        $select = $db->select()
+                     ->from('businesses', 'business_id')
+                     ->where('businesses.business_secret = "' . $businessSecret . '"');
+        $result = $db->fetchAll($select);
+        $businessId = $result[0]['business_id'];
+
+
+        if(isset($businessId)) {
+            return array($businessId, $db);
+        } else {
+            return array('you', 'fail');
+        }
     }
 }

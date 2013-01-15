@@ -28,10 +28,13 @@ class InvoiceController extends Zend_Controller_Action
 
         if($form->isValid() === true) {
 
+            $secret = substr(str_shuffle('abcdefghijlkmnopqrstuvwxyz1234567890abcdefghijlkmnopqrstuvwxyz1234567890abcdefghijlkmnopqrstuvwxyz1234567890'), 0, 10);
+
             // insert
             $table = new Model_Db_Invoices(array('db' => $db));
             $invoiceId = $table->insert(array(
                     'invoice_number' => $form->getValue('invoiceNumber'),
+                    'invoice_secret' => $secret,
                     'business' => $_SESSION['business'],
                     'customer' => $form->getValue('customer'),
                     'status' => $form->getValue('status'),

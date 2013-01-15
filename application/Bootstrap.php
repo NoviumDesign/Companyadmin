@@ -37,7 +37,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 
 		if(isset(Zend_Auth::getInstance()->getStorage()->read()->company)) {
 			$company_id = Zend_Auth::getInstance()->getStorage()->read()->company;
-			$config = new Zend_Config_Ini(APPLICATION_PATH . '/companies/' . $company_id . '/config.ini');
+			$config = new Zend_Config_Ini(APPLICATION_PATH . '/companies/' . $company_id . '/config.ini', APPLICATION_ENV);
 
 			$db = new Zend_Db_Adapter_Pdo_Mysql(array(
 			    'host'     => $config->db->host,

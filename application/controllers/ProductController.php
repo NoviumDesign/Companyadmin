@@ -33,9 +33,12 @@ class ProductController extends Zend_Controller_Action
                         'date' => time()
                     ));
 
+                $secret = substr(str_shuffle('abcdefghijlkmnopqrstuvwxyz1234567890abcdefghijlkmnopqrstuvwxyz1234567890abcdefghijlkmnopqrstuvwxyz1234567890'), 0, 10);
+
                 $table = new Model_Db_Products(array('db' => $db));
                 $table->insert(array(
                         'product_number' => $form->getValue('productNumber'),
+                        'product_secret' => $secret,
                         'business' => $_SESSION['business'],
                         'product' => $form->getValue('productName'),
                         'price' => $priceId,
