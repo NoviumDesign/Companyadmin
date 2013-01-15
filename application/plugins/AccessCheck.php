@@ -20,9 +20,14 @@ class Plugin_AccessCheck extends Zend_Controller_Plugin_Abstract
 		}
 
 		if(!$this->acl->access($this->role, $controller, $action)) {
-			$request->setControllerName('authentication')
-					->setActionName('logout');
+
+			header('Location: /authentication/logout');
+
+			// does not work... -_-
+			// $request->setControllerName('authentication')
+			// 		->setActionName('logout');
 		}
 		
 	}
+
 }

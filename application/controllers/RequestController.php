@@ -66,6 +66,17 @@ class RequestController extends Zend_Controller_Action
 
 
 
+                if(isset($_POST['order']['try'])) {
+                    // test user
+
+                } else {
+                    // create user
+                } else {
+                    $valid = false;
+                }
+
+
+
 
 
                 if($valid) {
@@ -112,12 +123,15 @@ class RequestController extends Zend_Controller_Action
                         }
                     }
 
+                    $output['success'] = true;
+
+                } else {
+                    $output['error'] =  'data';
                 }
 
 
 
                 // success
-                $output['success'] = true;
             } else {
                 $output['error'] =  'token';
             }
@@ -209,7 +223,7 @@ class RequestController extends Zend_Controller_Action
         $companyId = $result[0]['company_id'];
 
 
-        $config = new Zend_Config_Ini(APPLICATION_PATH . '/companies/' . $companyId . '/config.ini');
+        $config = new Zend_Config_Ini(APPLICATION_PATH . '/companies/' . $companyId . '/config.ini', APPLICATION_ENV);
         $db = new Zend_Db_Adapter_Pdo_Mysql(array(
             'host'     => $config->db->host,
             'username' => $config->db->username,
