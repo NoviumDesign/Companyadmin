@@ -3,246 +3,342 @@
 class RequestController extends Zend_Controller_Action
 {
 	private $sessionName = '1jf83gd7848hfg834hgf8s834hd834h3458dfh328fhas89h';
+    private $companySecret;
+    private $businessSecret;
+    private $token;
+    private $db;
+    private $businessId;
+    private $output = array();
 
-	public function preDispatch()
+	public function init()
 	{
+        // disable layout and view
         $this->_helper->layout()->disableLayout(); 
         $this->_helper->viewRenderer->setNoRender(true);
-    }
 
-    public function postAction()
-    {
-        $output = array();
+        // check action
+        $action = $this->getRequest()->getActionName();
+        if($action != 'token') {
 
-        $parameters = new Emilk_Request_Parameters();
-        list($companySecret, $businessSecret, $tokenUrl) = $parameters->get();
+            // parse parameters
+            $parameters = new Emilk_Request_Parameters();
+            list($this->companySecret, $this->businessSecret, $this->token) = $parameters->get();
 
-        if(isset($_SESSION[$this->sessionName]) && isset($tokenUrl) && isset($companySecret) && isset($businessSecret) && isset($tokenUrl)) {
+            // parameter check
+            
+            if(!($this->companySecret && $this->businessSecret && $this->token)) {
+                echo json_encode(array('error' => 'parameters'));
+                exit();
+            }
 
             $token = $_SESSION[$this->sessionName];
-            if($token === $tokenUrl) {
-
-                list($businessId, $db) = $this->getBusinessDb($companySecret, $businessSecret);
-
-                // validation for insert
-                $valid = true;
-
-                // get available custom fields
-                $select = $db->select()
-                             ->from('businesses', array('custom_field_1 as "1"', 'custom_field_2 as "2"', 'custom_field_3 as "3"'))
-                             ->where('businesses.business_secret = "' . $businessSecret . '"');
-                $result = $db->fetchAll($select);
-                $_customFields = $result[0];
-
-                // custom fields
-                $customFields = $_POST['customFields'];
-                $i = 0;
-                foreach($_customFields as $key => $value) {
-                    if(!$value) {
-                        $customFields[$i] = null;
-                    }
-                    $i++;
-                }
-
-                // delivery
-                if(isset($_POST['order']['delivery']) && $_POST['order']['delivery'] == 'requested') {
-                    if(!isset($_POST['order']['deliveryAdress']) && !isset($_POST['order']['deliveryDate'])) { 
-                        $output['error'] =  'data';
-                        $valid = false;
-                    }
-                } elseif(isset($_POST['order']['delivery']) && $_POST['order']['delivery'] == 'none') {
-                    $_POST['order']['deliveryAdress'] = null;
-                    $_POST['order']['deliveryDate'] = null;
-                } else {
-                    $output['error'] =  'data';
-                    $valid = false;
-                }
-
-                $select = $db->select()
-                             ->from('orders', '(COALESCE(MAX(order_number), 0) + 1) as orderNumber')
-                             ->where('orders.business =' . $businessId);
-                $result= $db->fetchAll($select);
-                $orderNumber = $result[0]['orderNumber'];
-
-
-
-                if(isset($_POST['order']['try'])) {
-                    // test user
-
-                } else {
-                    // create user
-                } else {
-                    $valid = false;
-                }
-
-
-
-
-
-                if($valid) {
-                    $secret = substr(str_shuffle('abcdefghijlkmnopqrstuvwxyz1234567890abcdefghijlkmnopqrstuvwxyz1234567890abcdefghijlkmnopqrstuvwxyz1234567890'), 0, 10);
-
-                    // insert
-                    $table = new Model_Db_Orders(array('db' => $db));
-                    $orderId = $table->insert(array(
-                            'order_secret' => $secret,
-                            'order_number' => $orderNumber,
-                            'date' => time(),
-                            'business' => $businessId,
-                            'delivery' => htmlentities($_POST['order']['delivery'], ENT_QUOTES, "UTF-8"),
-                            'delivery_adress' => htmlentities($_POST['order']['deliveryAdress'], ENT_QUOTES, "UTF-8"),
-                            'delivery_date' => strtotime($_POST['order']['deliveryDate']),
-                            'status' => 'active',
-                            'customer' => '3', // create customer
-                            'notes' => htmlentities($_POST['order']['deliveryNotes'], ENT_QUOTES, "UTF-8"),
-                            'custom_1' => htmlentities($customFields[0], ENT_QUOTES, "UTF-8"),
-                            'custom_2' => htmlentities($customFields[1], ENT_QUOTES, "UTF-8"),
-                            'custom_3' => htmlentities($customFields[2], ENT_QUOTES, "UTF-8") 
-                        ));
-
-
-                    // create items
-                    foreach($_POST['products'] as $productSecret => $quantity) {
-                        if($quantity > 0) {
-
-                            // get price and productId
-                            $select = $db->select()
-                                         ->from('products', array('product_id as id', 'price'))
-                                         ->where('product_secret = "' . $productSecret . '"');
-                            $result= $db->fetchAll($select);
-                            $product = $result[0];
-
-                            // insert
-                            $table = new Model_Db_Items(array('db' => $db));
-                            $table->insert(array(
-                                    'product' => $product['id'],
-                                    'order' => $orderId,
-                                    'quantity' => $quantity,
-                                    'price' => $product['price']
-                                ));
-                        }
-                    }
-
-                    $output['success'] = true;
-
-                } else {
-                    $output['error'] =  'data';
-                }
-
-
-
-                // success
-            } else {
-                $output['error'] =  'token';
+            if($token != $this->token) {
+                echo json_encode(array('error' => 'token'));
+                exit();
             }
-        } else {
-            $output['error'] =  'parameters';
+
+            // connect to db
+            $this->dbConnection();
         }
-
-        // generate new token
-        $output['token'] = $this->generateToken();
-
-        echo json_encode($output);
     }
 
-    public function dataAction()
+    function __destruct()
     {
-    	// data about products, order and customer to be used in a form
-    	$output = array();
+        // generate new token
+        $this->output['token'] = $this->generateToken();
 
-    	$parameters = new Emilk_Request_Parameters();
-        list($companySecret, $businessSecret, $tokenUrl) = $parameters->get();
-
-    	if(isset($_SESSION[$this->sessionName]) && isset($tokenUrl) && isset($companySecret) && isset($businessSecret) && isset($tokenUrl)) {
-
-    		$token = $_SESSION[$this->sessionName];
-	    	if($token === $tokenUrl) {
-
-                list($businessId, $db) = $this->getBusinessDb($companySecret, $businessSecret);
-                
-
-	    		// products data
-		        $select = $db->select()
-		                     ->from('products', array('product_secret', 'product'))
-		                     ->joinLeft('prices', 'prices.price_id = products.price', array('price', 'unit'))
-		                     ->where('products.business = ' . $businessId . ' AND products.status <> "deleted"')
-		                     ->order('product ASC');
-		        $products = $db->fetchAll($select);
-
-		        // custom fields
-		        $select = $db->select()
-		                     ->from('businesses', array('custom_field_1', 'custom_field_2', 'custom_field_3'))
-		                     ->where('businesses.business_id = ' . $businessId);
-		        $result = $db->fetchAll($select);
-		        $customFields = $result[0];
-
-		        $output['data']['products'] = $products;
-
-		        $output['data']['customFields'] = $customFields;
-
-
-	    		// success
-	    		$output['success'] = true;
-	    	} else {
-	    		$output['error'] =  'token';
-	    	}
-    	} else {
-	    	$output['error'] =  'parameters';
-    	}
-
-    	// generate new token
-    	$output['token'] = $this->generateToken();
-
-    	echo json_encode($output);
+        // output for every action
+        echo json_encode($this->output);
     }
 
     public function tokenAction()
     {
-    	// recieve token to be used in request
+    }
 
-    	echo json_encode(array('token' => $this->generateToken()));
+    public function dataAction()
+    {
+        // products data
+        $products = $this->selectProducts();
+
+        // remove product_id from array. same mselect method is used elsewhere and product_id is there necessary 
+        foreach($products as $key => $value) {
+            unset($products[$key]['product_id']);
+        }
+
+        // custom fields
+        $customFields = $this->selectCustomFields();
+
+        $this->output['data']['products'] = $products;
+        $this->output['data']['customFields'] = $customFields;
+
+        // success
+        $this->output['success'] = true;
+    }
+
+    public function customerAction()
+    {   
+        $customerSecret = $this->treat($_POST['try']);
+
+
+        $customer = $this->selectCustomer($customerSecret);
+
+
+        $this->output['customer'] = $customer;
+
+    }
+
+    public function postAction()
+    {
+        // validation for insert
+        $valid = true;
+
+        // get available custom fields
+        $_customFields = $this->selectCustomFields();
+        
+        // custom fields
+        $customFields = $this->treat($_POST['customFields']);
+        $i = 0;
+        foreach($_customFields as $key => $value) {
+            if(!$value) {
+                $customFields[$i] = null;
+            }
+            $i++;
+        }
+
+        // delivery
+        $order = $this->treat($_POST['order']);
+        if(isset($order['delivery'])) {
+
+            if($order['delivery'] == 'requested') {
+                if(!(isset($order['deliveryAdress']) && isset($order['deliveryDate']))) {
+                    $this->output['error'] =  'data';
+                    $valid = false;
+                }
+            } elseif($order['delivery'] == 'none') {
+                $order['deliveryAdress'] = null;
+                $order['deliveryDate'] = null;
+            } 
+        }
+
+        // items
+        $items = $this->treat($_POST['products']);
+        $i = 0;
+        foreach($items as $quantity) {
+            // prevent item quantity equals a string
+            if((float)$quantity > 0) {
+                $i++;
+            }
+        }
+        if($i == 0) {
+            $valid = false;
+        }
+
+        // get customer
+        $customer = $this->treat($_POST['customer']);
+
+        if(isset($customer['try'])) {
+            // allready a user
+            $orderCustomer = $this->selectCustomer($customer['try']);
+            $orderCustomer = $orderCustomer['customer_id'];
+        } else {
+            if( 
+                isset($customer['name']) &&
+                isset($customer['type']) &&
+                isset($customer['phone']) &&
+                isset($customer['mail']) &&
+                isset($customer['zipCode']) &&
+                isset($customer['city']) &&
+                isset($customer['country']) &&
+                isset($customer['secret']) &&
+                (
+                    isset($customer['invoiceAdress'] ||
+                    isset($customer['box']
+                )
+            ) {   
+                $orderCustomer = false;
+            } else {
+                $valid = false;
+            }
+        }
+
+
+
+        if($valid) {
+            $secret = substr(str_shuffle('abcdefghijlkmnopqrstuvwxyz1234567890abcdefghijlkmnopqrstuvwxyz1234567890abcdefghijlkmnopqrstuvwxyz1234567890'), 0, 10);
+
+            if(!$orderCustomer) {
+                // insert new customer
+
+                // temp
+                $orderCustomer = 1;
+            }
+
+
+
+            // insert
+            $table = new Model_Db_Orders(array('db' => $this->db));
+            $orderId = $table->insert(array(
+                    'order_secret' => $secret,
+                    'order_number' => $this->selectOrderNumber(),
+                    'date' => time(),
+                    'business' => $this->businessId,
+                    'delivery' => $order['delivery'],
+                    'delivery_adress' => $order['deliveryAdress'],
+                    'delivery_date' =>  strtotime($order['deliveryDate']),
+                    'status' => 'active',
+                    'customer' => $orderCustomer, // create customer
+                    'notes' => $order['deliveryNotes'],
+                    'custom_1' => htmlentities($customFields[0], ENT_QUOTES, "UTF-8"),
+                    'custom_2' => htmlentities($customFields[1], ENT_QUOTES, "UTF-8"),
+                    'custom_3' => htmlentities($customFields[2], ENT_QUOTES, "UTF-8") 
+                ));
+
+            // create items
+            foreach($items as $productSecret => $quantity) {
+
+                    $products = $this->selectProducts($productSecret);
+                    $product = $products[0];
+
+                    // insert
+                $table = new Model_Db_Items(array('db' => $this->db));
+                $table->insert(array(
+                        'product' => $product['product_id'],
+                        'order' => $orderId,
+                        'quantity' => $quantity,
+                        'price' => $product['price']
+                ));
+            }
+
+            $this->output['success'] = true;
+
+        } else {
+            $this->output['error'] =  'data';
+        }
+    }
+
+
+    // for treat
+    private function process($val)
+    {
+            $trimmed = trim($val);
+            $html = htmlentities($trimmed);
+
+            return $html;
+    }
+    private function treat($array)
+    {
+        // array or string
+        if(is_array($array)){
+            $return = array();
+            foreach($array as $key => $value) {
+                // so that isset(value) will enough validation
+                if($this->process($value)) {
+                    $return[$key] = $this->process($value);
+                }
+            }
+
+            return $return;
+        } else {
+            return $this->process($array);
+        }
     }
 
     private function generateToken()
     {
+        // create random string
     	$str = 'abcdefghijklmnopqrstuvwxyz0123456789';
     	$shuffled = str_shuffle($str);
 
+        // assign to session
     	$_SESSION[$this->sessionName] = $shuffled;
 
+        // return token which will be outputed
     	return $shuffled;
     }
 
-    private function getBusinessDb($companySecret, $businessSecret)
+    private function dbConnection()
     {
+        // select company
         $db = Zend_Db_Table::getDefaultAdapter();
         $select = $db->select()
                      ->from('companies', 'company_id')
-                     ->where('companies.company_secret = "' . $companySecret . '"');
+                     ->where('companies.company_secret = "' . $this->companySecret . '"');
         $result = $db->fetchAll($select);
         $companyId = $result[0]['company_id'];
 
-
+        // create company connection
         $config = new Zend_Config_Ini(APPLICATION_PATH . '/companies/' . $companyId . '/config.ini', APPLICATION_ENV);
-        $db = new Zend_Db_Adapter_Pdo_Mysql(array(
+        $this->db = new Zend_Db_Adapter_Pdo_Mysql(array(
             'host'     => $config->db->host,
             'username' => $config->db->username,
             'password' => $config->db->password,
             'dbname'   => $config->db->dbname
         ));
 
-
-        $select = $db->select()
+        // select business
+        $select = $this->db->select()
                      ->from('businesses', 'business_id')
-                     ->where('businesses.business_secret = "' . $businessSecret . '"');
-        $result = $db->fetchAll($select);
-        $businessId = $result[0]['business_id'];
+                     ->where('businesses.business_secret = "' . $this->businessSecret . '"');
+        $result = $this->db->fetchAll($select);
+        $this->businessId = $result[0]['business_id'];
+    }
 
+    // selects
+    private function selectCustomFields()
+    {
+        $select = $this->db->select()
+                       ->from('businesses', array('custom_field_1 as "1"', 'custom_field_2 as "2"', 'custom_field_3 as "3"'))
+                       ->where('businesses.business_id = "' . $this->businessId . '"');
+        $result = $this->db->fetchAll($select);
 
-        if(isset($businessId)) {
-            return array($businessId, $db);
+        return $result[0];
+    }
+
+    private function selectProducts($productSecret = false)
+    {
+        // extend precision for select
+        if($productSecret) {
+            // md5                                                                          <-----------------------------------------------------------------------
+            $product = ' AND products.product_secret = "' . $productSecret . '"';
         } else {
-            return array('you', 'fail');
+            $product = '';
         }
+
+        $select = $this->db->select()
+                       ->from('products', array('product_id', 'product_secret', 'product'))
+                       ->joinLeft('prices', 'prices.price_id = products.price', array('price', 'unit'))
+                       ->where('products.business = ' . $this->businessId . ' AND products.status <> "deleted"' . $product)
+                       ->order('product ASC');
+        $products = $this->db->fetchAll($select);
+
+        return $products;
+    }
+
+    private function selectOrderNumber()
+    {
+        $select = $this->db->select()
+                       ->from('orders', '(COALESCE(MAX(order_number), 0) + 1) as orderNumber')
+                       ->where('orders.business =' . $this->businessId);
+        $result = $this->db->fetchAll($select);
+        $orderNumber = $result[0]['orderNumber'];
+
+        return $orderNumber;
+    }
+
+    private function selectCustomer($customerSecret)
+    {
+        $select = $this->db->select()
+                       ->from('customers', array('customer_id', 'name'))
+                       ->where('customers.business =' . $this->businessId . ' AND customers.customer_secret = "' . $customerSecret . '"');
+        $result = $this->db->fetchAll($select);
+
+        // prevent "index undefined notice" if mismatch
+        if(isset($result[0])) {
+            $customer = $result[0];
+        } else {
+            $customer = null;
+        }
+
+        return $customer;
     }
 }

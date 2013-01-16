@@ -31,8 +31,6 @@
 <body>
 
 	<form id="companyadmin" method="post" action="/request/post">
-		<input name="token" id="token">
-
 		<fieldset class="products">
 			<label>Products</label>
 		</fieldset>
@@ -88,7 +86,8 @@
 					Write the secret code you submited at your first order to skip this step
 				</p>
 				<div>
-					<input type="text" name="order[try]">
+					<input class="try" type="text" name="customer[try]">
+					<span class="tryCustomer"></span>
 				</div>
 			</section>
 			<hr>
@@ -97,71 +96,81 @@
 				<section>
 					<label>Name</label>
 					<div>
-						<input type="text" name="order[name]">
+						<input type="text" name="customer[name]">
 					</div>
 				</section>
 
 				<section>
 					<label>Type</label>
 					<div>
-						<input type="radio" name="order[type]" value="prive">Private
-						<input type="radio" name="order[type]" value="company">Company
+						<input type="radio" name="customer[type]" value="prive">Private
+						<input type="radio" name="customer[type]" value="company">Company
 					</div>
 				</section>
 
 				<section>
 					<label>Phone</label>
 					<div>
-						<input type="text" name="order[phone]">
+						<input type="text" name="customer[phone]">
 					</div>
 				</section>
 
 				<section>
 					<label>mail</label>
 					<div>
-						<input type="mail" name="order[mail]">
+						<input type="mail" name="customer[mail]">
 					</div>
 				</section>
 
 				<section>
-					<label>Invoice adress</label>
+					<label>Invoice adress *</label>
 					<div>
-						<input type="mail" name="order[invoice_adress]">
+						<input type="mail" name="customer[invoiceAdress]">
 					</div>
 				</section>
 				
 				<section>
-					<label>Box</label>
+					<label>Box *</label>
 					<div>
-						<input type="mail" name="order[box]">
+						<input type="mail" name="customer[box]">
 					</div>
 				</section>
 
 				<section>
 					<label>Zip code</label>
 					<div>
-						<input type="mail" name="order[zip_code]">
+						<input type="mail" name="customer[zipCode]">
 					</div>
 				</section>
 				
 				<section>
 					<label>City</label>
 					<div>
-						<input type="mail" name="order[city]">
+						<input type="mail" name="customer[city]">
 					</div>
 				</section>
 
 				<section>
 					<label>Country</label>
 					<div>
-						<input type="mail" name="order[country]">
+						<input type="mail" name="customer[country]">
 					</div>
 				</section>
 
 				<section>
 					<label>Customer notes</label>
 					<div>
-						<textarea name="order[notes]"></textarea>
+						<textarea name="customer[notes]"></textarea>
+					</div>
+				</section>
+
+				<section>
+					<label>Customer secret</label>
+					<p>
+						Write a secret code/mail/personal stuff so you will be able to skip this step next time you order!
+					</p>
+					<div>
+						<input type="text" name="customer[secret]">
 					</div>
 				</section>
 			</div>
@@ -178,6 +187,7 @@
 
 	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
 	<script type="text/javascript">
+	
 		var url, token, getFormData, getToken, company, business, buildForm, formId;
 		url = '';
 		company = 'dfg7586ghf';
@@ -189,25 +199,26 @@
 				url + '/request/token',
 				function(response) {
 					token = response.token;
-					$(formId + ' #token').val(response.token);
+					
 
 					getFormData();
 			});
 		}
+
 		getFormData = function() {
 			$.getJSON(
 				url + '/request/data/' + company + '/' + business + '/' + token,
 				function(response) {
 					token = response.token;
-					$(formId + ' #token').val(response.token);
+					
 
 
 					buildForm(response.data)
 
 			});
 		}
-		buildForm = function(data) {
 
+		buildForm = function(data) {
 			var products = '';
 			for(var i = 0; i < data.products.length; i++) {
 				products += 
@@ -238,10 +249,29 @@
 			$(formId + ' .customFields').append(customFields);
 		}
 
+		var running = false;
+		$(formId + ' .try').keyup(function() {
+			var value = $(formId + ' .try').val();
 
+			if(value.length > 4 && running == false) {
+				running = true;
+				$.post(
+					url + '/request/customer/' + company + '/' + business + '/' + token,
+		        	{'try' : value},
+		        	function(response){
+		        		running = false;
 
+		        		token = response.token;
+						
+						if(response.customer) {
+							$(formId + ' .tryCustomer').html(response.customer.name);
+						} else {
+							$(formId + ' .tryCustomer').html('');
+						}
 
-
+			    }, 'json');
+			}
+		});
 
 
 		$(formId).submit(function(event) {
@@ -251,17 +281,15 @@
 	        	$(this).serialize(),
 	        	function(response){
 	        		token = response.token;
-					$(formId + ' #token').val(response.token);
-
-
 
 		            console.log(response);                     
 		        });
-	    });
+	    	});
 
 		$(document).ready(function() {
 			getToken();
 		});
+
 	</script>
 </body>
 </html>

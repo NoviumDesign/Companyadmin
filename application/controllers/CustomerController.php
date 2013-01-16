@@ -13,14 +13,6 @@ class CustomerController extends Zend_Controller_Action
         if($roleVal >= $adminVal) {
             $this->view->isAdmin = true;
         }
-
-        if($_SESSION['redirect']) {
-
-
-            $this->_redirect('/åt/helvete');
-
-        }
-
     }
     
     public function viewAction()
