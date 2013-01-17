@@ -11,7 +11,7 @@
 
    <h1>Invoice #<?= $this->invoice['invoice_number']; ?></h1>
 </div>
-<div class="g3">
+<div class="g3 from">
 	<h6>From</h6>
       <span><strong><?= ucfirst($this->businessComapny['company_name']); ?></strong></span>
       <span><?= ucfirst($this->businessComapny['company_adress']); ?></span>
@@ -19,7 +19,7 @@
       <span><?= ucfirst($this->businessComapny['company_country']); ?></span>
    </p>
 </div>
-<div class="g3">
+<div class="g3 to">
    <a href="/customer/view/<?= $this->invoice['customer_id']; ?>">
    	<h6>To</h6>
    	<span><strong><?= ucfirst($this->invoice['customer_name']); ?></strong></span>
