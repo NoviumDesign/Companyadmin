@@ -89,9 +89,6 @@ class RequestController extends Zend_Controller_Action
 
     public function postAction()
     {
-        // validation for insert
-        $valid = true;
-
         // get available custom fields
         $_customFields = $this->selectCustomFields();
         
@@ -111,8 +108,7 @@ class RequestController extends Zend_Controller_Action
 
             if($order['delivery'] == 'requested') {
                 if(!(isset($order['deliveryAdress']) && isset($order['deliveryDate']))) {
-                    $this->output['error'] =  'data';
-                    $valid = false;
+                    $this->output['error'] =  'delivery';
                 }
             } elseif($order['delivery'] == 'none') {
                 $order['deliveryAdress'] = null;
@@ -130,47 +126,71 @@ class RequestController extends Zend_Controller_Action
             }
         }
         if($i == 0) {
-            $valid = false;
+            $this->output['error'] = 'product';
         }
 
         // get customer
         $customer = $this->treat($_POST['customer']);
-
         if(isset($customer['try'])) {
             // allready a user
-            $orderCustomer = $this->selectCustomer($customer['try']);
-            $orderCustomer = $orderCustomer['customer_id'];
-        } else {
-            if( 
-                isset($customer['name']) &&
-                isset($customer['type']) &&
-                isset($customer['phone']) &&
-                isset($customer['mail']) &&
-                isset($customer['zipCode']) &&
-                isset($customer['city']) &&
-                isset($customer['country']) &&
-                isset($customer['secret']) &&
-                (
-                    isset($customer['invoiceAdress'] ||
-                    isset($customer['box']
-                )
-            ) {   
-                $orderCustomer = false;
-            } else {
-                $valid = false;
+            $_orderCustomer = $this->selectCustomer($customer['try']);
+
+            if($_orderCustomer) {
+                $orderCustomer = $_orderCustomer['customer_id'];
             }
+        }
+        if( 
+            (!isset($orderCustomer)) && // if try was false, forgot to erase
+            isset($customer['name']) &&
+            isset($customer['type']) &&
+            isset($customer['phone']) &&
+            isset($customer['mail']) &&
+            isset($customer['zipCode']) &&
+            isset($customer['city']) &&
+            isset($customer['country']) &&
+            isset($customer['secret']) &&
+            (
+                isset($customer['invoiceAdress']) ||
+                isset($customer['box'])
+            )
+        ) {   
+            $orderCustomer = false;
+            // test customer secret
+
+            if($this->selectCustomer($customer['secret'])) {
+                $this->output['error'] =  'secret';
+            }
+        }
+        if(!isset($orderCustomer)) {
+            $this->output['error'] = 'customer';
         }
 
 
-
-        if($valid) {
+        if(!$this->output['error']) {
             $secret = substr(str_shuffle('abcdefghijlkmnopqrstuvwxyz1234567890abcdefghijlkmnopqrstuvwxyz1234567890abcdefghijlkmnopqrstuvwxyz1234567890'), 0, 10);
 
             if(!$orderCustomer) {
                 // insert new customer
 
-                // temp
-                $orderCustomer = 1;
+                $table = new Model_Db_Customers(array('db' => $this->db));
+                $orderCustomer = $table->insert(array(
+                    'registered' => 'false',
+                    'customer_secret' => md5($customer['secret']),
+                    'business' => $this->businessId,
+                    'name' => $customer['name'],
+                    'type' => $customer['type'],
+                    'mail' => $customer['mail'],
+                    'phone' => $customer['phone'],
+                    'customer_adress' => $customer['invoiceAdress'],
+                    'box' => $customer['box'],
+                    'zip_code' => $customer['zipCode'],
+                    'city' => $customer['city'],
+                    'country' => $customer['country'],
+                    'notes' => $customer['notes']
+                ));
+
+                echo $orderCustomer;
+
             }
 
 
@@ -211,8 +231,6 @@ class RequestController extends Zend_Controller_Action
 
             $this->output['success'] = true;
 
-        } else {
-            $this->output['error'] =  'data';
         }
     }
 
@@ -298,7 +316,6 @@ class RequestController extends Zend_Controller_Action
     {
         // extend precision for select
         if($productSecret) {
-            // md5                                                                          <-----------------------------------------------------------------------
             $product = ' AND products.product_secret = "' . $productSecret . '"';
         } else {
             $product = '';
@@ -329,7 +346,7 @@ class RequestController extends Zend_Controller_Action
     {
         $select = $this->db->select()
                        ->from('customers', array('customer_id', 'name'))
-                       ->where('customers.business =' . $this->businessId . ' AND customers.customer_secret = "' . $customerSecret . '"');
+                       ->where('customers.business =' . $this->businessId . ' AND customers.customer_secret = "' . md5($customerSecret) . '"');
         $result = $this->db->fetchAll($select);
 
         // prevent "index undefined notice" if mismatch

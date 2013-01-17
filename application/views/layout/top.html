@@ -9,9 +9,24 @@
 		<p>
 			<h5>Choose company to admin</h5>
 			<ul>
-				<li><a href="#">Company 1</a></li>
-				<li><a href="#" class="active">Company 2</a></li>
-				<li><a href="#">Company 3</a></li>
+				
+				<?php
+					foreach($businesses as $business) { 
+						if($business['business_id'] == $_SESSION['business']) {
+							$businessName = $business['business'];
+				?>
+
+					<li><a href="/authentication/business/<?= $business['business_id']; ?>" class="active"><?= $business['business']; ?></a></li>
+
+				<?php } else { ?>
+
+					<li><a href="/authentication/business/<?= $business['business_id']; ?>"><?= $business['business']; ?></a></li>
+					
+				<?php
+						}
+					}
+				?>
+
 			</ul>
 		</p>
 	</div>
@@ -19,25 +34,9 @@
 
 <header>
 	<div id="logo">
-		<a href="/">Company name here</a>
+		<a href="/"><?= $businessName; ?></a>
 	</div>
 	<div id="header">
-
-		<?php 
-			foreach($businesses as $business) { 
-				if($business['business_id'] == $_SESSION['business']) {
-		?>
-			<h2 class="fl"><a href="/authentication/business/<?= $business['business_id']; ?>"><?= $business['business']; ?></a></h2>
-
-		<?php
-				} else {
-		?>
-			<h3 class="fl"><a href="/authentication/business/<?= $business['business_id']; ?>"><?= $business['business']; ?></a></h3>
-
-		<?php
-				}
-			}
-		?>
 
 	</div>
 </header>

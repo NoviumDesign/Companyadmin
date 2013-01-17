@@ -18,8 +18,8 @@
 				$db = Zend_Registry::get('db');
 
 				$select = $db->select()
-							 ->from('user_access', 'business as business_id')
-							 ->joinLeft('businesses', 'businesses.business_id = user_access.business', 'business')
+							 ->from('businesses', 'business')
+							 ->joinLeft('user_access', 'businesses.business_id = user_access.business', 'business as business_id')
 							 ->where('user_access.user = ' . $this->user->id)
 							 ->order('business ASC');
 				$businesses = $db->fetchAll($select);

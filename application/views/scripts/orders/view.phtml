@@ -8,10 +8,10 @@
 		<thead>
 			<tr>
 				<th>Order number</th>
-				<th>Order date</th>
 				<th>Customer</th>
 				<th>Status</th>
 				<th>Delivery</th>
+				<th>Delivary date</th>
 
 				<?php
 					if(!$this->showAll){
@@ -41,10 +41,10 @@
 
 				<tr class="gradeX">
 					<td><a href="/order/view/<?= $order['order_id'] ?>"><?= $order['order_number'] ?></a></td>
-					<td><?= date('Y-m-d', $order['delivery_date']) ?></td>
 					<td><a href="/customer/<?= $order['customer_id'] ?>"><?= $order['name'] ?></a></td>
 					<td><?= $order['status'] ?></td>
 					<td><?= $order['delivery'] ?></td>
+					<td><?= ($order['delivery'] != 'none' ? date('Y-m-d', $order['delivery_date']): '') ?></td>
 
 					<?php
 						if(!$this->showAll){
