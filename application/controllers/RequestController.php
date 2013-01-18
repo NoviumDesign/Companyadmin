@@ -2,7 +2,7 @@
 
 class RequestController extends Zend_Controller_Action
 {
-	private $sessionName = '1jf83gd7848hfg834hgf8s834hd834h3458dfh328fhas89h';
+    private $sessionName = '1jf83gd7848hfg834hgf8s834hd834h3458dfh328fhas89h';
     private $companySecret;
     private $businessSecret;
     private $token;
@@ -10,8 +10,8 @@ class RequestController extends Zend_Controller_Action
     private $businessId;
     private $output = array();
 
-	public function init()
-	{
+    public function init()
+    {
         // disable layout and view
         $this->_helper->layout()->disableLayout(); 
         $this->_helper->viewRenderer->setNoRender(true);
@@ -27,13 +27,13 @@ class RequestController extends Zend_Controller_Action
             // parameter check
             
             if(!($this->companySecret && $this->businessSecret && $this->token)) {
-                echo json_encode(array('error' => 'parameters'));
+                $this->output['error'] = 'parameters';
                 exit();
             }
 
             $token = $_SESSION[$this->sessionName];
             if($token != $this->token) {
-                echo json_encode(array('error' => 'token'));
+                $this->output['error'] = 'token';
                 exit();
             }
 
@@ -79,22 +79,23 @@ class RequestController extends Zend_Controller_Action
     {   
         $customerSecret = $this->treat($_POST['try']);
 
-
+        // select customer
         $customer = $this->selectCustomer($customerSecret);
 
+        // remove customer_id
+        unset($customer['customer_id']);
 
         $this->output['customer'] = $customer;
-
     }
 
     public function postAction()
     {
         // get available custom fields
         $_customFields = $this->selectCustomFields();
-        
+
         // custom fields
         $customFields = $this->treat($_POST['customFields']);
-        $i = 0;
+        $i = 1;
         foreach($_customFields as $key => $value) {
             if(!$value) {
                 $customFields[$i] = null;
@@ -157,6 +158,8 @@ class RequestController extends Zend_Controller_Action
             $orderCustomer = false;
             // test customer secret
 
+            // length over 5 <------------------------------------------------------------------------------------------------------------------OBS
+
             if($this->selectCustomer($customer['secret'])) {
                 $this->output['error'] =  'secret';
             }
@@ -166,12 +169,11 @@ class RequestController extends Zend_Controller_Action
         }
 
 
-        if(!$this->output['error']) {
+        if(!isset($this->output['error'])) {
             $secret = substr(str_shuffle('abcdefghijlkmnopqrstuvwxyz1234567890abcdefghijlkmnopqrstuvwxyz1234567890abcdefghijlkmnopqrstuvwxyz1234567890'), 0, 10);
 
             if(!$orderCustomer) {
                 // insert new customer
-
                 $table = new Model_Db_Customers(array('db' => $this->db));
                 $orderCustomer = $table->insert(array(
                     'registered' => 'false',
@@ -181,19 +183,14 @@ class RequestController extends Zend_Controller_Action
                     'type' => $customer['type'],
                     'mail' => $customer['mail'],
                     'phone' => $customer['phone'],
-                    'customer_adress' => $customer['invoiceAdress'],
-                    'box' => $customer['box'],
+                    'customer_adress' => (isset($customer['invoiceAdress'])? $customer['invoiceAdress']: null),
+                    'box' => (isset($customer['box'])? $customer['box']: null),
                     'zip_code' => $customer['zipCode'],
                     'city' => $customer['city'],
                     'country' => $customer['country'],
-                    'notes' => $customer['notes']
+                    'notes' => (isset($customer['notes'])? $customer['notes']: null)
                 ));
-
-                echo $orderCustomer;
-
             }
-
-
 
             // insert
             $table = new Model_Db_Orders(array('db' => $this->db));
@@ -203,14 +200,14 @@ class RequestController extends Zend_Controller_Action
                     'date' => time(),
                     'business' => $this->businessId,
                     'delivery' => $order['delivery'],
-                    'delivery_adress' => $order['deliveryAdress'],
-                    'delivery_date' =>  strtotime($order['deliveryDate']),
+                    'delivery_adress' => (isset($order['deliveryAdress'])? $order['deliveryAdress']: null),
+                    'delivery_date' =>  (isset($order['deliveryDate'])? strtotime($order['deliveryDate']): null),
                     'status' => 'active',
                     'customer' => $orderCustomer, // create customer
-                    'notes' => $order['deliveryNotes'],
-                    'custom_1' => htmlentities($customFields[0], ENT_QUOTES, "UTF-8"),
-                    'custom_2' => htmlentities($customFields[1], ENT_QUOTES, "UTF-8"),
-                    'custom_3' => htmlentities($customFields[2], ENT_QUOTES, "UTF-8") 
+                    'notes' => (isset($order['deliveryNotes'])? $order['deliveryNotes']: null),
+                    'custom_1' => (isset($customFields[1])? $customFields[1]: null),
+                    'custom_2' => (isset($customFields[2])? $customFields[2]: null),
+                    'custom_3' => (isset($customFields[3])? $customFields[3]: null)
                 ));
 
             // create items
@@ -264,14 +261,14 @@ class RequestController extends Zend_Controller_Action
     private function generateToken()
     {
         // create random string
-    	$str = 'abcdefghijklmnopqrstuvwxyz0123456789';
-    	$shuffled = str_shuffle($str);
+        $str = 'abcdefghijklmnopqrstuvwxyz0123456789';
+        $shuffled = str_shuffle($str);
 
         // assign to session
-    	$_SESSION[$this->sessionName] = $shuffled;
+        $_SESSION[$this->sessionName] = $shuffled;
 
         // return token which will be outputed
-    	return $shuffled;
+        return $shuffled;
     }
 
     private function dbConnection()
