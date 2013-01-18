@@ -13,10 +13,12 @@
 <fieldset>
 	<label>Customer</label>
 	<section>
-		<label for="customerId">Customer<br><span>Enter customer ID</span></label>
+		<label for="customerId">Customer</label>
 		<div>
 
 			<?= $this->element('customerId'); ?>
+
+			<input type="text" id="customer" class="autocomplete" required="" data-errortext="You can't add a new order without a customer">
 
 		</div>
 	</section>

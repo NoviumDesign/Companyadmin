@@ -40,12 +40,8 @@ class Form_AddOrderForm extends Emilk_Form
 				   ->setValue($_orderNumber);
 
 
-		$customerId = new Emilk_Form_Element_Text('customerId');
-		$customerId->setAttr('class', 'autocomplete')
-				   // ->setAttr('data-source', '[abc,def,ghi,jkl,mno,pqr,stu,vwx,yz]')
-				   ->setAttr('required', '')
-				   ->setAttr('data-errortext', 'You can\'t add a new order without a customer');
-
+		$customerId = new Emilk_Form_Element_Hidden('customerId');
+		
 
 		// products
 		$products = array();

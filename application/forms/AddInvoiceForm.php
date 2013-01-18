@@ -24,12 +24,11 @@ class Form_AddInvoiceForm extends Emilk_Form
         $result= $db->fetchAll($select);
         $_invoiceNumber = $result[0]['invoiceNumber'];
 
-
 		if($this->orderId) {
 
 			$select = $db->select()
-	                     ->from('orders', array('order_number', 'customer', 'notes'))
-	                     ->joinLeft('customers', 'orders.customer = customers.customer_id', 'name')
+	                     ->from('orders', array('order_number', 'customer as customer_id', 'notes'))
+	                     ->joinLeft('customers', 'orders.customer = customers.customer_id', 'name as customer_name')
 	                     ->where('orders.order_id = ' . $this->orderId . ' AND orders.business = ' . $_SESSION['business']);
 	        $result = $db->fetchAll($select);
 	        $order = $result[0];
@@ -90,10 +89,14 @@ class Form_AddInvoiceForm extends Emilk_Form
 		     ->setAttr('data-errortext', 'You must select something');
 
 
+
+        $customerId = new Emilk_Form_Element_Hidden('customerId');
+
 		$customer = new Emilk_Form_Element_Text('customer');
 		$customer->setAttr('class', 'autocomplete')
 				 ->setAttr('required', '')
 				 ->setAttr('data-errortext', 'You can\'t add a new invoice without a customer');
+
 
 
 		$invoiceDue = new Emilk_Form_Element_Text('invoiceDue');
@@ -130,7 +133,8 @@ class Form_AddInvoiceForm extends Emilk_Form
 
 
 		if($this->orderId) {
-			$customer->setValue($order['customer']);
+			$customerId->setValue($order['customer_id']);
+		    $customer->setValue($order['customer_name']);
 			$notes->setValue($order['notes']);
 			$status->setValue('unpaid');
 		}
@@ -142,6 +146,7 @@ class Form_AddInvoiceForm extends Emilk_Form
 			 ->setAttr('action', '/invoice/add')
 			 ->add(array(
 			 	$invoiceNumber,
+			 	$customerId,
 			 	$customer,
 			 	$invoiceDue,
 			 	$status,

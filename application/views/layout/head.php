@@ -68,3 +68,6 @@
 
 <!-- configuration to overwrite settings -->
 <script src="/js/config.js"></script>
+
+<!-- companyadmin -->
+<script src="/js/companyadmin.js"></script>

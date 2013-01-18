@@ -22,9 +22,13 @@
             <tr class="gradeX">
                <td><a href="/customer/view/<?= $customer['customer_id'] ?>"><?= $customer['name'] ?></a></td>
                <td><?= $customer['type'] ?></td>
-               <td><?= $customer['customer_adress'] ?></td>
-               <td><?= $customer['phone'] ?></td>
-               <td><?= $customer['mail'] ?></td>
+               <td>
+                  <a target="_blank" href="http://maps.google.com/?q=<?= $customer['customer_adress'] ?>, <?= $customer['zip_code'] ?> <?= $customer['city'] ?>, <?= $customer['country'] ?>">
+                     <?= $customer['customer_adress'] ?>
+                  </a>
+               </td>
+               <td><a href="tel:<?= $customer['phone'] ?>"><?= $customer['phone'] ?></a></td>
+               <td><a href="mailto:<?= $customer['mail'] ?>"><?= $customer['mail'] ?></a></td>
             </tr>
 
          <?php } ?>
@@ -54,10 +58,14 @@
 
             <tr class="gradeX">
                <td><a href="/customer/view/<?= $customer['customer_id'] ?>"><?= $customer['name'] ?></a></td>
-               <td><?= $customer['type'] ?></td>
-               <td><?= $customer['customer_adress'] ?></td>
-               <td><?= $customer['phone'] ?></td>
-               <td><?= $customer['mail'] ?></td>
+               <td><?= $customer['type'] ?>
+               <td>
+                  <a target="_blank" href="http://maps.google.com/?q=<?= $customer['customer_adress'] ?>, <?= $customer['zip_code'] ?> <?= $customer['city'] ?>, <?= $customer['country'] ?>">
+                     <?= $customer['customer_adress'] ?>
+                  </a>
+               </td>
+               <td><a href="tel:<?= $customer['phone'] ?>"><?= $customer['phone'] ?></td>
+               <td><a href="mailto:<?= $customer['mail'] ?>"><?= $customer['mail'] ?></a></td>
             </tr>
 
          <?php }} ?>

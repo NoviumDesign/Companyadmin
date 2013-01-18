@@ -53,6 +53,8 @@ class Model_LibraryAcl extends Emilk_Acl_Library
 					'delete' => 'admin'
 				),
 
+			'ajax' => 'user',
+
 			'request' => 'none'
 
 		);

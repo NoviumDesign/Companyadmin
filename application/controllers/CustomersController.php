@@ -8,12 +8,12 @@ class CustomersController extends Zend_Controller_Action
 
         // customers
         $select = $db->select()
-                     ->from('customers', array('customer_id', 'name', 'type', 'customer_adress', 'phone', 'mail'))
+                     ->from('customers', array('customer_id', 'name', 'type', 'customer_adress', 'zip_code', 'city', 'country', 'phone', 'mail'))
                      ->where('customers.business = ' . $_SESSION['business'] . ' AND customers.registered = "true"');
         $registeredCustomers = $db->fetchAll($select);
 
         $select = $db->select()
-                     ->from('customers', array('customer_id', 'name', 'type', 'customer_adress', 'phone', 'mail'))
+                     ->from('customers', array('customer_id', 'name', 'type', 'customer_adress', 'zip_code', 'city', 'country', 'phone', 'mail'))
                      ->where('customers.business = ' . $_SESSION['business'] . ' AND customers.registered = "false"');
         $noneRegisteredCustomers = $db->fetchAll($select);
 

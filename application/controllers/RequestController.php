@@ -159,8 +159,9 @@ class RequestController extends Zend_Controller_Action
             // test customer secret
 
             // length over 5 <------------------------------------------------------------------------------------------------------------------OBS
-
-            if($this->selectCustomer($customer['secret'])) {
+            if(strlen(trim($_POST['customer']['secret'])) < 5) {
+                $this->output['error'] =  'secret length';
+            } else if($this->selectCustomer($customer['secret'])) {
                 $this->output['error'] =  'secret';
             }
         }

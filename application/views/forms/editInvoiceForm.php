@@ -29,6 +29,8 @@
 		<label for="customer">Customer<br><span>Enter customer ID</span></label>
 		<div>
 
+			<?= $this->element('customerId'); ?>
+
 			<?= $this->element('customer'); ?>
 
 		</div>

@@ -36,7 +36,7 @@ class InvoiceController extends Zend_Controller_Action
                     'invoice_number' => $form->getValue('invoiceNumber'),
                     'invoice_secret' => $secret,
                     'business' => $_SESSION['business'],
-                    'customer' => $form->getValue('customer'),
+                    'customer' => $form->getValue('customerId'),
                     'status' => $form->getValue('status'),
                     'date' => time(),
                     'due' => strtotime($form->getValue('invoiceDue')),
@@ -85,7 +85,7 @@ class InvoiceController extends Zend_Controller_Action
             $table = new Model_Db_Invoices(array('db' => $db));
             $table->update(array(
                     'invoice_number' => $form->getValue('invoiceNumber'),
-                    'customer' => $form->getValue('customer'),
+                    'customer' => $form->getValue('customerId'),
                     'status' => $form->getValue('status'),
                     'due' => strtotime($form->getValue('invoiceDue')),
                     'discount' => $form->getValue('discount'),

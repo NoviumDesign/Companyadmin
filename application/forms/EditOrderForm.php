@@ -23,8 +23,8 @@ class Form_EditOrderForm extends Emilk_Form
 
 		// order data
 		$select = $db->select()
-                     ->from('orders', array('order_id', 'order_number', 'delivery_adress', 'delivery', 'delivery_date', 'status', 'customer', 'notes', 'custom_1', 'custom_2', 'custom_3'))
-                     ->joinLeft('customers', 'orders.customer = customers.customer_id', 'name')
+                     ->from('orders', array('order_id', 'order_number', 'delivery_adress', 'delivery', 'delivery_date', 'status', 'customer as customer_id', 'notes', 'custom_1', 'custom_2', 'custom_3'))
+                     ->joinLeft('customers', 'orders.customer = customers.customer_id', 'name as customer_name')
                      ->where('orders.order_id = ' . $id . ' AND orders.business = ' . $business);
         $result = $db->fetchAll($select);
         $this->order = $result[0];
@@ -61,12 +61,14 @@ class Form_EditOrderForm extends Emilk_Form
 				   ->setValue($order['order_number']);
 
 
-		$customerId = new Emilk_Form_Element_Text('customerId');
-		$customerId->setAttr('class', 'autocomplete')
-				   // ->setAttr('data-source', '[abc,def,ghi,jkl,mno,pqr,stu,vwx,yz]')
+		$customerId = new Emilk_Form_Element_Hidden('customerId');
+		$customerId->setValue($order['customer_id']);
+
+		$customer = new Emilk_Form_Element_Text('customer');
+		$customer->setAttr('class', 'autocomplete')
 				   ->setAttr('required', '')
 				   ->setAttr('data-errortext', 'You can\'t add a new order without a customer')
-				   ->setValue($order['customer']);
+				   ->setValue($order['customer_name']);
 
 
 		// products
@@ -140,6 +142,7 @@ class Form_EditOrderForm extends Emilk_Form
 			 ->add(array(
 			 	$orderNumber,
 			 	$customerId,
+			 	$customer,
 			 	$delivery,
 			 	$deliveryDate,
 			 	$deliveryTime,

@@ -18,6 +18,8 @@
 
 			<?= $this->element('customerId'); ?>
 
+			<?= $this->element('customer'); ?>
+
 		</div>
 	</section>
 </fieldset>

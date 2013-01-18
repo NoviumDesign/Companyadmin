@@ -28,9 +28,9 @@ $(document).ready(function() {
 		$content.find('input.time').wl_Time();
 		
 		//Autocompletes (source is required)
-		$content.find('input.autocomplete').wl_Autocomplete({
-			source: ["ActionScript","AppleScript","Asp","BASIC","C","C++","Clojure","COBOL","ColdFusion","Erlang","Fortran","Groovy","Haskell","Java","JavaScript","Lisp","Perl","PHP","Python","Ruby","Scala","Scheme"]
-		});
+		// $content.find('input.autocomplete').wl_Autocomplete({
+		// 	source: ["ActionScript","AppleScript","Asp","BASIC","C","C++","Clojure","COBOL","ColdFusion","Erlang","Fortran","Groovy","Haskell","Java","JavaScript","Lisp","Perl","PHP","Python","Ruby","Scala","Scheme"]
+		// });
 		
 		//Elastic textareas (autogrow)
 		$content.find('textarea[data-autogrow]').elastic();

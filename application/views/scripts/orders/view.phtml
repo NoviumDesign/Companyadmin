@@ -41,7 +41,7 @@
 
 				<tr class="gradeX">
 					<td><a href="/order/view/<?= $order['order_id'] ?>"><?= $order['order_number'] ?></a></td>
-					<td><a href="/customer/<?= $order['customer_id'] ?>"><?= $order['name'] ?></a></td>
+					<td><a href="/customer/view/<?= $order['customer_id'] ?>"><?= $order['name'] ?></a></td>
 					<td><?= $order['status'] ?></td>
 					<td><?= $order['delivery'] ?></td>
 					<td><?= ($order['delivery'] != 'none' ? date('Y-m-d', $order['delivery_date']): '') ?></td>
