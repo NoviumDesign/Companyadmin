@@ -31,11 +31,11 @@ class RequestController extends Zend_Controller_Action
                 exit();
             }
 
-            $token = $_SESSION[$this->sessionName];
-            if($token != $this->token) {
-                $this->output['error'] = 'token';
-                exit();
-            }
+            // $token = $_SESSION[$this->sessionName];
+            // if($token != $this->token) {
+            //     $this->output['error'] = 'token';
+            //     exit();
+            // }
 
             // connect to db
             $this->dbConnection();
@@ -143,12 +143,8 @@ class RequestController extends Zend_Controller_Action
         if( 
             (!isset($orderCustomer)) && // if try was false, forgot to erase
             isset($customer['name']) &&
-            isset($customer['type']) &&
             isset($customer['phone']) &&
             isset($customer['mail']) &&
-            isset($customer['zipCode']) &&
-            isset($customer['city']) &&
-            isset($customer['country']) &&
             isset($customer['secret']) &&
             (
                 isset($customer['invoiceAdress']) ||
@@ -181,14 +177,14 @@ class RequestController extends Zend_Controller_Action
                     'customer_secret' => md5($customer['secret']),
                     'business' => $this->businessId,
                     'name' => $customer['name'],
-                    'type' => $customer['type'],
+                    'type' => (isset($customer['type'])? $customer['type']: null),
                     'mail' => $customer['mail'],
                     'phone' => $customer['phone'],
                     'customer_adress' => (isset($customer['invoiceAdress'])? $customer['invoiceAdress']: null),
                     'box' => (isset($customer['box'])? $customer['box']: null),
-                    'zip_code' => $customer['zipCode'],
-                    'city' => $customer['city'],
-                    'country' => $customer['country'],
+                    'zip_code' => (isset($customer['zipCode'])?$customer['zipCode'] : null),
+                    'city' => (isset($customer['city'])?$customer['city'] : null),
+                    'country' => (isset($customer['country'])?$customer['country'] : null),
                     'notes' => (isset($customer['notes'])? $customer['notes']: null)
                 ));
             }
