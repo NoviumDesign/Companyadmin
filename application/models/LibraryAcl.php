@@ -55,7 +55,9 @@ class Model_LibraryAcl extends Emilk_Acl_Library
 
 			'ajax' => 'user',
 
-			'request' => 'none'
+			'request' => 'none',
+
+			'pdf' => 'none'
 
 		);
 		$this->addResources($resources);

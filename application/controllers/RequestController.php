@@ -77,6 +77,7 @@ class RequestController extends Zend_Controller_Action
 
     public function customerAction()
     {   
+        print_r($_REQUEST);
         $customerSecret = $this->treat($_POST['try']);
 
         // select customer
@@ -145,11 +146,7 @@ class RequestController extends Zend_Controller_Action
             isset($customer['name']) &&
             isset($customer['phone']) &&
             isset($customer['mail']) &&
-            isset($customer['secret']) &&
-            (
-                isset($customer['invoiceAdress']) ||
-                isset($customer['box'])
-            )
+            isset($customer['secret'])
         ) {   
             $orderCustomer = false;
             // test customer secret
