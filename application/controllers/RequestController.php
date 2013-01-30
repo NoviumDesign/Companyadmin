@@ -77,13 +77,12 @@ class RequestController extends Zend_Controller_Action
 
     public function customerAction()
     {   
-        print_r($_REQUEST);
         $customerSecret = $this->treat($_POST['try']);
 
         // select customer
         $customer = $this->selectCustomer($customerSecret);
 
-        // remove customer_id
+        // remove customer_id so it wont be sent to user
         unset($customer['customer_id']);
 
         $this->output['customer'] = $customer;

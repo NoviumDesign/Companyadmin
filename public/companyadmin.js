@@ -36,6 +36,11 @@ getFormData = function() {
 buildForm = function(data) {
 	for(var i = 0; i < data.products.length; i++) {
 
+		if(i == 0) {
+			// set product to first product
+			$(formId + ' .products').attr('name', 'products[' + data.products[i].product_secret + ']');
+		}
+
 		$(formId + ' .products').append(
 				'<option data-secret="' + data.products[i].product_secret + '" value="1">' +
 	        		data.products[i].product + (data.products[i].price > 0? ' ' + data.products[i].price + 'kr': '') +
