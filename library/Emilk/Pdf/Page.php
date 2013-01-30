@@ -140,8 +140,8 @@ class Emilk_Pdf_Page extends Zend_Pdf_Page
 			$p1->y = $pageDim->h - $pos->y;
 		// bottom right
 		$p2 = new stdClass();
-			$p2->x = $pos->x + $elemDim->w;
-			$p2->y = $pageDim->h - $pos->y - $elemDim->h;
+			$p2->x = $pos->x + $elemDim->w + $style['padding']['right'];
+			$p2->y = $pageDim->h - $pos->y - $elemDim->h + $style['padding']['bottom'];
 
 		if($style['background']) {
 			// color

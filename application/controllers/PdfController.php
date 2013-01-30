@@ -64,10 +64,28 @@ class PdfController extends Zend_Controller_Action
 
 				// border
 				$head->addElement()->setStyle(
-					array('dimensions'=>array('width'=>515, 'height'=>0.1),'margin'=>array('top'=>44.9),'background'=>'#000000'
+					array('dimensions'=>array('width'=>515, 'height'=>0.1),'margin'=>array('top'=>44.9),'background'=>'#646363'
 					)
 				);
 
+
+
+				// body
+			$body = $wrapper->addElement()->setStyle(
+				array('dimensions'=>array('width'=>515, 'height'=>400)
+				)
+			);
+
+				// first
+				$first = $body->addElement()->setStyle(
+					array('dimensions'=>array('width'=>515, 'height'=>200),'padding'=>array('left'=>10, 'right'=>10)
+
+						,'background'=>'#645673'
+					)
+				);
+
+					$first->addElement()->setStyle(array('dimensions'=>array('width'=>200, 'height'=>50),'margin'=>array('top'=>30),'background'=>'#623154'))
+						  ->text('Novium Designbyrå Aftongatan 49 582 49 LINKÖPING');
 
 
 		// redner page

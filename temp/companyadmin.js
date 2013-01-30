@@ -8,7 +8,7 @@ url = 'http://companyadmins.elasticbeanstalk.com';
 company = 'dfg7586ghf';
 business = '43g5345hj3';
 formId = '#order';
-success = '<div class="success"><h2>Tack fÃ¶r din bestÃ¤llning!</h2></div>';
+success = '<div class="success"><h2>Tack för din beställning!</h2></div>';
 
 // first
 getToken = function() {
