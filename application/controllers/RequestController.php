@@ -316,7 +316,7 @@ class RequestController extends Zend_Controller_Action
                        ->from('products', array('product_id', 'product_secret', 'product'))
                        ->joinLeft('prices', 'prices.price_id = products.price', array('price', 'unit'))
                        ->where('products.business = ' . $this->businessId . ' AND products.status <> "deleted"' . $product)
-                       ->order('product ASC');
+                       ->order('product_number ASC');
         $products = $this->db->fetchAll($select);
 
         return $products;
