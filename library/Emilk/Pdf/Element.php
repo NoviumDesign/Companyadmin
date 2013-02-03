@@ -5,39 +5,45 @@ class Emilk_Pdf_Element
 	// public $parent;
 	public $style = 
 		array(
-			'margin' => array(
-				'left' => 0,
-				'top' => 0,
-				'right' => 0,
-				'bottom' => 0
-			),
-			'padding' => array(
-				'left' => 0,
-				'top' => 0,
-				'right' => 0,
-				'bottom' => 0
-			),
 			'dimensions' => array(
 				'width' => 0,
 				'height' => 0
 			),
+			'margin' => array(
+				'top' => 0,
+				'right' => 0,
+				'bottom' => 0,
+				'left' => 0
+			),
+			'padding' => array(
+				'top' => 0,
+				'right' => 0,
+				'bottom' => 0,
+				'left' => 0
+			),
 			'font' => array(
 				'type' => Zend_Pdf_Font::FONT_HELVETICA,
-				'size' => 14,
-				'color' => '#000000'
+				'size' => 14
 			),
-			'clear' => 'left',
-			'background' => 0,
-			'text-aligne' => 'left'
+			'background' => array(
+				'color' => false,
+				'image' => false,
+				'position' => array(
+					'vertical' => 'top',
+					'horizontal' => 'left'
+				)
+			),
+			'text' => array(
+				'align' => 'left'
+			),
+			'color' => '#000000',
+			'clear' => 'left'
 		);
 	public $elements = array();
 	public $text;
 
 	function __construct()
 	{
-		// store parent for rendering? Needed widths and so on?
-		// $this->parent = $parent;
-
 	}
 
 	public function setStyle($style)
@@ -57,6 +63,57 @@ class Emilk_Pdf_Element
 		}
 
 		return $this;
+	}
+
+	public function style($string)
+	{
+		$styles = explode(';', $string);
+
+		// remove empty elements
+		$styles = array_filter($styles);
+
+		foreach($styles as $style) {
+			
+			// explode
+			list($key, $value) = explode(':', $style);
+
+			// trim
+			$key = trim($key);
+			$value = trim($value);
+
+			// convert to number
+			if(is_numeric($value)) {
+				$value = (float)$value;
+			}
+
+			// store
+			$path = explode('-', $key);
+			$atPath = &$this->style;
+			foreach($path as $key) {
+			 	$atPath = &$atPath[$key];
+			} 
+
+			// if array
+			if(is_array($atPath)) {
+				// set several values, maybe
+				$value = explode(' ', $value);
+
+
+				$i = 0;
+				foreach($atPath as $key => $nointerest) {
+					
+					$atPath[$key] = $value[$i];
+
+					if(isset($value[$i + 1])) {
+						$i++;
+					}
+
+				}
+			} else {
+				// asign value
+				$atPath = $value;
+			}
+		}
 	}
 
 	public function addElement()

@@ -81,15 +81,17 @@ class Emilk_Pdf_Page extends Zend_Pdf_Page
 			// print_r($drawPos);
 			// echo '<br>';
 
-			// draw
-			$this->renderElem($drawPos, $space, $elem);
+			// draw element
+			// get text height
+			$textHeight = $this->renderElem($drawPos, $space, $elem);
 
+			// echo $textHeight . '<br>';
 
 			// grandchildren?
 			if(count($elem->elements) > 0) {
 				// add padding
 				$drawPos->x += $elem->style['padding']['left'];
-				$drawPos->y += $elem->style['padding']['top'];
+				$drawPos->y += $elem->style['padding']['top'] + $textHeight;
 				// element dimensions
 				$elemDim = new stdClass();
 					$elemDim->w = $elem->style['dimensions']['width'] - $elem->style['padding']['left'] - $elem->style['padding']['right'];
@@ -101,10 +103,16 @@ class Emilk_Pdf_Page extends Zend_Pdf_Page
 
 			// FOR NEXT RUN
 
-			// highest element in row
+			// highest element/text in row
 			if($required->h > $highestElem) {
 				$highestElem = $required->h;
 			}
+
+			if($textHeight > $highestElem) {
+				// echo 123123123;
+				$highestElem = $textHeight;
+			}
+			// echo ' - ' . $highestElem . '<br>';
 
 			// move cursor for next elem
 			$pos->x += $required->w;
@@ -141,15 +149,13 @@ class Emilk_Pdf_Page extends Zend_Pdf_Page
 		// bottom right
 		$p2 = new stdClass();
 			$p2->x = $pos->x + $elemDim->w + $style['padding']['right'];
-			$p2->y = $pageDim->h - $pos->y - $elemDim->h + $style['padding']['bottom'];
+			$p2->y = $pageDim->h - $pos->y - $elemDim->h - $style['padding']['bottom'];
 
-		if($style['background']) {
+		if($style['background']['color']) {
 			// color
 
-			$color = $style['background'];
+			$color = $style['background']['color'];
     		$this->setFillColor(Zend_Pdf_Color_Html::color($color));
-
-			// $this->setFillColor(new Zend_Pdf_Color_GrayScale(rand(0, 60)*0.01));
 
 			// origo = (0,0) = (left, bottom)
 			$this->drawRectangle(
@@ -161,11 +167,69 @@ class Emilk_Pdf_Page extends Zend_Pdf_Page
 			); 
 		}
 
+
+
+
+
+
+		if($style['background']['image']) {
+			// MAKE POSITIONS WORK
+			// path
+			$imgPath = APPLICATION_PATH . $style['background']['image'];
+
+			// dimensions
+			$imgSize = getimagesize($imgPath);
+
+			// load image 
+			$image = Zend_Pdf_Image::imageWithPath($imgPath); 
+
+
+			if($imgSize[0]/$imgSize[1] > ($p2->x - $p1->x)/($p1->y - $p2->y)) {
+				// image wider
+
+				$this->drawImage(
+					$image,
+					$p1->x,	// left
+					$p1->y - $imgSize[1]*($p2->x - $p1->x)/$imgSize[0],	// bottom
+					$p2->x,	// right
+					$p1->y	// top
+				); 
+
+			} else {
+				// image higher
+
+				$this->drawImage(
+					$image,
+					$p1->x,	// left
+					$p2->y,	// bottom
+					$p1->x + $imgSize[0]*($p1->y - $p2->y)/$imgSize[1],	// right
+					$p1->y	// top
+				); 
+			}
+
+
+
+
+			// draw image 
+			// $this->drawImage(
+			// 	$image,
+			// 	$p1->x,	// left
+			// 	$p1->y + $imgSize[1],	// bottom
+			// 	$p1->x + $imgSize[0],	// right
+			// 	$p1->y	// top
+			// ); 
+		}
+
+
+
+
+
+
 		// add padding img before <--------------------------------------------------------
 		$p1->x += $style['padding']['left'];
 		$p1->y -= $style['padding']['top'];
 
-		if($text) {
+		if(strlen(trim($text)) > 0) {
 			// correct position, stick to width, new line, break-line (long word), sense new line in text?, align
 
 
@@ -173,7 +237,7 @@ class Emilk_Pdf_Page extends Zend_Pdf_Page
 			$font = new stdClass();
 				$font->type = $style['font']['type'];
 				$font->size = $style['font']['size'];
-				$font->color = $style['font']['color'];
+				$font->color = $style['color'];
 
 			// restriction
 			$res = new stdClass();
@@ -184,6 +248,7 @@ class Emilk_Pdf_Page extends Zend_Pdf_Page
 			// write text
 			$lines = $this->calculateText($text, $font, $res, $p1);
 
+			// print_r($lines);
 
 			// draw string
 			foreach($lines as $i => $line) {
@@ -195,10 +260,10 @@ class Emilk_Pdf_Page extends Zend_Pdf_Page
 				$this->setFont(Zend_Pdf_Font::fontWithName($font->type), $font->size);
 
 				// text-align
-				if($style['text-align'] == 'right') {
+				if($style['text']['align'] == 'right') {
 					// push text to right
 					$push = $elemDim->w - $line['width'];
-				} elseif($style['text-align'] == 'center') {
+				} elseif($style['text']['align'] == 'center') {
 					// center push
 					$push = ($elemDim->w - $line['width'])/2;
 				} else {
@@ -209,11 +274,19 @@ class Emilk_Pdf_Page extends Zend_Pdf_Page
 				$this->drawText(
 					$line['text'],
 					$p1->x + $push,	// align
-					$p1->y - $font->size*($i + 1),	// add for each row
+					$p1->y - $font->size*($i*1.2 + 1)*0.93,	// add for each row
 					'UTF-8'
 				); 
 	
 			}
+		}
+
+		// text height
+		if(isset($lines) && count($lines) > 0) {
+			$l = count($lines) - 1;
+			return $font->size*($l*0.95 + 1)*1.17;
+		} else {
+			return 0;
 		}
 	}
 
@@ -233,15 +306,20 @@ class Emilk_Pdf_Page extends Zend_Pdf_Page
 		$spaceLength = (array_sum($spaceLength)/$_font->getUnitsPerEm()) * $fontSize;
 
 		// array
+		$string = str_replace('[br]', ' [br] ', $string); // make sure its a word
+		$string = preg_replace('/\s+/', ' ', $string); // replace double '  ' with ' '
 		$string = explode(' ', $string);
 		$lineWidth = 0;
 		$line = '';
 		$lines = array();
 		foreach($string as $word) {
 
-			// add sapce
-			// maybe add as a separate element
-			$word .= ' '; 
+			// check if <br>
+			if($word == '[br]') {
+				$nl = true;
+			} else {
+				$nl = false;
+			}
 
 			// for each char in string
 			$characters = array();
@@ -259,19 +337,28 @@ class Emilk_Pdf_Page extends Zend_Pdf_Page
 			// string width
 			$wordWidth = (array_sum($widths)/$_font->getUnitsPerEm()) * $fontSize;
 
-			if($lineWidth + $wordWidth > $restriction->w) {
+			if($nl || $lineWidth + $wordWidth > $restriction->w) {
 				// new line
-				// store for draw
-				$lines[] = array('text' => substr_replace($line, '', -1), 'width' => $lineWidth - $spaceLength);	// removes last ' '
 
-				// reset line width and line
-				$line = '';
-				$lineWidth = 0;
+				// otherwise first line somtimes will become empty
+				if($line) {
+					// store for draw
+					$lines[] = array('text' => substr_replace($line, '', -1), 'width' => $lineWidth - $spaceLength);	// removes last ' '
+				}
+
+				// reset line width and line but add current word or else it will disapear
+				if(!$nl) {
+					$line = $word . ' ';
+					$lineWidth = $wordWidth + $spaceLength;
+				} else {
+					$line = '';
+					$lineWidth = 0;
+				}
 			} else {
 				// next word
 				// add
-				$line .= $word;
-				$lineWidth += $wordWidth;
+				$line .= $word . ' ';
+				$lineWidth += $wordWidth + $spaceLength;
 			}
 		}
 		// add last line
@@ -281,4 +368,63 @@ class Emilk_Pdf_Page extends Zend_Pdf_Page
 
 		return $lines;
 	}
+
+	public function build($string) {
+		// remove first "<"
+		$string = substr(trim($string), 1);
+
+		// make sure <br> wont be elements
+		$string = str_replace('<br>', '[br]', $string);
+
+		// split elem
+		$elemA = explode('<', $string);
+
+		// recursive
+		$this->buildRecursive($elemA, $this);
+	}
+
+	private function buildRecursive($array, $who)
+	{
+		// make queue
+		$stack = new Emilk_Stack();
+		foreach($array as $key => $elemS) {
+
+			// if element
+			$firstLetter = $elemS[0];
+			if(trim($elemS) && $firstLetter != '/' && $stack->isEmpty()) {
+				// only get siblings and not children
+				$stack->add('elem');
+
+				// new element
+				$elem = $who->addElement();
+
+				// element attributes
+				$elemEnd = strrpos($elemS, '>', -0);
+				$elemAttr = trim(substr($elemS, 0, $elemEnd));
+				$elemText = trim(substr($elemS, $elemEnd + 1));
+
+				$elem->text($elemText);
+				$elem->style($elemAttr);
+
+				// rest of array
+				$arrayRest = array_slice($array, $key + 1);
+
+				// recursive
+				$this->buildRecursive($arrayRest, $elem);
+
+			} elseif($firstLetter == '/') {
+				if($stack->isEmpty()) {
+					// parent end tag => exit funktion
+					return;
+				} else {
+					// remove
+					$stack->get();
+				}
+			} else {
+				// child elements
+				$stack->add('elem');
+			}
+		}
+	}
+
 }

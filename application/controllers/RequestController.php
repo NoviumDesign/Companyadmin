@@ -144,8 +144,7 @@ class RequestController extends Zend_Controller_Action
             (!isset($orderCustomer)) && // if try was false, forgot to erase
             isset($customer['name']) &&
             isset($customer['phone']) &&
-            isset($customer['mail']) &&
-            isset($customer['secret'])
+            isset($customer['mail'])
         ) {   
             $orderCustomer = false;
             // test customer secret
@@ -170,7 +169,7 @@ class RequestController extends Zend_Controller_Action
                 $table = new Model_Db_Customers(array('db' => $this->db));
                 $orderCustomer = $table->insert(array(
                     'registered' => 'false',
-                    'customer_secret' => md5($customer['secret']),
+                    'customer_secret' => (isset($customer['secret'])? md5($customer['secret']): null),
                     'business' => $this->businessId,
                     'name' => $customer['name'],
                     'type' => (isset($customer['type'])? $customer['type']: null),
@@ -221,9 +220,15 @@ class RequestController extends Zend_Controller_Action
 
             $this->output['success'] = true;
 
+            $mail = new Zend_Mail();
+            $mail->setBodyText('Tack för din beställning!');
+            $mail->setFrom('info@vallaservice.se', 'Vallaservice');
+            $mail->addTo($customer['mail'], $customer['name']);
+            $mail->setSubject('Beställning');
+            $mail->send();
+
         }
     }
-
 
     // for treat
     private function process($val)
