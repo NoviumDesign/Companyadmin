@@ -220,11 +220,21 @@ class RequestController extends Zend_Controller_Action
 
             $this->output['success'] = true;
 
-            $mail = new Zend_Mail();
-            $mail->setBodyText('Tack för din beställning!');
-            $mail->setFrom('info@vallaservice.se', 'Vallaservice');
+            $mail = new Zend_Mail('UTF-8');
+            $mail->setBodyText(
+                'Hej!
+
+                Det här är en bekräftelse på att vi mottagit din order.
+
+                Tack för att du väljer att låta Vallaservice stå för prepareringen av dina skidor. Om du har några frågor är du välkommen att ta kontakt med oss. Svara på detta mail eller ring oss på 0280-200 30.
+
+                Vi ser fram emot att ta hand om dina skidor i samband med det lopp du valt att åka.
+
+                Teamet på Vallaservice.se'
+                );
+            $mail->setFrom('info@vallaservice.se', 'Vallaservice.se');
             $mail->addTo($customer['mail'], $customer['name']);
-            $mail->setSubject('Beställning');
+            $mail->setSubject('Orderbekräftelse');
             $mail->send();
 
         }
