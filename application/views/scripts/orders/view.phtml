@@ -12,6 +12,8 @@
 				<th>Status</th>
 				<th>Delivery</th>
 				<th>Delivary date</th>
+				<th>Notes</th>
+				<th>Items</th>
 
 				<?php
 					if(!$this->showAll){
@@ -45,6 +47,8 @@
 					<td><?= $order['status'] ?></td>
 					<td><?= $order['delivery'] ?></td>
 					<td><?= ($order['delivery'] != 'none' ? date('Y-m-d', $order['delivery_date']): '') ?></td>
+					<td><?= ($order['notes'] ? 'yes' : '') ?></td>
+					<td><?= $order['quantity'] ?></td>
 
 					<?php
 						if(!$this->showAll){
@@ -72,4 +76,32 @@
 
 		</tbody>
 	</table>
+
+
+	<h1>Ordered products</h1>
+	<table class="datatable">
+		<thead>
+			<tr>
+				<th>Product</th>
+				<th>Quantity</th>
+			</tr>
+		</thead>
+		<tbody>
+
+			<?php foreach($this->orderedProducts as $product) { ?>
+
+				<tr class="gradeX">
+					<td><a href="/product/view/<?= $product['product_id'] ?>"><?= $product['product'] ?></a></td>
+					<td><?= $product['quantity'] ?></td>
+				</tr>
+
+			<?php } ?>
+
+		</tbody>
+	</table>
+
+
+
+
+
 </div>	
