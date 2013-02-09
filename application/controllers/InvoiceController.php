@@ -158,8 +158,8 @@ class InvoiceController extends Zend_Controller_Action
 
         // invoice
         $select = $db->select()
-                     ->from('invoices', array('invoice_id', 'invoice_number', 'date', 'due', 'status', 'discount', 'notes'))
-                     ->joinLeft('customers', 'invoices.customer = customers.customer_id', array('name as customer_name', 'customer_id', 'customer_adress', 'zip_code', 'city', 'country'))
+                     ->from('invoices', array('invoice_id', 'invoice_number', 'date', 'due', 'status', 'discount', 'notes', 'invoice_secret'))
+                     ->joinLeft('customers', 'invoices.customer = customers.customer_id', array('name as customer_name', 'customer_id', 'customer_adress', 'zip_code', 'city', 'country', 'mail'))
                      ->where('invoices.invoice_id = ' . $invoiceId . ' AND invoices.business = ' . $_SESSION['business']);
         $result = $db->fetchAll($select);
         $this->view->invoice = $result[0];
@@ -176,11 +176,25 @@ class InvoiceController extends Zend_Controller_Action
 
         // business company
         $select = $db->select()
-                     ->from('businesses', array('company_name', 'company_adress', 'company_zip_code', 'company_city', 'company_country'))
+                     ->from('businesses', array('company_name', 'company_adress', 'company_zip_code', 'company_city', 'company_country', 'business_secret'))
                      ->where('businesses.business_id = ' . $_SESSION['business']);
         $result = $db->fetchAll($select);
-
         $this->view->businessComapny = $result[0];
+
+        // pdf link
+        $dDb = Zend_Db_Table::getDefaultAdapter();
+        $companyId = Zend_Auth::getInstance()->getStorage()->read()->company;
+
+        $select = $dDb->select()
+                      ->from('companies', 'company_secret')
+                      ->where('companies.company_id = ' . $companyId);
+        $result = $dDb->fetchAll($select);
+        $this->view->pdfLink = $result[0]['company_secret'] . '/' . $this->view->businessComapny['business_secret'] . '/' . $this->view->invoice['invoice_secret'];
+
+        // mailto
+        $this->view->mailTo= '
+            mailto:' . $this->view->invoice['mail'] . '?subject=faktura&body=http://companyadmins.elasticbeanstalk.com/' . $this->view->pdfLink;
+
     }
 
     public function deleteAction()

@@ -8,7 +8,13 @@
          <button class="red">Delete invoice</button>
       </a>
    <?php } ?>
-
+      <a href="/pdf/invoice/<?= $this->pdfLink ?>" target="_blank">
+         <button>PDF</button>
+      </a>
+      <a href="<?= $this->mailTo ?>" target="_blank">
+         <button>Mail PDF</button>
+      </a>
+      
    <h1>Invoice #<?= $this->invoice['invoice_number']; ?></h1>
 </div>
 <div class="g3 from">
