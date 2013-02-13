@@ -67,7 +67,7 @@ class Emilk_Form
 
 	public function element($name, $choise = 0)
 	{
-		if($this->elements[$name]->type == 'radio') {
+		if($this->elements[$name]->type == 'radio' || $this->elements[$name]->type == 'checkbox') {
 			$this->elements[$name]->render($choise);
 		} else {
 			$this->elements[$name]->render();

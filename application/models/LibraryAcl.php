@@ -57,7 +57,16 @@ class Model_LibraryAcl extends Emilk_Acl_Library
 
 			'request' => 'none',
 
-			'pdf' => 'none'
+			'pdf' => 'none',
+
+			'system' => 'admin',
+
+			'users' => 'admin',
+			'user' => array
+				(
+					'add' => 'admin',
+					'view' => 'user'
+				)
 
 		);
 		$this->addResources($resources);

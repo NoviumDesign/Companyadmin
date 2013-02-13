@@ -1,0 +1,32 @@
+<a href="/user/add">
+	<button>Add user</button>
+</a>
+
+<div class="g12">
+	<h1>Users</h1>
+	<table class="datatable">
+		<thead>
+			<tr>
+				<th>Name</th>
+				<th>Mail</th>
+				<th>Role</th>
+
+			</tr>
+		</thead>
+		<tbody>
+
+			<?php foreach($this->users as $user) { ?>
+
+				<tr class="gradeX">
+					<td>
+						<a href="/user/view/<?= $user['secret'] ?>"><?= $user['name'] ?></a>
+					</td>
+					<td><?= $user['mail'] ?></td>
+					<td><?= $user['role'] ?></td>
+				</tr>
+
+			<?php } ?>
+
+		</tbody>
+	</table>
+</div>

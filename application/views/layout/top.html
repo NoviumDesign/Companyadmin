@@ -2,7 +2,14 @@
 	<ul>
 		<li><a href="/authentication/logout">Logout</a></li>
 		<li><a href="/#" id="wl_config">Quick settings</a></li>
-		<li><a href="/#">System configuration</a></li>
+		<li><a href="/user/view">Account</a></li>
+
+		<?php if($roleVal >= $adminVal) { ?>
+		
+			<li><a href="/system">System configuration</a></li>
+
+		<?php } ?>
+
 	</ul>
 	<div>
 		<h3>Quick settings</h3>

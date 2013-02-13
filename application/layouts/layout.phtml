@@ -14,6 +14,18 @@
 
 		<?php
 			if(isset($this->user->mail) && isset($_SESSION['business'])) {
+
+				// is admin
+				$role = $this->user->role;
+		        $acl = new Model_LibraryAcl;
+		        $adminVal =  array_search('admin', $acl::$roles);
+		        $roleVal =  array_search($role, $acl::$roles);
+
+		        $isAdmin = false;
+		        if($roleVal >= $adminVal) {
+		            $isAdmin = true;
+		        }
+
 				// businesses
 				$db = Zend_Registry::get('db');
 

@@ -112,7 +112,7 @@ class PdfController extends Zend_Controller_Action
 	        			$item['quantity'] . '
 	        		</>
 	        		<dimensions:85 12; font-size:10; color:#000000; text-align:right; clear:none>' . 
-	        			$item['price'] . ' :-
+	        			$item['price'] . ' :- / ' . $item['unit'] . '
 	        		</>
 	        		<dimensions:85 12; font-size:10; color:#000000; text-align:right; clear:none>' . 
 	        			(float)$item['quantity']*(float)$item['price'] . ' :-
