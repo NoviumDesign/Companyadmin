@@ -27,9 +27,18 @@ class Form_EditUserForm extends Emilk_Form
         list($user) = $dDb->fetchAll($select);
 
         // access
-        $select = $db->select()
-                     ->from('businesses', array('business_id', 'business'))
-                     ->joinLeft('user_access', 'user_access.business = businesses.business_id AND user_access.user = "' . $this->userId . '"', 'user as access');
+        if($this->role == 'admin') {
+        	$adminId = Zend_Auth::getInstance()->getStorage()->read()->id;
+        	$select = $db->select()
+                    	 ->from('user_access as admin_access')
+                   		 ->joinLeft('businesses', 'admin_access.business = businesses.business_id', array('business_id', 'business'))
+                     	 ->joinLeft('user_access', 'user_access.business = businesses.business_id AND user_access.user = "' . $this->userId . '"', 'user as user_access')
+        			 	 ->where('admin_access.user = "' . $adminId. '"');
+        } else {
+        	$select = $db->select()
+                    	 ->from('businesses', array('business_id', 'business'))
+                     	 ->joinLeft('user_access', 'user_access.business = businesses.business_id AND user_access.user = "' . $this->userId . '"', 'user as user_access');
+        }
         $this->businesses = $db->fetchAll($select);
 
         // businesses
@@ -41,7 +50,7 @@ class Form_EditUserForm extends Emilk_Form
 													'permitted'
 												 ));
 
-			if($business['access']) {
+			if($business['user_access']) {
 				$businesses[$business['business_id']]->setValue('permitted');
 			}
 		}

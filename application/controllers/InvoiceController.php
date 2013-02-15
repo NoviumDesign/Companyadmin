@@ -30,10 +30,17 @@ class InvoiceController extends Zend_Controller_Action
 
             $secret = substr(str_shuffle('abcdefghijlkmnopqrstuvwxyz1234567890abcdefghijlkmnopqrstuvwxyz1234567890abcdefghijlkmnopqrstuvwxyz1234567890'), 0, 10);
 
+            // invoice number
+            $select = $db->select()
+                         ->from('invoices', '(COALESCE(MAX(invoice_number), 0) + 1) AS invoiceNumber')
+                         ->where('invoices.business =' . $_SESSION['business']);
+            $result= $db->fetchAll($select);
+            $_invoiceNumber = $result[0]['invoiceNumber'];
+            
             // insert
             $table = new Model_Db_Invoices(array('db' => $db));
             $invoiceId = $table->insert(array(
-                    'invoice_number' => $form->getValue('invoiceNumber'),
+                    'invoice_number' => $_invoiceNumber,
                     'invoice_secret' => $secret,
                     'business' => $_SESSION['business'],
                     'customer' => $form->getValue('customerId'),

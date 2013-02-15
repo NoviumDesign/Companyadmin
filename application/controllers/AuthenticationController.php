@@ -42,6 +42,7 @@ class AuthenticationController extends Zend_Controller_Action
     public function logoutAction()
     {
         Zend_Auth::getInstance()->clearIdentity();
+        unset($_SESSION['business']);
         $this->_redirect('/authentication/login');
     }
 
@@ -53,7 +54,7 @@ class AuthenticationController extends Zend_Controller_Action
         $user = Zend_Auth::getInstance()->getStorage()->read();
         $db = Zend_Registry::get('db');
 
-        // sent from login?
+        // sent from change business or login?
         if($businessId > 1) {
             $select = $db->select()
                          ->from('user_access', 'COUNT(business) as access')
@@ -83,11 +84,26 @@ class AuthenticationController extends Zend_Controller_Action
         } else {
             $select = $db->select()
                          ->from('user_access', 'MIN(business) as business')
-                         ->where('user_access.user = ' . $user->id);
-            $result = $db->fetchAll($select);
+                         ->where('user_access.user = "' . $user->id . '"');
+            list($businessId) = $db->fetchAll($select);
 
-            if($result[0]['business']) {
-                $_SESSION['business'] = $result[0]['business'];
+            $userRole = Zend_Auth::getInstance()->getStorage()->read()->role;
+            if(!$businessId['business'] && ($userRole == 'god' || $userRole == 'master')) {
+
+                // select first business
+                $select = $db->select()
+                             ->from('businesses', 'MIN(business_id) as business');
+                list($businessId) = $db->fetchAll($select);
+
+                if(!$businessId['business']) {
+                    $_SESSION['business'] = 1;
+                    $this->_redirect('/business/add');
+                }
+
+            }
+
+            if($businessId['business']) {
+                $_SESSION['business'] = $businessId['business'];
                 $this->_redirect('/');
             } else {
                 $this->_redirect('/authentication/logout');
@@ -102,7 +118,6 @@ class AuthenticationController extends Zend_Controller_Action
         $authAdapter->setTableName('users')
                     ->setIdentityColumn('mail')
                     ->setCredentialColumn('password');
-                    // ->setCredentialTreatmen();
 
         return $authAdapter;
     }

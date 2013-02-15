@@ -1,13 +1,5 @@
 <fieldset>
-	<label>Invoice number</label>
-	<section>
-		<label for="invoiceNumber">Invoice number</label>
-		<div>
-
-			<?= $this->element('invoiceNumber'); ?>
-
-		</div>
-	</section>
+	<label>Invoice status</label>
 	<section>
 		<label for="status">status</label>
 		<div>

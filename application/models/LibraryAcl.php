@@ -65,7 +65,13 @@ class Model_LibraryAcl extends Emilk_Acl_Library
 			'user' => array
 				(
 					'add' => 'admin',
-					'view' => 'user'
+					'view' => 'user',
+					'delete' => 'admin'
+				),
+
+			'business' => array
+				(
+					'add' => 'master'
 				)
 
 		);

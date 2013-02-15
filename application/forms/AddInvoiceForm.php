@@ -17,13 +17,6 @@ class Form_AddInvoiceForm extends Emilk_Form
 		$business = $_SESSION['business'];
 
 
-        // invoice number
-        $select = $db->select()
-                     ->from('invoices', '(COALESCE(MAX(invoice_number), 0) + 1) AS invoiceNumber')
-                     ->where('invoices.business =' . $_SESSION['business']);
-        $result= $db->fetchAll($select);
-        $_invoiceNumber = $result[0]['invoiceNumber'];
-
 		if($this->orderId) {
 
 			$select = $db->select()
@@ -50,11 +43,6 @@ class Form_AddInvoiceForm extends Emilk_Form
 		                     ->where('invoices.invoice_number = ' . $order['order_number'] . ' AND invoices.business = ' . $_SESSION['business']);
 		        $result = $db->fetchAll($select);
 
-		        // if, set invoice number
-		        if(!count($result)) {
-		        	$_invoiceNumber = $order['order_number'];
-		        }
-
 
 	        } else {
 				header('Location: /invoice/add');
@@ -71,13 +59,6 @@ class Form_AddInvoiceForm extends Emilk_Form
 	        $result = $db->fetchAll($select);
 	        $this->products = $result;
 		}
-
-
-        $invoiceNumber = new Emilk_Form_Element_Text('invoiceNumber');
-		$invoiceNumber->setAttr('class', 'autocomplete')
-				   ->setAttr('required', '')
-				   ->setAttr('data-errortext', 'You can\'t add a new invoice without a invoice number')
-				   ->setValue($_invoiceNumber);
 
 
 		$status = new Emilk_Form_Element_Radio('status');
@@ -145,7 +126,6 @@ class Form_AddInvoiceForm extends Emilk_Form
 			 ->setAttr('autocomplete', 'off')
 			 ->setAttr('action', '/invoice/add')
 			 ->add(array(
-			 	$invoiceNumber,
 			 	$customerId,
 			 	$customer,
 			 	$invoiceDue,

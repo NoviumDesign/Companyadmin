@@ -36,9 +36,16 @@
 
 			<label for="role">Admin</label>
 
-			<?= $this->element('role', 'master'); ?>
+			<?php
+				$role = Zend_Auth::getInstance()->getStorage()->read()->role;
+				if($role != 'admin') {
+				 	$this->element('role', 'master');
+			?>
 
-			<label for="role">Master</label>
+				<label for="role">Master</label>
+
+			<?php } ?>
+				
 		</div>
 	</section>
 </fieldset>

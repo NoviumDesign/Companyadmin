@@ -28,6 +28,14 @@ class UserController extends Zend_Controller_Action
         if($this->_request->isPost()) {
             if($form->isValid()) {
 
+                // check role
+                $role = Zend_Auth::getInstance()->getStorage()->read()->role;
+                if($role == 'admin' && $form->getValue('role') != 'user' && $form->getValue('role') != 'admin') {
+                    // admin tried to add master
+                    $this->_redirect('/users/view');
+                    exit();
+                }
+
             	$secret = substr(str_shuffle('abcdefghijlkmnopqrstuvwxyz1234567890abcdefghijlkmnopqrstuvwxyz1234567890abcdefghijlkmnopqrstuvwxyz1234567890'), 0, 10);
 				$companyId = Zend_Auth::getInstance()->getStorage()->read()->company;
 
@@ -43,6 +51,20 @@ class UserController extends Zend_Controller_Action
 
                 foreach($_POST['access'] as $business => $access) {
                 	if($access == 'permitted') {
+
+                        // if admin -> check selfe access
+                        if($role == 'admin') {
+                            $adminId = Zend_Auth::getInstance()->getStorage()->read()->id;
+                            $select = $db->select()
+                                         ->from('user_access', array('user AS access'))
+                                         ->where('user = "' . $adminId . '" AND business = "' . $business . '"');
+                            $_access = $db->fetchAll($select);
+
+                            // skip
+                            if(!count($_access)) {
+                                continue;
+                            }
+                        }
 
                 		$table = new Model_Db_UserAccess(array('db' => $db));
                 		$table->insert(array(
@@ -62,6 +84,9 @@ class UserController extends Zend_Controller_Action
     {
         $dDb = Zend_Db_Table::getDefaultAdapter();
         $db = Zend_Registry::get('db');
+
+        $parameters = new Emilk_Request_Parameters();
+        list($this->view->userSecret) = $parameters->get();
 
         // get user id from url
         $userId = $this->userId();
@@ -97,20 +122,47 @@ class UserController extends Zend_Controller_Action
                 );
 
                 // is admin -> update access
-                if($this->isAdmin) {
-                    // remove all
-                    $table = new Model_Db_UserAccess(array('db' => $db));
-                    $table->delete('user = "' . $userId . '"');
+                if($this->isAdmin) {                    
 
                     // insert
                     foreach($_POST['access'] as $business => $access) {
-                        if($access == 'permitted') {
 
+                        // if admin -> check selfe access
+                        $userRole = Zend_Auth::getInstance()->getStorage()->read()->role;
+                        if($userRole == 'admin') {
+                            $adminId = Zend_Auth::getInstance()->getStorage()->read()->id;
+                            $select = $db->select()
+                                         ->from('user_access', array('user AS access'))
+                                         ->where('user = "' . $adminId . '" AND business = "' . $business . '"');
+                            $_access = $db->fetchAll($select);
+
+                            // skip
+                            if(!count($_access)) {
+                                continue;
+                            }
+                        }
+
+
+                        if($access == 'permitted') {
+                            // access granted
+                            // check if not exist->insert
+                            $select = $db->select()
+                                         ->from('user_access', array('user AS access'))
+                                         ->where('user = "' . $userId . '" AND business = "' . $business . '"');
+                            $_access = $db->fetchAll($select);
+
+                            if(!count($_access)) {
+                                $table = new Model_Db_UserAccess(array('db' => $db));
+                                $table->insert(array(
+                                    'user' => $userId,
+                                    'business' => $business
+                                ));
+                            }
+                        } else {
+                            // access denied
+                            // remove
                             $table = new Model_Db_UserAccess(array('db' => $db));
-                            $table->insert(array(
-                                'user' => $userId,
-                                'business' => $business
-                            ));
+                            $table->delete('user = "' . $userId . '" AND business = "' . $business . '"');
 
                         }
                     }
@@ -121,6 +173,26 @@ class UserController extends Zend_Controller_Action
             }
         }
 
+    }
+    public function deleteAction()
+    {
+        $dDb = Zend_Db_Table::getDefaultAdapter();
+        $db = Zend_Registry::get('db');
+
+        // get user id from url
+        $userId = $this->userId();
+
+        // not able to delete own account
+        if(Zend_Auth::getInstance()->getStorage()->read()->id != $userId) {
+            //delete
+            $table = new Model_Db_Users(array('db' => $dDb));
+            $table->delete('id = "' . $userId . '"');
+
+            $table = new Model_Db_UserAccess(array('db' => $db));
+            $table->delete('user = "' . $userId . '"');
+        }
+
+        header('Location: /users/view');
     }
 
     private function userId()

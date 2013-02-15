@@ -7,9 +7,18 @@ class Form_AddUserForm extends Emilk_Form
 		$db = Zend_Registry::get('db');
 
 		// select businesses
-		$select = $db->select()
+		$role = Zend_Auth::getInstance()->getStorage()->read()->role;
+		if($role == 'admin') {
+			$adminId = Zend_Auth::getInstance()->getStorage()->read()->id;
+        	$select = $db->select()
+                    	 ->from('user_access as admin_access')
+                   		 ->joinLeft('businesses', 'admin_access.business = businesses.business_id', array('business_id', 'business'))
+        			 	 ->where('admin_access.user = "' . $adminId. '"');
+		} else {
+			$select = $db->select()
 					 ->from('businesses', array('business_id', 'business'))
 					 ->order('business ASC');
+		}
 		$this->businesses = $db->fetchAll($select);
 
 		// businesses
