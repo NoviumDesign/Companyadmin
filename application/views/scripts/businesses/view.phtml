@@ -1,0 +1,29 @@
+<a href="/business/add">
+	<button>Add business</button>
+</a>
+
+<div class="g12">
+	<h1>Businesses</h1>
+	<table class="datatable">
+		<thead>
+			<tr>
+				<th>Business</th>
+				<th>Company</th>
+				<th>Org.nr</th>
+			</tr>
+		</thead>
+		<tbody>
+
+			<?php foreach($this->businesses as $business) { ?>
+
+				<tr class="clickable" data-link="/business/view/<?= $business['business_id'] ?>">
+					<td><?= $business['business'] ?></td>
+					<td><?= $business['company_name'] ?></td>
+					<td><?= $business['company_orgnr'] ?></td>
+				</tr>
+
+			<?php } ?>
+
+		</tbody>
+	</table>
+</div>	

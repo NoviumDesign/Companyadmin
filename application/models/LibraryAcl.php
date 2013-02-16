@@ -70,10 +70,9 @@ class Model_LibraryAcl extends Emilk_Acl_Library
 					'delete' => 'admin'
 				),
 
-			'business' => array
-				(
-					'add' => 'master'
-				)
+			'businesses' => 'master',
+			'business' => 'master'
+
 
 		);
 		$this->addResources($resources);
