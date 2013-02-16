@@ -2,7 +2,6 @@
 
 class IndexController extends Zend_Controller_Action
 {
-    
     public function indexAction()
     {
         $db = Zend_Registry::get('db');
@@ -14,7 +13,6 @@ class IndexController extends Zend_Controller_Action
                      ->group('COALESCE(orders.delivery_date, 0) - MOD(COALESCE(orders.delivery_date, 0), 24*60*60)')
                      ->where('orders.business = ' . $_SESSION['business']);
         $this->view->orderDates = $db->fetchAll($select);
-
 
     }
 }

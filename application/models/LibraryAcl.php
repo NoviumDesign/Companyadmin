@@ -10,6 +10,7 @@ class Model_LibraryAcl extends Emilk_Acl_Library
 		// resources
 		$resources = array(
 			'error' => 'none',
+			'favicon.ico' => 'none',	// AccessCheck fix
 			
 			'authentication' => array
 				(
