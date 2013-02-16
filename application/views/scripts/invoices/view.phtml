@@ -18,8 +18,8 @@
 
          <?php foreach($this->invoices as $invoice) { ?>
 
-            <tr class="gradeX">
-               <td><a href="/invoice/view/<?= $invoice['invoice_id'] ?>"><?= $invoice['invoice_number'] ?></a></td>
+            <tr class="clickable" data-link="/invoice/view/<?= $invoice['invoice_id'] ?>">
+               <td><?= $invoice['invoice_number'] ?></td>
                <td><a href="/customer/view/<?= $invoice['customer_id'] ?>"><?= $invoice['name'] ?></td>
                <td><?= date('Y-m-d', $invoice['date']) /*ADD + 1 HOUR*/?></td>
                <td><?= date('Y-m-d', $invoice['due']) ?></td>

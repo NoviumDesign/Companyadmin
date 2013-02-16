@@ -19,8 +19,8 @@
 
          <?php foreach($this->noneRegisteredCustomers as $customer) { ?>
 
-            <tr class="gradeX">
-               <td><a href="/customer/view/<?= $customer['customer_id'] ?>"><?= $customer['name'] ?></a></td>
+            <tr class="clickable" data-link="/customer/view/<?= $customer['customer_id'] ?>">
+               <td><?= $customer['name'] ?></td>
                <td><?= $customer['type'] ?></td>
                <td>
                   <a target="_blank" href="http://maps.google.com/?q=<?= $customer['customer_adress'] ?>, <?= $customer['zip_code'] ?> <?= $customer['city'] ?>, <?= $customer['country'] ?>">
@@ -56,8 +56,8 @@
          if(isset($this->registeredCustomers)) {
             foreach($this->registeredCustomers as $customer) { ?>
 
-            <tr class="gradeX">
-               <td><a href="/customer/view/<?= $customer['customer_id'] ?>"><?= $customer['name'] ?></a></td>
+            <tr class="clickable" data-link="/customer/view/<?= $customer['customer_id'] ?>">
+               <td><?= $customer['name'] ?></td>
                <td><?= $customer['type'] ?>
                <td>
                   <a target="_blank" href="http://maps.google.com/?q=<?= $customer['customer_adress'] ?>, <?= $customer['zip_code'] ?> <?= $customer['city'] ?>, <?= $customer['country'] ?>">

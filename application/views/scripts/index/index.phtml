@@ -4,7 +4,35 @@
 
 <div class="g6 widgets">
 
-	<div class="widget" id="calendar_widget" data-icon="calendar">
+	<div class="widget" id="widget_order_date" data-icon="create_write">
+		<h3 class="handle">Order dates</h3>
+		<div>
+			<table class="datatable">
+				<thead>
+					<tr>
+						<th>Date</th>
+						<th>Orders</th>
+						<th>Items</th>
+					</tr>
+				</thead>
+				<tbody>
+
+					<?php foreach($this->orderDates as $date) { ?>
+
+					<tr>
+						<td><?= ($date['delivery_date'] ? date('Y-m-d', $date['delivery_date']): ''); ?></td>
+						<td><?= $date['orders']; ?></td>
+						<td><?= $date['items']; ?></td>
+					</tr>
+
+					<?php } ?>
+
+				</tbody>
+			</table>
+		</div>
+	</div>
+
+	<!-- <div class="widget" id="calendar_widget" data-icon="calendar">
 		<h3 class="handle">Calendar</h3>
 		<div>
 			<div class="calendar" data-header="small">
@@ -13,9 +41,9 @@
 			<a class="btn" href="calendar.html">Check out the Calendar section</a>
 			</p>
 		</div>
-	</div>
+	</div> -->
 
-	<div class="widget number-widget" id="widget_CRM" data-icon="folder_love">
+	<!-- <div class="widget number-widget" id="widget_CRM" data-icon="folder_love">
 		<h3 class="handle">CRM</h3>
 		<div>
 			<ul>
@@ -24,9 +52,9 @@
 				<li><a href=""><span>153</span> Active ticets</a></li>
 			</ul>
 		</div>
-	</div>
+	</div> -->
 
-	<div class="widget number-widget" id="widget_monitoring" data-icon="graph">
+	<!-- <div class="widget number-widget" id="widget_monitoring" data-icon="graph">
 		<h3 class="handle">Monitoring</h3>
 		<div>
 			<ul>
@@ -36,8 +64,8 @@
 			</ul>
 		</div>
 	</div>
-
-	<div class="widget" id="overdue-invoice" data-icon="cash_register">
+ -->
+	<!-- <div class="widget" id="overdue-invoice" data-icon="cash_register">
 		<h3 class="handle">Overdue invoices</h3>
 		<div>
 
@@ -68,7 +96,7 @@
 
 		</div>
 
-	</div>
+	</div> -->
 
 </div>
 
@@ -76,26 +104,13 @@
 <div class="g6 widgets">
 		
 	
-	<div class="widget" id="widget_unconfirmedorders" data-icon="create_write">
+	<!-- <div class="widget" id="widget_unconfirmedorders" data-icon="create_write">
 		<h3 class="handle">Unconfirmed orders</h3>
 		<div>
 			x
 		</div>
-	</div>
+	</div> -->
 
-	<div class="widget" id="widget_activeorders" data-icon="create_write">
-		<h3 class="handle">Active orders</h3>
-		<div>
-			x
-		</div>
-	</div>
-
-
-	<div class="widget" id="widget_deliveries" data-icon="truck">
-		<h3 class="handle">Deliveries</h3>
-		<div>
-			x
-		</div>
-	</div>	
+	
 
 </div>

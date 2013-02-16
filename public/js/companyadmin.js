@@ -40,3 +40,35 @@ elem.live('autocompletechange autocompleteselect', function(event, ui) {
 $('.ui-autocomplete').live('click', function() {
 	elem.blur();
 })
+
+
+
+//
+// CLICK TABLE
+//
+$('.clickable').live('click', function(event) {
+	// clicked child elements
+	$target = $(event.target);
+	$targetTd = $target.parent('td');
+
+	// if target is link
+	if($target.attr('href')) {
+		// link via link
+		return;
+	}
+
+	// if target contain link
+	if($targetTd.data('link')) {
+		// libk via td
+		window.location = $targetTd.data('link');
+		return;
+	}
+
+	// if parent td contain link
+	if($(this).data('link')) {
+		// libk via td
+		window.location = $(this).data('link');
+		return;
+	}
+
+});

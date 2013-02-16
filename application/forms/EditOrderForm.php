@@ -93,13 +93,20 @@ class Form_EditOrderForm extends Emilk_Form
 
 
 		$deliveryDate = new Emilk_Form_Element_Text('deliveryDate');
-		$deliveryDate->setAttr('class', 'date')
-				     ->setValue(date('d/m/Y', $order['delivery_date']));	// GMT?
+		$deliveryDate->setAttr('class', 'date');
 
 
 		$deliveryTime = new Emilk_Form_Element_Text('deliveryTime');
-		$deliveryTime->setAttr('class', 'time')
-				   	 ->setValue(date('H:i', $order['delivery_date']));		// GMT?
+		$deliveryTime->setAttr('class', 'time');
+
+
+		if($order['delivery_date']) {
+			$deliveryDate->setValue(date('d/m/Y', $order['delivery_date']));	// GMT?
+			$deliveryTime->setValue(date('H:i', $order['delivery_date']));		// GMT?
+		} else {
+			$deliveryDate->setAttr('data-value', '+7');
+			$deliveryTime->setAttr('data-value', 'now');
+		}
 
 
 		$deliveryAdress = new Emilk_Form_Element_Text('deliveryAdress');
