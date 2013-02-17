@@ -91,4 +91,43 @@ class BusinessController extends Zend_Controller_Action
             }
         }
     }
+
+    public function deleteAction()
+    {
+        $dDb = Zend_Db_Table::getDefaultAdapter();
+        $db = Zend_Registry::get('db');
+
+        $parameters = new Emilk_Request_Parameters();
+        list($businessId) = $parameters->get();
+
+        $form = new Form_DeleteBusinessForm();
+        $this->view->form = $form;
+
+
+        if($this->_request->isPost()) {
+            if($form->isValid()) {
+                
+
+                $password = md5($form->getValue('password'));
+
+                $select = $dDb->select()
+                              ->from('users', 'id')
+                              ->where('password = "' . $password . '"');
+                $user = $dDb->fetchAll($select);
+
+
+                if(count($user)) {
+
+                    // delete
+
+
+
+                    print_r($user);
+
+
+                }
+            }
+        }
+
+    }
 }
