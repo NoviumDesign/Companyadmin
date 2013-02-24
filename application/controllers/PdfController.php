@@ -88,7 +88,7 @@ class PdfController extends Zend_Controller_Action
 
         // business company
         $select = $db->select()
-                     ->from('businesses', array('company_name', 'company_adress', 'company_zip_code', 'company_city', 'company_country', 'company_mail', 'company_phone', 'company_site', 'company_bank', 'company_orgnr', 'company_color'))
+                     ->from('businesses', array('company_name', 'company_adress', 'company_zip_code', 'company_city', 'company_country', 'company_mail', 'company_phone', 'company_site', 'company_bank', 'company_orgnr', 'company_color', 'invoice_prefix'))
                      ->where('businesses.business_id = ' . $this->businessId);
         $result = $db->fetchAll($select);
         $comapany = $result[0];
@@ -175,7 +175,9 @@ class PdfController extends Zend_Controller_Action
 		<dimensions:260 80; background-image:/companies/' . $this->companyId . '/logotypes/' . $this->businessId . '.jpg></>
 		<dimensions:265 60; clear:none>
 			<dimensions:265 30; padding-top:-5.5; clear:none; text-align:right; font-size:26; color: #646363>Faktura</>
-			<dimensions:265 30; padding-top:-5.5; clear:none; text-align:right; font-size:26; color: #646363>Nr: ' . $invoice['invoice_number'] . '</>
+			<dimensions:265 30; padding-top:-5.5; clear:none; text-align:right; font-size:26; color: #646363>Nr: ' . 
+			strip_tags(html_entity_decode(ucfirst($comapany['invoice_prefix']), ENT_QUOTES, 'UTF-8')) . $invoice['invoice_number']
+			. '</>
 		</>
 		<dimensions:525 0.1; margin-top:44.9; background-color:#646363></>
 	</>

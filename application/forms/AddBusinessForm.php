@@ -30,11 +30,19 @@ class Form_AddBusinessForm extends Emilk_Form
 
 
 
+		$logo = new Emilk_Form_Element_File('logo');
+
+		$prefix = new Emilk_Form_Element_Text('prefix');
+		$prefix->setAttr('class', 'autocomplete');
+
 		$companyBank = new Emilk_Form_Element_Text('companyBank');
 		$companyBank->setAttr('class', 'autocomplete');
 
 		$companyOrgnr = new Emilk_Form_Element_Text('companyOrgnr');
 		$companyOrgnr->setAttr('class', 'autocomplete');
+
+		$companyColor = new Emilk_Form_Element_Color('companyColor');
+		$companyColor->setAttr('class', 'autocomplete color');
 
 
 
@@ -51,12 +59,6 @@ class Form_AddBusinessForm extends Emilk_Form
 
 		$confirmationMail = new Emilk_Form_Element_Textarea('confirmationMail');
 		$confirmationMail->setAttr('data-autogrow', 'true');
-
-
-
-		$companyColor = new Emilk_Form_Element_Color('companyColor');
-		$companyColor->setAttr('class', 'autocomplete');
-
 
 
 		$c1 = new Emilk_Form_Element_Text('c1');
@@ -80,6 +82,7 @@ class Form_AddBusinessForm extends Emilk_Form
 			 ->setAttr('method', 'post')
 			 ->setAttr('autocomplete', 'off')
 			 ->setAttr('action', '/business/add')
+			 ->setAttr('enctype', 'multipart/form-data')
 			 ->add(array(
 			 	$businessName,
 				$companyName,
@@ -98,7 +101,9 @@ class Form_AddBusinessForm extends Emilk_Form
 				$c1,
 				$c2,
 				$c3,
-				$addBusiness
+				$addBusiness,
+				$prefix,
+				$logo
 			 ));
 	}
 }

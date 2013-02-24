@@ -28,7 +28,8 @@ class Form_EditBusinessForm extends Emilk_Form
 	                    'confirmation_mail',
 	                    'custom_field_1',
 	                    'custom_field_2',
-	                    'custom_field_3'
+	                    'custom_field_3',
+	                    'invoice_prefix'
                      ))
                      ->where('business_id = "' . $businessId . '"');
         list($business) = $db->fetchAll($select);
@@ -67,6 +68,11 @@ class Form_EditBusinessForm extends Emilk_Form
 					 ->setValue($business['company_country']);
 
 
+		$logo = new Emilk_Form_Element_File('logo');
+
+		$prefix = new Emilk_Form_Element_Text('prefix');
+		$prefix->setAttr('class', 'autocomplete')
+				->setValue($business['invoice_prefix']);
 
 		$companyBank = new Emilk_Form_Element_Text('companyBank');
 		$companyBank->setAttr('class', 'autocomplete')
@@ -99,7 +105,7 @@ class Form_EditBusinessForm extends Emilk_Form
 
 
 		$companyColor = new Emilk_Form_Element_Color('companyColor');
-		$companyColor->setAttr('class', 'autocomplete')
+		$companyColor->setAttr('class', 'autocomplete color')
 					 ->setValue('#' . $business['company_color']);
 
 
@@ -127,6 +133,7 @@ class Form_EditBusinessForm extends Emilk_Form
 		$this->setAttr('id', 'form')
 			 ->setAttr('method', 'post')
 			 ->setAttr('autocomplete', 'off')
+			 ->setAttr('enctype', 'multipart/form-data')
 			 ->add(array(
 			 	$businessName,
 				$companyName,
@@ -145,7 +152,9 @@ class Form_EditBusinessForm extends Emilk_Form
 				$c1,
 				$c2,
 				$c3,
-				$editBusiness
+				$editBusiness,
+				$logo,
+				$prefix
 			 ));
 	}
 }

@@ -67,6 +67,25 @@
 <fieldset>
     <label>Invoice details</label>
     <section>
+        <label for="logo">Company logo</label>
+        <div>
+
+            <?= $this->element('logo'); ?>
+
+            <br>
+            <i>       Allowed file types are .jpeg or .jpg</i>
+
+        </div>
+    </section>
+    <section>
+        <label for="delivery">invoice number prefix</label>
+        <div>
+
+            <?= $this->element('prefix'); ?>
+
+        </div>
+    </section>
+    <section>
         <label for="delivery">Bank</label>
         <div>
 
@@ -79,6 +98,14 @@
         <div>
 
             <?= $this->element('companyOrgnr'); ?>
+
+        </div>
+    </section>
+    <section>
+        <label for="delivery">theme color</label>
+        <div>
+
+            <?= $this->element('companyColor'); ?>
 
         </div>
     </section>
@@ -120,18 +147,6 @@
         <div>
 
             <?= $this->element('confirmationMail'); ?>
-
-        </div>
-    </section>
-</fieldset>
-
-
-<fieldset>
-    <label>Invoice text color</label>
-    <section>
-        <div>
-
-            <?= $this->element('companyColor'); ?>
 
         </div>
     </section>

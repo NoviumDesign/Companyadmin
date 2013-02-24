@@ -183,7 +183,7 @@ class InvoiceController extends Zend_Controller_Action
 
         // business company
         $select = $db->select()
-                     ->from('businesses', array('company_name', 'company_adress', 'company_zip_code', 'company_city', 'company_country', 'business_secret'))
+                     ->from('businesses', array('company_name', 'company_adress', 'company_zip_code', 'company_city', 'company_country', 'business_secret', 'invoice_prefix'))
                      ->where('businesses.business_id = ' . $_SESSION['business']);
         $result = $db->fetchAll($select);
         $this->view->businessComapny = $result[0];

@@ -43,7 +43,7 @@ $(document).ready(function() {
 		$content.find('input[type=url]').wl_URL();
 
 		//File Upload
-		$content.find('input[type=file]').wl_File();
+		// $content.find('input[type=file]').wl_File();
 
 		//Password and Color
 		$content.find('input[type=password]').wl_Password();

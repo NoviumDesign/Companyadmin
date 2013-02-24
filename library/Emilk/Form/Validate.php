@@ -25,6 +25,7 @@ class Emilk_Form_Validate {
             foreach($this->elements as $element) {
                 
                 if(isset($_POST[$element->name])) {
+
                     if($_POST[$element->name]) {
                         if(is_array($_POST[$element->name])) {
 
@@ -39,9 +40,11 @@ class Emilk_Form_Validate {
 
                         }
 
-                    } else {
+                    }  else {
                         $element->value = array('');
                     }
+                } elseif (isset($_FILES[$element->name])) {
+                        $element->value = $_FILES[$element->name];
                 }
             }
             return true;

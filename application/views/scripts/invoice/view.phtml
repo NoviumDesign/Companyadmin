@@ -15,7 +15,7 @@
          <button>Mail PDF</button>
       </a>
       
-   <h1>Invoice #<?= $this->invoice['invoice_number']; ?></h1>
+   <h1>Invoice #<?= $this->businessComapny['invoice_prefix'] . $this->invoice['invoice_number']; ?></h1>
 </div>
 <div class="g3 from">
 	<h6>From</h6>
@@ -39,7 +39,7 @@
 		<tbody>
 			<tr>
 				<th class="align-right">Invoice no.</th>
-				<td class="align-left">#<?= $this->invoice['invoice_number']; ?></td>
+				<td class="align-left">#<?= $this->businessComapny['invoice_prefix'] . $this->invoice['invoice_number']; ?></td>
 			</tr>
 			<tr>
 				<th class="align-right">Invoice date</th>
