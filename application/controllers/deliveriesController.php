@@ -16,12 +16,12 @@ class DeliveriesController extends Zend_Controller_Action
 		$select = $db->select()
 	                 ->from('orders', array('order_id', 'order_number', 'orders.delivery_date', 'delivery_adress', 'status', 'notes'))
 	                 ->joinLeft('customers', 'customers.customer_id = orders.customer', array('customer_id', 'name'))
-	                 ->joinLeft('items', 'items.order = orders.order_id', 'COUNT(items.quantity) AS items')
+	                 ->joinLeft('items', 'items.order = orders.order_id', 'SUM(items.quantity) AS items')
+	                 ->group('orders.order_id')
 	                 ->where('orders.business = ' . $_SESSION['business'])
 	                 ->where('orders.delivery_date >= "' . $today . '"')
 	                 ->where('orders.delivery_date < "' . $tomorrow . '"')
-	                 ->where('orders.delivery <> "requested"')
-	                 ->order('orders.delivery_date DESC');
+	                 ->where('orders.delivery <> "requested"');
 	    $this->view->deliveries = $db->fetchAll($select);
 
     }
