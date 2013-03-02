@@ -37,10 +37,21 @@
 				$businesses = $db->fetchAll($select);
 
 				// num things
-				$numOrders = $db->fetchAll('SELECT COUNT(order_id) as "0" FROM orders WHERE business = ' . $_SESSION['business']);
-				$numProducts = $db->fetchAll('SELECT COUNT(product_id) as "0" FROM products WHERE status <> "deleted" AND business = ' . $_SESSION['business']);
-				$numCustomers = $db->fetchAll('SELECT COUNT(customer_id) as "0" FROM customers WHERE business = ' . $_SESSION['business']);
-				$numInvoices = $db->fetchAll('SELECT COUNT(invoice_id) as "0" FROM invoices WHERE business = ' . $_SESSION['business']);
+				$numOrders = $db->fetchAll('SELECT COUNT(order_id) as "quantity" FROM orders WHERE business = ' . $_SESSION['business']);
+				$numProducts = $db->fetchAll('SELECT COUNT(product_id) as "quantity" FROM products WHERE status <> "deleted" AND business = ' . $_SESSION['business']);
+				$numCustomers = $db->fetchAll('SELECT COUNT(customer_id) as "quantity" FROM customers WHERE business = ' . $_SESSION['business']);
+				$numInvoices = $db->fetchAll('SELECT COUNT(invoice_id) as "quantity" FROM invoices WHERE business = ' . $_SESSION['business']);
+
+				$today = strtotime(date('Y-m-d'));
+				$tomorrow = $today + 24*60*60;
+				$select = $db->select()
+	                 ->from('orders', 'COUNT(order_id) as quantity')
+	                 ->where('orders.business = ' . $_SESSION['business'])
+	                 ->where('orders.delivery_date >= "' . $today . '"')
+	                 ->where('orders.delivery_date < "' . $tomorrow . '"')
+	                 ->where('orders.delivery <> "requested"');
+	    		$numDeliveries = $db->fetchAll($select);
+
 
 				include APPLICATION_PATH . '/views/layout/top.html';
 				include APPLICATION_PATH . '/views/layout/nav.php';

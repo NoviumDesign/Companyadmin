@@ -83,6 +83,7 @@ class Form_AddOrderForm extends Emilk_Form
 		$deliveryStatus = new Emilk_Form_Element_Radio('deliveryStatus');
 		$deliveryStatus->setAttr('required', '')
 					   ->addChoises(array(
+					   		'new',
 					      'active',
 					      'completed'
 					   ));

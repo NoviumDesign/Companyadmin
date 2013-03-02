@@ -93,8 +93,20 @@ $.fn.wl_Date = function (method) {
 
 $.fn.wl_Date.defaults = {
 	value: null,
-	mousewheel: true
+	mousewheel: true,
+	
+	//some datepicker standards
+	dayNames : ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
+	dayNamesMin : ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'],
+	dayNamesShort : ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+	firstDay: 0,
+	nextText: 'next',
+	prevText: 'prev',
+	currentText: 'Today',
+	showWeek: true,
+	dateFormat: 'yy-mm-dd'
 };
+
 $.fn.wl_Date.version = '1.0';
 
 

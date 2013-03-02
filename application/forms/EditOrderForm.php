@@ -101,7 +101,7 @@ class Form_EditOrderForm extends Emilk_Form
 
 
 		if($order['delivery_date']) {
-			$deliveryDate->setValue(date('d/m/Y', $order['delivery_date']));	// GMT?
+			$deliveryDate->setValue(date('Y-m-d', $order['delivery_date']));	// GMT?
 			$deliveryTime->setValue(date('H:i', $order['delivery_date']));		// GMT?
 		} else {
 			$deliveryDate->setAttr('data-value', '+7');
@@ -121,6 +121,7 @@ class Form_EditOrderForm extends Emilk_Form
 		$deliveryStatus = new Emilk_Form_Element_Radio('deliveryStatus');
 		$deliveryStatus->setAttr('required', '')
 					   ->addChoises(array(
+					   	  'new',
 					      'active',
 					      'completed'))
 				   	   ->setValue($order['status']);

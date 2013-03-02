@@ -44,7 +44,7 @@
 				<tr class="clickable" data-link="/order/view/<?= $order['order_id'] ?>">
 					<td><?= $order['order_number'] ?></td>
 					<td><a href="/customer/view/<?= $order['customer_id'] ?>"><?= $order['name'] ?></a></td>
-					<td><?= $order['status'] ?></td>
+					<td><a href="#" class="changeStatus" data-id="<?= $order['order_id'] ?>"><?= $order['status'] ?></a></td>
 					<td><?= $order['delivery'] ?></td>
 					<td><?= ($order['delivery_date'] ? date('Y-m-d', $order['delivery_date']): '') ?></td>
 					<td><?= ($order['notes'] ? 'yes' : '') ?></td>

@@ -177,34 +177,37 @@ class Emilk_Pdf_Page extends Zend_Pdf_Page
 			// path
 			$imgPath = APPLICATION_PATH . $style['background']['image'];
 
-			// dimensions
-			$imgSize = getimagesize($imgPath);
+			if(file_exists($imgPath)) {
 
-			// load image 
-			$image = Zend_Pdf_Image::imageWithPath($imgPath); 
+				// dimensions
+				$imgSize = getimagesize($imgPath);
+
+				// load image 
+				$image = Zend_Pdf_Image::imageWithPath($imgPath); 
 
 
-			if($imgSize[0]/$imgSize[1] > ($p2->x - $p1->x)/($p1->y - $p2->y)) {
-				// image wider
+				if($imgSize[0]/$imgSize[1] > ($p2->x - $p1->x)/($p1->y - $p2->y)) {
+					// image wider
 
-				$this->drawImage(
-					$image,
-					$p1->x,	// left
-					$p1->y - $imgSize[1]*($p2->x - $p1->x)/$imgSize[0],	// bottom
-					$p2->x,	// right
-					$p1->y	// top
-				); 
+					$this->drawImage(
+						$image,
+						$p1->x,	// left
+						$p1->y - $imgSize[1]*($p2->x - $p1->x)/$imgSize[0],	// bottom
+						$p2->x,	// right
+						$p1->y	// top
+					); 
 
-			} else {
-				// image higher
+				} else {
+					// image higher
 
-				$this->drawImage(
-					$image,
-					$p1->x,	// left
-					$p2->y,	// bottom
-					$p1->x + $imgSize[0]*($p1->y - $p2->y)/$imgSize[1],	// right
-					$p1->y	// top
-				); 
+					$this->drawImage(
+						$image,
+						$p1->x,	// left
+						$p2->y,	// bottom
+						$p1->x + $imgSize[0]*($p1->y - $p2->y)/$imgSize[1],	// right
+						$p1->y	// top
+					); 
+				}
 			}
 
 

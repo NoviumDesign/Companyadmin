@@ -194,7 +194,7 @@ class RequestController extends Zend_Controller_Action
                     'delivery' => $order['delivery'],
                     'delivery_adress' => (isset($order['deliveryAdress'])? $order['deliveryAdress']: null),
                     'delivery_date' =>  (isset($order['deliveryDate'])? strtotime($order['deliveryDate']): null),
-                    'status' => 'active',
+                    'status' => 'new',
                     'customer' => $orderCustomer, // create customer
                     'notes' => (isset($order['deliveryNotes'])? $order['deliveryNotes']: null),
                     'custom_1' => (isset($customFields[1])? $customFields[1]: null),

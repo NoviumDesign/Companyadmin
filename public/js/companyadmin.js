@@ -46,7 +46,13 @@ $('.ui-autocomplete').live('click', function() {
 //
 // CLICK TABLE
 //
-$('.clickable').live('click', function(event) {
+$('.clickable').live('mouseup', function(event) {
+	var target = '_self'
+
+	if(event.which == 2 || event.which == 3 || event.ctrlKey) {
+		target = '_blank'
+	}
+
 	// clicked child elements
 	$target = $(event.target);
 	$targetTd = $target.parent('td');
@@ -59,16 +65,46 @@ $('.clickable').live('click', function(event) {
 
 	// if target contain link
 	if($targetTd.data('link')) {
-		// libk via td
-		window.location = $targetTd.data('link');
+		// link via td
+		redirect($targetTd.data('link'), target)
 		return;
 	}
 
 	// if parent td contain link
 	if($(this).data('link')) {
-		// libk via td
-		window.location = $(this).data('link');
+		// link via td
+		redirect($(this).data('link'), target)
 		return;
 	}
 
 });
+var redirect = function(url, target) {
+	window.open(url, target)
+}
+
+$('.changeStatus').live('click', function(event) {
+	event.preventDefault();
+	var status, statuses, index, id;
+
+	status = $(this).html();
+	statuses = ['new', 'active', 'completed'];
+	id = $(this).data('id');
+
+	index = (statuses.indexOf(status) + 1)%statuses.length
+
+	$that = $(this);
+	$.post(
+    	'/ajax/status',
+		{
+			'id': id,
+			'status': statuses[index]
+		},
+		function(response){
+
+			$that.html(response);
+
+    	}
+    );
+
+});
+

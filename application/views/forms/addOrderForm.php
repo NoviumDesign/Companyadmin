@@ -147,6 +147,10 @@
 		<label for="delivery">Status on order?</label>
 		<div>
 			
+			<?= $this->element('deliveryStatus', 'new'); ?>
+
+			<label for="deliverystatus">New</label>
+			
 			<?= $this->element('deliveryStatus', 'active'); ?>
 
 			<label for="deliverystatus">Active</label>
