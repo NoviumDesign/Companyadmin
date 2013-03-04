@@ -3,7 +3,7 @@
 <?php } ?>
 
 <div class="g12">
-   <h1>Invoices</h1>
+   <h1><?= (isset($this->paid)? 'Paid ': 'Unpaid ') ?>Invoices</h1>
    <table class="datatable">
       <thead>
          <tr>
@@ -16,14 +16,24 @@
       </thead>
       <tbody>
 
-         <?php foreach($this->invoices as $invoice) { ?>
+         <?php 
+            foreach($this->invoices as $invoice) {
 
-            <tr class="clickable" data-link="/invoice/view/<?= $invoice['invoice_id'] ?>">
+            $color = '';
+            if($invoice['status'] == 'paid') {
+               $color = 'green';
+            } elseif ($invoice['status'] == 'unpaid') {
+               $color = 'yellow';
+            }
+
+         ?>
+
+            <tr class="clickable <?= $color ?>" data-link="/invoice/view/<?= $invoice['invoice_id'] ?>">
                <td><?= $invoice['invoice_number'] ?></td>
                <td><a href="/customer/view/<?= $invoice['customer_id'] ?>"><?= $invoice['name'] ?></td>
                <td><?= date('Y-m-d', $invoice['date']) /*ADD + 1 HOUR*/?></td>
                <td><?= date('Y-m-d', $invoice['due']) ?></td>
-               <td><?= $invoice['status'] ?></td>
+               <td><a href="#" class="changeInvoiceStatus" data-id="<?= $invoice['invoice_id'] ?>"><?= $invoice['status'] ?></a></td>
             </tr>
 
          <?php } ?>

@@ -3,13 +3,12 @@
 <?php } ?>
 
 <div class="g12">
-	<h1>Orders</h1>
+	<h1><?= (isset($this->completed)? 'Completed ': 'Active '); ?>orders</h1>
 	<table class="datatable">
 		<thead>
 			<tr>
 				<th>Order number</th>
 				<th>Customer</th>
-				<th>Status</th>
 				<th>Delivery</th>
 				<th>Delivary date</th>
 				<th>Notes</th>
@@ -35,16 +34,31 @@
 					}
 				?>
 
+				<th>Status</th>
+
 			</tr>
 		</thead>
 		<tbody>
 
-			<?php foreach($this->orders as $order) { ?>
+			<?php 
+				foreach($this->orders as $order) {
 
-				<tr class="clickable" data-link="/order/view/<?= $order['order_id'] ?>">
+				$color = '';
+				if($order['status'] == 'new') {
+					$color = 'blue';
+				} elseif ($order['status'] == 'active') {
+					$color = 'yellow';
+				} elseif ($order['status'] == 'completed') {
+					$color = 'green';
+				} elseif ($order['status'] == 'invoice') {
+					$color = 'orange';
+				}
+
+			?>
+
+				<tr class="clickable <?= $color ?>" data-link="/order/view/<?= $order['order_id'] ?>">
 					<td><?= $order['order_number'] ?></td>
 					<td><a href="/customer/view/<?= $order['customer_id'] ?>"><?= $order['name'] ?></a></td>
-					<td><a href="#" class="changeStatus" data-id="<?= $order['order_id'] ?>"><?= $order['status'] ?></a></td>
 					<td><?= $order['delivery'] ?></td>
 					<td><?= ($order['delivery_date'] ? date('Y-m-d', $order['delivery_date']): '') ?></td>
 					<td><?= ($order['notes'] ? 'yes' : '') ?></td>
@@ -70,38 +84,12 @@
 						}
 					?>
 
+					<td><a href="#" class="changeOrderStatus" data-id="<?= $order['order_id'] ?>"><?= $order['status'] ?></a></td>
+
 				</tr>
 
 			<?php } ?>
 
 		</tbody>
 	</table>
-
-
-	<h1>Ordered products</h1>
-	<table class="datatable">
-		<thead>
-			<tr>
-				<th>Product</th>
-				<th>Quantity</th>
-			</tr>
-		</thead>
-		<tbody>
-
-			<?php foreach($this->orderedProducts as $product) { ?>
-
-				<tr>
-					<td><a href="/product/view/<?= $product['product_id'] ?>"><?= $product['product'] ?></a></td>
-					<td><?= $product['quantity'] ?></td>
-				</tr>
-
-			<?php } ?>
-
-		</tbody>
-	</table>
-
-
-
-
-
 </div>	

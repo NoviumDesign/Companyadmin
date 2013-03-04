@@ -5,7 +5,10 @@ class OrdersController extends Zend_Controller_Action
     public function viewAction()
     {
         $db = Zend_Registry::get('db');
-        
+
+        $parameters = new Emilk_Request_Parameters();
+        list($completed) = $parameters->get();
+
         // select
         $select = $db->select()
                      ->from('orders', array('order_id', 'order_number', 'delivery_date', 'status', 'delivery', 'notes', 'custom_1', 'custom_2', 'custom_3'))
@@ -13,6 +16,15 @@ class OrdersController extends Zend_Controller_Action
                      ->joinLeft('items', 'items.order = orders.order_id', 'SUM(items.quantity) as quantity')
                      ->group('orders.order_id')
                      ->where('orders.business = ' . $_SESSION['business']);
+
+        if($completed == 'completed') {
+            $this->view->completed = true;
+
+            $select->where('(orders.status = "completed" OR orders.status = "invoice")');
+        } else {
+            $select->where('(orders.status = "new" OR orders.status = "active")');
+        }
+        
         $orders = $db->fetchAll($select);
 
         $this->view->orders = $orders;
@@ -24,17 +36,6 @@ class OrdersController extends Zend_Controller_Action
         $customs = $db->fetchAll($select);
 
         $this->view->customs = $customs;
-
-        // all ordered products
-        $select = $db->select()
-                     ->from('products', array('product_id', 'product'))
-                     ->joinLeft('items', 'items.product = products.product_id', 'SUM(items.quantity) as quantity')
-                     ->group('products.product_id')
-                     ->where('items.invoice = 0')
-                     ->where('products.business = ' . $_SESSION['business']);
-        $orderedProducts = $db->fetchAll($select);
-
-        $this->view->orderedProducts = $orderedProducts;
 
         // is admin
         $acl = new Model_LibraryAcl;

@@ -72,6 +72,17 @@ class InvoiceController extends Zend_Controller_Action
                         ));
                 }
             }
+
+            // from order?
+            if($form->getValue('orderId')) {
+                $table = new Model_Db_Orders(array('db' => $db));
+                $table->update(array(
+                        'status' => 'invoice'
+                    ),
+                    'order_id = ' . $form->getValue('orderId') . ' AND  business = ' . $_SESSION['business']
+                );
+            }
+
             $this->_redirect('/invoice/view/' . $invoiceId);
         }
     }

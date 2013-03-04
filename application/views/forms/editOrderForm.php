@@ -158,6 +158,10 @@
 			<?= $this->element('deliveryStatus', 'completed'); ?>
 
 			<label for="deldiverystatus">Completed</label>
+
+			<?= $this->element('deliveryStatus', 'invoice'); ?>
+
+			<label for="deldiverystatus">Invoice created</label>
 		</div>
 	</section>
 	<section>

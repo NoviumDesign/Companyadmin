@@ -12,6 +12,19 @@ body {
 	padding-top: 20px;
 }
 
+body#error {
+	position: relative;
+	width: auto !important;
+	margin-top: 0;
+	padding-top: 20px;
+	margin-left: 10%;
+	margin-right: 10%;
+
+	#content {
+		padding: 15px 5px 15px 230px;
+	}
+}
+
 .table-unstyled {
 
 	td, th {
@@ -149,12 +162,68 @@ body {
 /* Table
 /*----------------------------------------------------------------------*/
 
-
-.clickable {
-	cursor: pointer;
-}
-.clickable:hover td{
-	background-image: -webkit-linear-gradient(45deg, rgba(200, 200, 200, 0.14902) 25%, transparent 25%, transparent 50%, rgba(200, 200, 200, 0.14902) 50%, rgba(200, 200, 200, 0.14902) 75%, transparent 75%, transparent);
+.datatable tr {
 	background-repeat: repeat-x;
-	background-size: 40px 40px;
+
+	td {
+		background-size: 40px 40px !important;
+	}
+	&.clickable {
+		cursor: pointer;
+	}
+
+	&.even {
+		td {
+			background-image: -webkit-linear-gradient(45deg, rgba(255, 255, 255, 0.1) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.1) 50%, rgba(255, 255, 255, 0.1) 75%, transparent 75%, transparent);
+		}
+		&:hover td{
+			background-image: -webkit-linear-gradient(45deg, rgba(255, 255, 255, 0.2) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.2) 50%, rgba(255, 255, 255, 0.2) 75%, transparent 75%, transparent);
+		}
+	}
+	&.odd {
+		td {
+			background-image: -webkit-linear-gradient(-45deg, rgba(255, 255, 255, 0.1) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.1) 50%, rgba(255, 255, 255, 0.1) 75%, transparent 75%, transparent);
+		}
+		&:hover td{
+			background-image: -webkit-linear-gradient(-45deg, rgba(255, 255, 255, 0.2) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.2) 50%, rgba(255, 255, 255, 0.2) 75%, transparent 75%, transparent);
+		}
+	}
+
+	&.red {
+		td {
+			background-color: #f0a8a8 !important;
+		}
+	}
+	&.blue {
+		td {
+			background-color: #d3d6ff !important;
+		}
+	}
+	&.green {
+		td {
+			background-color: #a2e8a2 !important;
+		}
+	}
+	&.yellow {
+		td {
+			background-color: #f0efa8 !important;
+		}
+	}
+	&.orange {
+		td {
+			background-color: #f0cca8 !important;
+		}
+	}
+
+	&.even td.sorting_1 {
+		background-image: -webkit-linear-gradient(45deg, rgba(255, 255, 255, 0.3) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.3) 50%, rgba(255, 255, 255, 0.3) 75%, transparent 75%, transparent) !important;
+	}
+	&.odd td.sorting_1 {
+		background-image: -webkit-linear-gradient(-45deg, rgba(255, 255, 255, 0.3) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.3) 50%, rgba(255, 255, 255, 0.3) 75%, transparent 75%, transparent) !important;
+	}
+}
+
+nav ul li ul {
+	padding-bottom: 10px;
+	margin-bottom: 0px
 }

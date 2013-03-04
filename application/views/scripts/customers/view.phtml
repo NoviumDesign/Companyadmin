@@ -2,9 +2,8 @@
    <a href="/customer/add"><button>Add customer</button></a>
 <?php } ?>
 
-<?php if(isset($this->noneRegisteredCustomers)) { ?>
 <div class="g12">
-   <h1>None registered customers</h1>
+   <h1>Customers</h1>
    <table class="datatable">
       <thead>
          <tr>
@@ -17,46 +16,18 @@
       </thead>
       <tbody>
 
-         <?php foreach($this->noneRegisteredCustomers as $customer) { ?>
+         <?php
+            foreach($this->customers as $customer) {
 
-            <tr class="clickable" data-link="/customer/view/<?= $customer['customer_id'] ?>">
-               <td><?= $customer['name'] ?></td>
-               <td><?= $customer['type'] ?></td>
-               <td>
-                  <a target="_blank" href="http://maps.google.com/?q=<?= $customer['customer_adress'] ?>, <?= $customer['zip_code'] ?> <?= $customer['city'] ?>, <?= $customer['country'] ?>">
-                     <?= $customer['customer_adress'] ?>
-                  </a>
-               </td>
-               <td><a href="tel:<?= $customer['phone'] ?>"><?= $customer['phone'] ?></a></td>
-               <td><a href="mailto:<?= $customer['mail'] ?>"><?= $customer['mail'] ?></a></td>
-            </tr>
+            $color = '';
+            if($customer['type'] == 'private') {
+               $color = 'yellow';
+            } elseif ($customer['type'] == 'company') {
+               $color = 'blue';
+            }
+         ?>
 
-         <?php } ?>
-
-      </tbody>
-   </table>
-</div>
-<?php } ?>
-
-<div class="g12">
-   <h1>Registered customers</h1>
-   <table class="datatable">
-      <thead>
-         <tr>
-            <th>Name</th>
-            <th>Type</th>
-            <th>Adress</th>
-            <th>Phone</th>
-            <th>Mail</th>
-         </tr>
-      </thead>
-      <tbody>
-
-         <?php 
-         if(isset($this->registeredCustomers)) {
-            foreach($this->registeredCustomers as $customer) { ?>
-
-            <tr class="clickable" data-link="/customer/view/<?= $customer['customer_id'] ?>">
+            <tr class="clickable <?= $color; ?>" data-link="/customer/view/<?= $customer['customer_id'] ?>">
                <td><?= $customer['name'] ?></td>
                <td><?= $customer['type'] ?>
                <td>
@@ -68,7 +39,7 @@
                <td><a href="mailto:<?= $customer['mail'] ?>"><?= $customer['mail'] ?></a></td>
             </tr>
 
-         <?php }} ?>
+         <?php } ?>
 
       </tbody>
    </table>

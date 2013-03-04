@@ -73,7 +73,9 @@ class Model_LibraryAcl extends Emilk_Acl_Library
 			'businesses' => 'master',
 			'business' => 'master',
 
-			'deliveries' => 'user'
+			'deliveries' => 'user',
+
+			'crs' => 'user'
 
 
 		);

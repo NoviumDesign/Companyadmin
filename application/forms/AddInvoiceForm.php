@@ -112,12 +112,14 @@ class Form_AddInvoiceForm extends Emilk_Form
 				    ->setValue('submit')
 				    ->setText('Add Invoice');
 
+		$orderId = new Emilk_Form_Element_Hidden('orderId');
 
 		if($this->orderId) {
 			$customerId->setValue($order['customer_id']);
 		    $customer->setValue($order['customer_name']);
 			$notes->setValue($order['notes']);
 			$status->setValue('unpaid');
+			$orderId->setValue($this->orderId);
 		}
 
 
@@ -132,7 +134,8 @@ class Form_AddInvoiceForm extends Emilk_Form
 			 	$status,
 			 	$discount,
 			 	$notes,
-			 	$addInvoice
+			 	$addInvoice,
+			 	$orderId
 			 ))
 			 ->add($products);
 	}

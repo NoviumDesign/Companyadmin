@@ -123,7 +123,8 @@ class Form_EditOrderForm extends Emilk_Form
 					   ->addChoises(array(
 					   	  'new',
 					      'active',
-					      'completed'))
+					      'completed',
+					      'invoice'))
 				   	   ->setValue($order['status']);
 
 

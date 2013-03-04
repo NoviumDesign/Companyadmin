@@ -1,3 +1,5 @@
+<?= $this->element('orderId'); ?>
+
 <fieldset>
 	<label>Invoice status</label>
 	<section>

@@ -9,22 +9,8 @@ class CustomersController extends Zend_Controller_Action
         // customers
         $select = $db->select()
                      ->from('customers', array('customer_id', 'name', 'type', 'customer_adress', 'zip_code', 'city', 'country', 'phone', 'mail'))
-                     ->where('customers.business = ' . $_SESSION['business'] . ' AND customers.registered = "true"');
-        $registeredCustomers = $db->fetchAll($select);
-
-        $select = $db->select()
-                     ->from('customers', array('customer_id', 'name', 'type', 'customer_adress', 'zip_code', 'city', 'country', 'phone', 'mail'))
-                     ->where('customers.business = ' . $_SESSION['business'] . ' AND customers.registered = "false"');
-        $noneRegisteredCustomers = $db->fetchAll($select);
-
-        // pass to view
-        if(count($registeredCustomers) > 0) {
-            $this->view->registeredCustomers = $registeredCustomers;
-        }
-        if(count($noneRegisteredCustomers) > 0) {
-            $this->view->noneRegisteredCustomers = $noneRegisteredCustomers;
-        }
-
+                     ->where('customers.business = ' . $_SESSION['business']);
+        $this->view->customers = $db->fetchAll($select);
 
         // is admin
         $acl = new Model_LibraryAcl;

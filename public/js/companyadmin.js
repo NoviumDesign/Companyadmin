@@ -49,7 +49,7 @@ $('.ui-autocomplete').live('click', function() {
 $('.clickable').live('mouseup', function(event) {
 	var target = '_self'
 
-	if(event.which == 2 || event.which == 3 || event.ctrlKey) {
+	if(event.which == 2 || event.which == 3 || event.ctrlKey || event.shiftKey) {
 		target = '_blank'
 	}
 
@@ -82,29 +82,98 @@ var redirect = function(url, target) {
 	window.open(url, target)
 }
 
-$('.changeStatus').live('click', function(event) {
+
+$('.changeOrderStatus').live('click', function(event) {
 	event.preventDefault();
-	var status, statuses, index, id;
+	var status, statuses, index, id, colors;
 
 	status = $(this).html();
-	statuses = ['new', 'active', 'completed'];
+	statuses = ['new', 'active', 'completed', 'invoice'];
+	colors = ['blue', 'yellow', 'green', 'orange']
 	id = $(this).data('id');
 
 	index = (statuses.indexOf(status) + 1)%statuses.length
 
 	$that = $(this);
 	$.post(
-    	'/ajax/status',
+    	'/ajax/orderstatus',
 		{
 			'id': id,
 			'status': statuses[index]
 		},
 		function(response){
+			index = statuses.indexOf(response)%statuses.length
+			color = colors[index]
 
 			$that.html(response);
 
+			$that.parents('tr').removeClass(colors.join(' '))
+			$that.parents('tr').addClass(color)
     	}
     );
-
 });
 
+$('.changeInvoiceStatus').live('click', function(event) {
+	event.preventDefault();
+	var status, statuses, index, id, colors;
+
+	status = $(this).html();
+	statuses = ['unpaid', 'paid'];
+	colors = ['yellow', 'green']
+	id = $(this).data('id');
+
+	index = (statuses.indexOf(status) + 1)%statuses.length
+
+	$that = $(this);
+	$.post(
+    	'/ajax/invoicestatus',
+		{
+			'id': id,
+			'status': statuses[index]
+		},
+		function(response){
+			index = statuses.indexOf(response)%statuses.length
+			color = colors[index]
+
+			$that.html(response);
+
+			$that.parents('tr').removeClass(colors.join(' '))
+			$that.parents('tr').addClass(color)
+    	}
+    );
+});
+
+$('.changeCrStatus').live('click', function(event) {
+	event.preventDefault();
+	var status, statuses, index, id, colors;
+
+	status = $(this).html();
+	statuses = ['active', 'completed'];
+	colors = ['yellow', 'green']
+	id = $(this).data('id');
+
+	index = (statuses.indexOf(status) + 1)%statuses.length
+
+	$that = $(this);
+	$.post(
+    	'/ajax/crstatus',
+		{
+			'id': id,
+			'status': statuses[index]
+		},
+		function(response){
+			index = statuses.indexOf(response)%statuses.length
+			color = colors[index]
+
+			$that.html(response);
+
+			$that.parents('tr').removeClass(colors.join(' '))
+			$that.parents('tr').addClass(color)
+    	}
+    );
+});
+
+
+$('#deliveryDate').live('change', function() {
+	redirect('/deliveries/view/' + $(this).val(), '_self');
+});

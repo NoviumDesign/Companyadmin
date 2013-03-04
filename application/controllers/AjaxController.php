@@ -28,7 +28,7 @@ class AjaxController extends Zend_Controller_Action
 
     }
 
-    public function statusAction()
+    public function orderstatusAction()
     {
         $db = Zend_Registry::get('db');
 
@@ -41,6 +41,42 @@ class AjaxController extends Zend_Controller_Action
                 'status' => $status
             ),
             'order_id = ' . $orderId . ' AND  business = ' . $_SESSION['business']
+        );
+
+        echo $status;
+    }
+
+    public function invoicestatusAction()
+    {
+        $db = Zend_Registry::get('db');
+
+        $invoiceId = $_POST['id'];
+        $status = $_POST['status'];
+
+        // update invoice
+        $table = new Model_Db_Invoices(array('db' => $db));
+        $table->update(array(
+                'status' => $status
+            ),
+            'invoice_id = ' . $invoiceId . ' AND  business = ' . $_SESSION['business']
+        );
+
+        echo $status;
+    }
+
+    public function crstatusAction()
+    {
+        $db = Zend_Registry::get('db');
+
+        $crId = $_POST['id'];
+        $status = $_POST['status'];
+
+        // update invoice
+        $table = new Model_Db_Crs(array('db' => $db));
+        $table->update(array(
+                'status' => $status
+            ),
+            'crs_id = ' . $crId . ' AND  business = ' . $_SESSION['business']
         );
 
         echo $status;

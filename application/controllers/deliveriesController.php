@@ -10,8 +10,17 @@ class DeliveriesController extends Zend_Controller_Action
     {
     	$db = Zend_Registry::get('db');
 
-		$today = strtotime(date('Y-m-d'));
-		$tomorrow = $today + 24*60*60;
+    	$parameters = new Emilk_Request_Parameters();
+        list($date) = $parameters->get();
+
+        if($date) {
+			$today = strtotime($date);
+			$tomorrow = $today + 24*60*60;
+			$this->view->date = $date;
+        } else {
+			$today = strtotime(date('Y-m-d'));
+			$tomorrow = $today + 24*60*60;
+        }
 
 		$select = $db->select()
 	                 ->from('orders', array('order_id', 'order_number', 'orders.delivery_date', 'delivery_adress', 'status', 'notes'))

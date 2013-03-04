@@ -5,7 +5,7 @@
 <div class="g6 widgets">
 
 	<div class="widget" id="widget_order_date" data-icon="create_write">
-		<h3 class="handle">Order dates</h3>
+		<h3 class="handle">Delivery dates</h3>
 		<div>
 			<table class="datatable">
 				<thead>
@@ -17,7 +17,7 @@
 				</thead>
 				<tbody>
 
-					<?php foreach($this->orderDates as $date) { ?>
+					<?php foreach($this->deliveryDates as $date) { ?>
 
 					<tr>
 						<td><?= ($date['delivery_date'] ? date('Y-m-d', $date['delivery_date']): ''); ?></td>
@@ -31,6 +31,36 @@
 			</table>
 		</div>
 	</div>
+
+	<div class="widget" id="widget_order_date" data-icon="create_write">
+		<h3 class="handle">Ordered products</h3>
+		<div>
+			<table class="datatable">
+				<thead>
+					<tr>
+						<th>Product</th>
+						<th>Quantity</th>
+					</tr>
+				</thead>
+				<tbody>
+
+					<?php foreach($this->orderedProducts as $product) { ?>
+
+						<tr>
+							<td><a href="/product/view/<?= $product['product_id'] ?>"><?= $product['product'] ?></a></td>
+							<td><?= $product['quantity'] ?></td>
+						</tr>
+
+					<?php } ?>
+
+				</tbody>
+			</table>
+		</div>
+	</div>
+
+
+
+
 
 	<!-- <div class="widget" id="calendar_widget" data-icon="calendar">
 		<h3 class="handle">Calendar</h3>
