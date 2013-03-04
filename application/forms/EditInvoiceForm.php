@@ -69,7 +69,7 @@ class Form_EditInvoiceForm extends Emilk_Form
 
 		$invoiceDue = new Emilk_Form_Element_Text('invoiceDue');
 		$invoiceDue->setAttr('class', 'date')
-				   ->setValue(date('d/m/Y', $invoice['due']));
+				   ->setValue(date('Y-m-d', $invoice['due']));
 
 
 		$products = array();

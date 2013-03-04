@@ -177,3 +177,12 @@ $('.changeCrStatus').live('click', function(event) {
 $('#deliveryDate').live('change', function() {
 	redirect('/deliveries/view/' + $(this).val(), '_self');
 });
+
+$('#widget_mails textarea').live('focus', function() {
+	$(this)[0].select();
+
+	$(this).live('mouseup', function() {
+		$(this)[0].onmouseup = null;
+        return false;
+	})
+});

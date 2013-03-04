@@ -65,7 +65,14 @@ class OrderController extends Zend_Controller_Action
                         ));
                 }
             }
-            $this->_redirect('/orders/view/');
+
+            if($form->getValue('deliveryStatus') == 'new' || $form->getValue('deliveryStatus') == 'active') {
+                $status = 'active';
+            } else {
+                $status = 'completed';
+            }
+
+            $this->_redirect('/orders/view/' . $status);
         }
     }
 
@@ -148,7 +155,14 @@ class OrderController extends Zend_Controller_Action
                     }
                 }
             }
-            $this->_redirect('/orders/view');
+
+            if($form->getValue('deliveryStatus') == 'new' || $form->getValue('deliveryStatus') == 'active') {
+                $status = 'active';
+            } else {
+                $status = 'completed';
+            }
+
+            $this->_redirect('/orders/view/' . $status);
         }
     }
 

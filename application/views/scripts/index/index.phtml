@@ -4,7 +4,7 @@
 
 <div class="g6 widgets">
 
-	<div class="widget" id="widget_order_date" data-icon="create_write">
+	<div class="widget" id="widget_order_date" data-icon="calendar">
 		<h3 class="handle">Delivery dates</h3>
 		<div>
 			<table class="datatable">
@@ -32,7 +32,7 @@
 		</div>
 	</div>
 
-	<div class="widget" id="widget_order_date" data-icon="create_write">
+	<div class="widget" id="widget_ordered_products" data-icon="abacus">
 		<h3 class="handle">Ordered products</h3>
 		<div>
 			<table class="datatable">
@@ -55,6 +55,16 @@
 
 				</tbody>
 			</table>
+		</div>
+	</div>
+
+	<div class="widget" id="widget_mails" data-icon="mail">
+		<h3 class="handle">Mail adresses</h3>
+		<div>
+			<h5>
+				There's <i><?= $this->numMails ?></i> distinct mail adresses at this moment.
+			</h5>
+			<textarea><?= $this->mails ?></textarea>
 		</div>
 	</div>
 
