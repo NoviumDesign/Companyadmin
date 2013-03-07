@@ -20,6 +20,8 @@ class Plugin_AccessCheck extends Zend_Controller_Plugin_Abstract
 		}
 
 		if(!$this->acl->access($this->role, $controller, $action)) {
+
+			$_SESSION['access_denied'] = array($controller, $action);
 			
 			// set other path
 			$request->setControllerName('authentication')

@@ -194,7 +194,7 @@ class InvoiceController extends Zend_Controller_Action
 
         // business company
         $select = $db->select()
-                     ->from('businesses', array('company_name', 'company_adress', 'company_zip_code', 'company_city', 'company_country', 'business_secret', 'invoice_prefix'))
+                     ->from('businesses', array('company_name', 'company_adress', 'company_zip_code', 'company_city', 'company_country', 'business_secret', 'invoice_prefix', 'invoice_mail_title', 'invoice_mail_content'))
                      ->where('businesses.business_id = ' . $_SESSION['business']);
         $result = $db->fetchAll($select);
         $this->view->businessComapny = $result[0];
@@ -210,9 +210,14 @@ class InvoiceController extends Zend_Controller_Action
         $this->view->pdfLink = $result[0]['company_secret'] . '/' . $this->view->businessComapny['business_secret'] . '/' . $this->view->invoice['invoice_secret'];
 
         // mailto
-        $this->view->mailTo= '
-            mailto:' . $this->view->invoice['mail'] . '?subject=faktura&body=http://companyadmins.elasticbeanstalk.com/' . $this->view->pdfLink;
+        $mailAdress = $this->view->invoice['mail'];
+        $invoiceLink = 'http://companyadmins.elasticbeanstalk.com/' . $this->view->pdfLink;
+        $title = urlencode(html_entity_decode($this->view->businessComapny['invoice_mail_title'], ENT_QUOTES, 'UTF-8'));
+        $body = urlencode(str_replace('<invoice>', $invoiceLink, html_entity_decode($this->view->businessComapny['invoice_mail_content'], ENT_QUOTES, 'UTF-8')));
 
+        $mail = 'mailto:' . $mailAdress . '?subject=' . $title . '&body=' . $body;
+
+        $this->view->mailTo = $mail;
     }
 
     public function deleteAction()

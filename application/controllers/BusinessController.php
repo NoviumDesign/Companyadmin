@@ -26,6 +26,7 @@ class BusinessController extends Zend_Controller_Action
                         'company_city' => $form->getValue('companyCity'),
                         'company_country' => $form->getValue('companyCountry'),
 
+                        'company_reference' => $form->getValue('companyReference'),
                         'company_phone' => $form->getValue('companyPhone'),
                         'company_mail' => $form->getValue('companyMail'),
                         'company_site' => $form->getValue('companySite'),
@@ -37,10 +38,14 @@ class BusinessController extends Zend_Controller_Action
                         'confirmation_mail' => $form->getValue('confirmationMail'),
 
                         'invoice_prefix' => $form->getValue('prefix'),
+                        'invoice_detail' => $form->getValue('detail'),
 
                         'custom_field_1' => $form->getValue('c1'),
                         'custom_field_2' => $form->getValue('c2'),
-                        'custom_field_3' => $form->getValue('c3')
+                        'custom_field_3' => $form->getValue('c3'),
+
+                        'invoice_mail_title' => $form->getValue('invoiceMailTitle'),
+                        'invoice_mail_content' => $form->getValue('invoiceMailContent')
                     ));
                 
                 # file
@@ -88,6 +93,7 @@ class BusinessController extends Zend_Controller_Action
                         'company_city' => $form->getValue('companyCity'),
                         'company_country' => $form->getValue('companyCountry'),
 
+                        'company_reference' => $form->getValue('companyReference'),
                         'company_phone' => $form->getValue('companyPhone'),
                         'company_mail' => $form->getValue('companyMail'),
                         'company_site' => $form->getValue('companySite'),
@@ -99,10 +105,14 @@ class BusinessController extends Zend_Controller_Action
                         'confirmation_mail' => $form->getValue('confirmationMail'),
 
                         'invoice_prefix' => $form->getValue('prefix'),
+                        'invoice_detail' => $form->getValue('detail'),
 
                         'custom_field_1' => $form->getValue('c1'),
                         'custom_field_2' => $form->getValue('c2'),
-                        'custom_field_3' => $form->getValue('c3')
+                        'custom_field_3' => $form->getValue('c3'),
+
+                        'invoice_mail_title' => $form->getValue('invoiceMailTitle'),
+                        'invoice_mail_content' => $form->getValue('invoiceMailContent')
                     ), 'business_id = "' . $businessId . '"');
 
                 # file

@@ -53,7 +53,7 @@ class PdfController extends Zend_Controller_Action
 
 
 	    	// headers for file transfer
-			header('Content-Disposition: inline; filename = ' . $action . '-' . $this->secret . '.pdf'); 
+			header('Content-Disposition: inline; filename = ' . $action . '-' . trim($this->fileName) . '.pdf'); 
 			header('Content-type: application/x-pdf'); 
 
 			// render pdf
@@ -72,7 +72,7 @@ class PdfController extends Zend_Controller_Action
     	// customer and invoice info
     	$select = $db->select()
                      ->from('invoices', array('invoice_id', 'invoice_number', 'date', 'due', 'status', 'discount', 'notes'))
-                     ->joinLeft('customers', 'invoices.customer = customers.customer_id', array('name as customer_name', 'customer_id', 'customer_adress', 'zip_code', 'city', 'country'))
+                     ->joinLeft('customers', 'invoices.customer = customers.customer_id', array('name as customer_name', 'customer_id', 'customer_adress', 'zip_code', 'city', 'country', 'box', 'reference', 'type'))
                      ->where('invoices.invoice_secret = "' . $this->secret . '" AND invoices.business = ' . $this->businessId);
         $result = $db->fetchAll($select);
         $invoice = $result[0];
@@ -81,45 +81,50 @@ class PdfController extends Zend_Controller_Action
         $select = $db->select()
                      ->from('items', 'quantity')
                      ->joinLeft('products','items.product = products.product_id', array('product_id', 'product'))
-                     ->joinLeft('prices', 'prices.price_id = items.price', array('price', 'unit'))
+                     ->joinLeft('prices', 'prices.price_id = items.price', array('price', 'unit', 'vat'))
                      ->where('items.invoice = ' . $invoice['invoice_id'] . ' AND products.business = ' . $this->businessId)
                      ->order('product ASC');
         $items = $db->fetchAll($select);
 
         // business company
         $select = $db->select()
-                     ->from('businesses', array('company_name', 'company_adress', 'company_zip_code', 'company_city', 'company_country', 'company_mail', 'company_phone', 'company_site', 'company_bank', 'company_orgnr', 'company_color', 'invoice_prefix'))
+                     ->from('businesses', array('company_name', 'company_adress', 'company_zip_code', 'company_city', 'company_country', 'company_mail', 'company_phone', 'company_site', 'company_bank', 'company_orgnr', 'company_color', 'invoice_prefix', 'invoice_detail', 'company_reference', 'company_box'))
                      ->where('businesses.business_id = ' . $this->businessId);
         $result = $db->fetchAll($select);
-        $comapany = $result[0];
+        $company = $result[0];
 
         // theme color
-        $themeColor = '#' . $comapany['company_color'];
+        $themeColor = '#' . $company['company_color'];
+
+        // file name
+        $this->fileName = strip_tags(html_entity_decode($company['invoice_prefix'], ENT_QUOTES, 'UTF-8')) . $invoice['invoice_number'];
 
 
         // items
         $_items = '';
         $totalSum = 0;
+        $totalVat = 0*1;
         foreach($items as $item) {
         	$product = strip_tags(html_entity_decode($item['product'], ENT_QUOTES, 'UTF-8'));
 
         	$_items .= '
 	        	<dimensions:525 18; padding: 3 10 3 10; font-size:10>
-	        		<dimensions:250 12; font-size:10; color:#000000>' . 
+	        		<dimensions:250 12; font-size:10>' . 
 	        			$product . '
 	        		</>
-	        		<dimensions:85 12; font-size:10; color:#000000; text-align:right; clear:none>' . 
+	        		<dimensions:85 12; font-size:10; text-align:right; clear:none>' . 
 	        			$item['quantity'] . '
 	        		</>
-	        		<dimensions:85 12; font-size:10; color:#000000; text-align:right; clear:none>' . 
-	        			$item['price'] . ' :- / ' . $item['unit'] . '
+	        		<dimensions:85 12; font-size:10; text-align:right; clear:none>' . 
+	        			round($item['price'], 2) . ':- 
 	        		</>
-	        		<dimensions:85 12; font-size:10; color:#000000; text-align:right; clear:none>' . 
-	        			(float)$item['quantity']*(float)$item['price'] . ' :-
+	        		<dimensions:85 12; font-size:10; text-align:right; clear:none>' . 
+	        			round((float)$item['quantity']*(float)$item['price'], 2) . ':-
 	        		</>
 	        	</>';
 
         	$totalSum += (float)$item['quantity']*(float)$item['price'];
+        	$totalVat += (float)$item['quantity']*(float)$item['price']*(0.01*(float)$item['vat']);
         }
 
         // total
@@ -131,8 +136,8 @@ class PdfController extends Zend_Controller_Action
 					<dimensions:420 12; font-size:10; color:' . $themeColor .' ; text-align:right; clear:none>
 						Rabatt
 					</>
-					<dimensions:85 12; font-size:10; color:#000000; text-align:right; clear:none>' .
-						$invoice['discount'] . ' :-
+					<dimensions:85 12; font-size:10; text-align:right; clear:none>' .
+						$invoice['discount'] . ':-
 					</>
 				</>';
         }
@@ -141,16 +146,24 @@ class PdfController extends Zend_Controller_Action
 				<dimensions:420 12; font-size:10; color:' . $themeColor .' ; text-align:right; clear:none>
 					Delsumma
 				</>
-				<dimensions:85 12; font-size:10; color:#000000; text-align:right; clear:none>' .
-					$totalSum . ' :-
+				<dimensions:85 12; font-size:10; text-align:right; clear:none>' .
+					round($totalSum, 2) . ':-
 				</>
 			</>
 			<dimensions:525 21; padding: 3 10 3 10; font-size:10>
 				<dimensions:420 12; font-size:10; color:' . $themeColor .' ; text-align:right; clear:none>
-					Moms 25%
+					Moms
 				</>
-				<dimensions:85 12; font-size:10; color:#000000; text-align:right; clear:none>' .
-					$totalSum*0.25 . ' :-
+				<dimensions:85 12; font-size:10; text-align:right; clear:none>' .
+					round($totalVat, 2) . ':-
+				</>
+			</>
+			<dimensions:525 21; padding: 3 10 3 10; font-size:10>
+				<dimensions:420 12; font-size:10; color:' . $themeColor .' ; text-align:right; clear:none; padding-left:5>
+					Öresavrundning
+				</>
+				<dimensions:85 12; font-size:10; text-align:right; clear:none>' .
+					round(round($totalSum*1.25) - $totalSum*1.25, 2) . ':-
 				</>
 			</>
 			<dimensions:525 0.5; background-color:#646363></>
@@ -158,62 +171,84 @@ class PdfController extends Zend_Controller_Action
 				<dimensions:420 12; font-size:10; color:' . $themeColor .' ; text-align:right; clear:none>
 					Att betala
 				</>
-				<dimensions:85 12; font-size:10; color:#000000; text-align:right; clear:none>' .
-					$totalSum*1.25 . ' :-
+				<dimensions:85 12; font-size:10; text-align:right; clear:none>' .
+					round($totalSum + $totalVat) . ':-
 				</>
 			</>';
 
-
-
-
-
-		// pdf document
+		// pdf document 
 		$this->document = '
 <dimensions:595 842; padding:35>
 
-	<dimensions:525 125>
-		<dimensions:260 80; background-image:/companies/' . $this->companyId . '/logotypes/' . $this->businessId . '.jpg></>
-		<dimensions:265 60; clear:none>
-			<dimensions:265 30; padding-top:-5.5; clear:none; text-align:right; font-size:26; color: #646363>Faktura</>
-			<dimensions:265 30; padding-top:-5.5; clear:none; text-align:right; font-size:26; color: #646363>Nr: ' . 
-			strip_tags(html_entity_decode(ucfirst($comapany['invoice_prefix']), ENT_QUOTES, 'UTF-8')) . $invoice['invoice_number']
-			. '</>
+	<dimensions:525 35>
+		<dimensions:220 35; background-image:/companies/' . $this->companyId . '/logotypes/' . $this->businessId . '.jpg></>
+		<dimensions:305 35; clear:none; text-align:right; font-size:24>
+			Faktura
 		</>
-		<dimensions:525 0.1; margin-top:44.9; background-color:#646363></>
 	</>
 
-	<dimensions:525 535>
+	<dimensions:525 60; margin-top: 15;>
+		<dimensions:288 60; font-size:13>' . 
+			strip_tags(html_entity_decode(ucfirst($company['company_name']), ENT_QUOTES, 'UTF-8')) . '<br>' .
+			strip_tags(html_entity_decode(ucfirst(($company['company_adress']? $company['company_adress']: $company['company_box'])), ENT_QUOTES, 'UTF-8')) . '<br>' .
+			strip_tags(html_entity_decode($company['company_zip_code'], ENT_QUOTES, 'UTF-8')) . ' ' .
+			strip_tags(html_entity_decode(ucfirst($company['company_city']), ENT_QUOTES, 'UTF-8')) . '<br>' .
+			strip_tags(html_entity_decode(ucfirst($company['company_country']), ENT_QUOTES, 'UTF-8')). '
+		</>
+		<dimensions:237 60; font-size:13; clear:none>' . 
+			strip_tags(html_entity_decode(ucfirst($invoice['customer_name']), ENT_QUOTES, 'UTF-8')) . '<br>' .
+			strip_tags(html_entity_decode(ucfirst(($invoice['customer_adress']? $invoice['customer_adress']: $invoice['box'])), ENT_QUOTES, 'UTF-8')) . '<br>' .
+			strip_tags(html_entity_decode($invoice['zip_code'], ENT_QUOTES, 'UTF-8')) . ' ' .
+			strip_tags(html_entity_decode(ucfirst($invoice['city']), ENT_QUOTES, 'UTF-8')) . '<br>' .
+			strip_tags(html_entity_decode(ucfirst($invoice['country']), ENT_QUOTES, 'UTF-8')). '
+		</>
+	</>
+
+	<dimensions:525 542; margin-top:25>
 		<dimensions:525 90; padding-left:10>
-			<dimensions:170 50; margin-top:20; font-size:13; color:#646363>
-				' . 
-				strip_tags(html_entity_decode(ucfirst($comapany['company_name']), ENT_QUOTES, 'UTF-8')) . '<br>' .
-				strip_tags(html_entity_decode(ucfirst($comapany['company_adress']), ENT_QUOTES, 'UTF-8')) . '<br>' .
-				strip_tags(html_entity_decode($comapany['company_zip_code'], ENT_QUOTES, 'UTF-8')) . ' ' .
-				strip_tags(html_entity_decode(ucfirst($comapany['company_city']), ENT_QUOTES, 'UTF-8')) . '<br>' .
-				strip_tags(html_entity_decode(ucfirst($comapany['company_country']), ENT_QUOTES, 'UTF-8'))
-      			. '
-			</>
-			<dimensions:105 55; margin-left:20; padding-top:4; color:' . $themeColor .' ; font-size:10; clear:none; text-align:center>
-				FAKTURADATUM
-				<dimensions:105 15; margin-top:14; color:#000000; font-size:10; text-align:center;>
-					' . date('Y-m-d', $invoice['date']) /*ADD 1 HOUR*/ . '
+			<dimensions:525 0.1; margin:0 0 10 -10; background-color:#646363></>
+
+			<dimensions:68 30; color:' . $themeColor .' ; font-size:10; clear:none>
+				Faktura.nr
+				<dimensions:68 15; margin-top:3; font-size:10;>
+					' . strip_tags(html_entity_decode($company['invoice_prefix'], ENT_QUOTES, 'UTF-8')) . $invoice['invoice_number'] . '
 				</>
 			</>
-			<dimensions:105 55; padding-top:4; color:#ffffff; font-size:10; clear:none; text-align:center; background-color:' . $themeColor .' >
-				ATT BETALA
-				<dimensions:105 15; margin-top:14; color:#ffffff; font-size:10; text-align:center;>
-					' . $totalSum*1.25 . ' :-
+
+			<dimensions:105 30; color:' . $themeColor .' ; font-size:10; clear:none>
+				Er referens
+				<dimensions:95 15; margin-top:3; font-size:10;>
+					' . ($invoice['type'] == 'company'? html_entity_decode(ucfirst($invoice['reference']), ENT_QUOTES, 'UTF-8'): html_entity_decode(ucfirst($invoice['customer_name']), ENT_QUOTES, 'UTF-8')) . '
 				</>
 			</>
-			<dimensions:115 55; padding-top:4; color:' . $themeColor .' ; font-size:10; clear:none; text-align:center>
-				FÖRFALLODATUM
-				<dimensions:115 15; margin-top:14; color:#000000; font-size:10; text-align:center;>
+			<dimensions:105 30;color:' . $themeColor .' ; font-size:10; clear:none>
+				Vår referens
+				<dimensions:95 15; margin-top:3; font-size:10;>
+					' . strip_tags(html_entity_decode(ucfirst($company['company_reference']), ENT_QUOTES, 'UTF-8')) . '
+				</>
+			</>
+			<dimensions:86 30; color:' . $themeColor .' ; font-size:10; clear:none>
+				Dröjsmålsränta
+				<dimensions:86 15; margin-top:3; font-size:10;>
+					9,5 %
+				</>
+			</>
+			<dimensions:80 30; color:' . $themeColor .' ; font-size:10; clear:none>
+				Fakturadatum
+				<dimensions:80 15; margin-top:3; font-size:10;>
+					' . date('Y-m-d', $invoice['date']) . '
+				</>
+			</>
+			<dimensions:61 30; color:' . $themeColor .' ; font-size:10; clear:none>
+				Förfallodatum
+				<dimensions:61 15; margin-top:3; font-size:10;>
 					' . date('Y-m-d', $invoice['due']) . '
 				</>
 			</>
+
 		</>
 
-		<dimensions:525 425; margin-top:40>
+		<dimensions:525 451>
 
 			<dimensions:525 18; padding: 3 10 3 10; font-size:10>
 				<dimensions:250 12; font-size:10; color:' . $themeColor .' >
@@ -222,7 +257,7 @@ class PdfController extends Zend_Controller_Action
 				<dimensions:85 12; font-size:10; color:' . $themeColor .' ; text-align:right; clear:none>
 					Antal
 				</>
-				<dimensions:85 12; font-size:10; color:' . $themeColor .' ; text-align:right; clear:none; padding-right:-5>
+				<dimensions:85 12; font-size:10; color:' . $themeColor .' ; text-align:right; clear:none; padding-left:5>
 					Á pris
 				</>
 				<dimensions:85 12; font-size:10; color:' . $themeColor .' ; text-align:right; clear:none>
@@ -230,64 +265,75 @@ class PdfController extends Zend_Controller_Action
 				</>
 			</>
 			<dimensions:525 0.5; background-color:#646363></>
-			<dimensions:525 240; margin-top:-13>
+			<dimensions:525 190; margin-top:-13>
 				' . $_items . '
 			</>
 
-			<dimensions:525 100>
+			<dimensions:525 105>
 				' . $sumUp . '
+			</>
+			<dimensions:525 128; margin-top:-72; padding:0 10 0 10>
+				<dimensions: 505 ' . ($invoice['discount'] > 0? 71: 71+15) . '; margin-top:' . ($invoice['discount'] > 0? 15: 0) . '; font-size:10>' .
+					strip_tags(html_entity_decode(ucfirst($invoice['notes']), ENT_QUOTES, 'UTF-8')) . '
+				</>
+
+				<dimensions: 505 25; margin-top:10; font-size:10>' .
+					strip_tags(html_entity_decode(ucfirst($company['invoice_detail']), ENT_QUOTES, 'UTF-8')) . '
+				</>
+
+
 			</>
 		</>
 	</>
 
-	<dimensions:525 112>
-		<dimensions:525 0.1; margin-bottom:20; background-color:#646363></>
+	<dimensions:525 90>
+		<dimensions:525 0.1; margin-bottom:10; background-color:#646363></>
 		
 		<dimensions:525 43; padding: 3 10 3 10; font-size:10>
-			<dimensions:170 12; font-size:10; color:' . $themeColor .' ; clear:none>
+			<dimensions:175 12; font-size:10; color:' . $themeColor .' ; clear:none>
 				Adress
-				<dimensions:170 25; margin-top:3; font-size:10>' .
-					strip_tags(html_entity_decode(ucfirst($comapany['company_adress']), ENT_QUOTES, 'UTF-8')) . '<br>' .
-					strip_tags(html_entity_decode($comapany['company_zip_code'], ENT_QUOTES, 'UTF-8')) . ' ' .
-					strip_tags(html_entity_decode(ucfirst($comapany['company_city']), ENT_QUOTES, 'UTF-8')) . '
+				<dimensions:175 25; margin-top:3; font-size:10>' .
+					strip_tags(html_entity_decode(ucfirst($company['company_adress']), ENT_QUOTES, 'UTF-8')) . '<br>' .
+					strip_tags(html_entity_decode($company['company_zip_code'], ENT_QUOTES, 'UTF-8')) . ' ' .
+					strip_tags(html_entity_decode(ucfirst($company['company_city']), ENT_QUOTES, 'UTF-8')) . '
 				</>
 			</>
-			<dimensions:170 12; font-size:10; color:' . $themeColor .' ; clear:none>
+			<dimensions:165 12; font-size:10; color:' . $themeColor .' ; clear:none>
+				Telefon
+				<dimensions:165 25; margin-top:3; font-size:10>' .
+					strip_tags(html_entity_decode($company['company_phone'], ENT_QUOTES, 'UTF-8')) . '
+				</>
+			</>
+			<dimensions:165 12; font-size:10; color:' . $themeColor .' ; clear:none>
 				Epost
-				<dimensions:170 25; margin-top:3; font-size:10>' .
-					strip_tags(html_entity_decode($comapany['company_mail'], ENT_QUOTES, 'UTF-8')) . '
+				<dimensions:165 25; margin-top:3; font-size:10>' .
+					strip_tags(html_entity_decode($company['company_mail'], ENT_QUOTES, 'UTF-8')) . '
+				</>
+			</>
+		</>
+
+		<dimensions:525 31; margin-top:6; padding: 3 10 3 10; font-size:10>
+			<dimensions:175 12; font-size:10; color:' . $themeColor .' ; clear:none>
+				Webbsida
+				<dimensions:175 25; margin-top:3; font-size:10>' .
+					strip_tags(html_entity_decode($company['company_site'], ENT_QUOTES, 'UTF-8')) . '
 				</>
 			</>
 			<dimensions:165 12; font-size:10; color:' . $themeColor .' ; clear:none>
 				Bankgiro
-				<dimensions:170 25; margin-top:3; font-size:10>' .
-					strip_tags(html_entity_decode($comapany['company_bank'], ENT_QUOTES, 'UTF-8')) . '
-				</>
-			</>
-		</>
-
-		<dimensions:525 43; margin-top:6; padding: 3 10 3 10; font-size:10>
-			<dimensions:170 12; font-size:10; color:' . $themeColor .' ; clear:none>
-				Webbsida
-				<dimensions:170 25; margin-top:3; font-size:10>' .
-					strip_tags(html_entity_decode($comapany['company_site'], ENT_QUOTES, 'UTF-8')) . '
-				</>
-			</>
-			<dimensions:170 12; font-size:10; color:' . $themeColor .' ; clear:none>
-				Telefon
-				<dimensions:170 25; margin-top:3; font-size:10>' .
-					strip_tags(html_entity_decode($comapany['company_phone'], ENT_QUOTES, 'UTF-8')) . '
+				<dimensions:165 25; margin-top:3; font-size:10>' .
+					strip_tags(html_entity_decode($company['company_bank'], ENT_QUOTES, 'UTF-8')) . '
 				</>
 			</>
 			<dimensions:165 12; font-size:10; color:' . $themeColor .' ; clear:none>
 				Organisationsnummer
-				<dimensions:170 25; margin-top:3; font-size:10>' .
-					strip_tags(html_entity_decode($comapany['company_orgnr'], ENT_QUOTES, 'UTF-8')) . '
+				<dimensions:165 25; margin-top:3; font-size:10>' .
+					strip_tags(html_entity_decode($company['company_orgnr'], ENT_QUOTES, 'UTF-8')) . '
 				</>
 			</>
 		</>
 	</>
-	</>
+</>
 		';
 
     }

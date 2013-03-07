@@ -5,72 +5,61 @@ class Form_AddBusinessForm extends Emilk_Form
 	public function build()
 	{
 		$businessName = new Emilk_Form_Element_Text('businessName');
-		$businessName->setAttr('required', '')
-				     ->setAttr('class', 'autocomplete');
-
-
+		$businessName->setAttr('required', '');
 
 		$companyName = new Emilk_Form_Element_Text('companyName');
-		$companyName->setAttr('class', 'autocomplete');
-
+	
 		$companyAdress = new Emilk_Form_Element_Text('companyAdress');
-		$companyAdress->setAttr('class', 'autocomplete');
-
+		
 		$companyBox = new Emilk_Form_Element_Text('companyBox');
-		$companyBox->setAttr('class', 'autocomplete');
-
+		
 		$companyZipCode = new Emilk_Form_Element_Text('companyZipCode');
-		$companyZipCode->setAttr('class', 'autocomplete');
-
+		
 		$companyCity = new Emilk_Form_Element_Text('companyCity');
-		$companyCity->setAttr('class', 'autocomplete');
-
+		
 		$companyCountry = new Emilk_Form_Element_Text('companyCountry');
-		$companyCountry->setAttr('class', 'autocomplete');
-
-
+		
 
 		$logo = new Emilk_Form_Element_File('logo');
 
 		$prefix = new Emilk_Form_Element_Text('prefix');
-		$prefix->setAttr('class', 'autocomplete');
 
+		$detail = new Emilk_Form_Element_Text('detail');
+		
 		$companyBank = new Emilk_Form_Element_Text('companyBank');
-		$companyBank->setAttr('class', 'autocomplete');
-
+		
 		$companyOrgnr = new Emilk_Form_Element_Text('companyOrgnr');
-		$companyOrgnr->setAttr('class', 'autocomplete');
-
+		
 		$companyColor = new Emilk_Form_Element_Color('companyColor');
-		$companyColor->setAttr('class', 'autocomplete color');
+		$companyColor->setAttr('class', 'color');
 
-
+		$companyReference = new Emilk_Form_Element_Text('companyReference');
+		$companyReference->setAttr('required', '');
 
 		$companyMail = new Emilk_Form_Element_Email('companyMail');
-		$companyMail->setAttr('class', 'autocomplete');
-
+		
 		$companyPhone = new Emilk_Form_Element_Text('companyPhone');
-		$companyPhone->setAttr('class', 'autocomplete');
-
+		
 		$companySite = new Emilk_Form_Element_Text('companySite');
-		$companySite->setAttr('class', 'autocomplete');
-
-
+		
 
 		$confirmationMail = new Emilk_Form_Element_Textarea('confirmationMail');
 		$confirmationMail->setAttr('data-autogrow', 'true');
 
-
 		$c1 = new Emilk_Form_Element_Text('c1');
-		$c1->setAttr('class', 'autocomplete');
-
+		
 		$c2 = new Emilk_Form_Element_Text('c2');
-		$c2->setAttr('class', 'autocomplete');
-
+		
 		$c3 = new Emilk_Form_Element_Text('c3');
-		$c3->setAttr('class', 'autocomplete');
 
 
+		$invoiceMailTitle = new Emilk_Form_Element_Text('invoiceMailTitle');
+		$invoiceMailTitle->setAttr('required', '');
+
+		$invoiceMailContent = new Emilk_Form_Element_Textarea('invoiceMailContent');
+		$invoiceMailContent->setAttr('data-autogrow', 'true')
+						   ->setAttr('required', '');
+		
 
 		$addBusiness = new Emilk_Form_Element_Button('addBusiness');
 		$addBusiness->setAttr('class', 'submit green')
@@ -103,7 +92,11 @@ class Form_AddBusinessForm extends Emilk_Form
 				$c3,
 				$addBusiness,
 				$prefix,
-				$logo
+				$logo,
+				$detail,
+				$companyReference,
+				$invoiceMailTitle,
+				$invoiceMailContent
 			 ));
 	}
 }

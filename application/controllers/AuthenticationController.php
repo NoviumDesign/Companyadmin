@@ -37,6 +37,13 @@ class AuthenticationController extends Zend_Controller_Action
             }
         }
         $this->view->form = $form;
+
+        if($_SESSION['access_denied']) {
+            echo '<div style="display:none">';
+            print_r($_SESSION['access_denied']);
+            echo '</div>';
+        }
+
     }
 
     public function logoutAction()

@@ -82,7 +82,7 @@ class Form_AddInvoiceForm extends Emilk_Form
 
 		$invoiceDue = new Emilk_Form_Element_Text('invoiceDue');
 		$invoiceDue->setAttr('class', 'date')
-				   ->setAttr('data-value', '+30');
+				   ->setAttr('data-value', '+10');
 
 
 		$products = array();

@@ -91,6 +91,14 @@
         </div>
     </section>
     <section>
+        <label for="delivery">Invoice detail</label>
+        <div>
+
+            <?= $this->element('detail'); ?>
+
+        </div>
+    </section>
+    <section>
         <label for="delivery">Bank</label>
         <div>
 
@@ -143,15 +151,45 @@
 
         </div>
     </section>
+    <section>
+        <label for="delivery">Reference</label>
+        <div>
+
+            <?= $this->element('companyReference'); ?>
+
+        </div>
+    </section>
 </fieldset>
 
 
 <fieldset>
     <label>Confirmation Mail</label>
     <section>
+        <label for="delivery">content</label>
         <div>
 
             <?= $this->element('confirmationMail'); ?>
+
+        </div>
+    </section>
+</fieldset>
+
+
+<fieldset>
+    <label>Invoice Mail</label>
+    <section>
+        <label for="delivery">title</label>
+        <div>
+
+            <?= $this->element('invoiceMailTitle'); ?>
+
+        </div>
+    </section>
+    <section>
+        <label for="delivery">content</label>
+        <div>
+
+            <?= $this->element('invoiceMailContent'); ?>
 
         </div>
     </section>
