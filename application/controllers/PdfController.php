@@ -103,7 +103,7 @@ class PdfController extends Zend_Controller_Action
         // items
         $_items = '';
         $totalSum = 0;
-        $totalVat = 0*1;
+        $totalVat = 0;
         foreach($items as $item) {
         	$product = strip_tags(html_entity_decode($item['product'], ENT_QUOTES, 'UTF-8'));
 
@@ -124,23 +124,20 @@ class PdfController extends Zend_Controller_Action
 	        	</>';
 
         	$totalSum += (float)$item['quantity']*(float)$item['price'];
-        	$totalVat += (float)$item['quantity']*(float)$item['price']*(0.01*(float)$item['vat']);
+        }
+
+	    $discount = (float)$invoice['discount'];
+        $totalVat = 0;
+        foreach($items as $item) {
+	        $price = (float)$item['price'];
+	        $quantity = (float)$item['quantity'];
+	        $vat = (0.01*(float)$item['vat']);
+
+        	$totalVat += $quantity*$price*(1 - $discount/$totalSum)*$vat;
         }
 
         // total
         $sumUp = '';
-        if($invoice['discount'] > 0) {
-        	$totalSum += -$invoice['discount'];
-        	$sumUp .= '
-        		<dimensions:525 21; padding: 3 10 3 10; font-size:10>
-					<dimensions:420 12; font-size:10; color:' . $themeColor .' ; text-align:right; clear:none>
-						Rabatt
-					</>
-					<dimensions:85 12; font-size:10; text-align:right; clear:none>' .
-						$invoice['discount'] . ':-
-					</>
-				</>';
-        }
         $sumUp .= '
         	<dimensions:525 21; padding: 3 10 3 10; font-size:10>
 				<dimensions:420 12; font-size:10; color:' . $themeColor .' ; text-align:right; clear:none>
@@ -149,7 +146,19 @@ class PdfController extends Zend_Controller_Action
 				<dimensions:85 12; font-size:10; text-align:right; clear:none>' .
 					round($totalSum, 2) . ':-
 				</>
-			</>
+			</>';
+        if($invoice['discount'] > 0) {
+        	$sumUp .= '
+        		<dimensions:525 21; padding: 3 10 3 10; font-size:10>
+					<dimensions:420 12; font-size:10; color:' . $themeColor .' ; text-align:right; clear:none>
+						Rabatt
+					</>
+					<dimensions:85 12; font-size:10; text-align:right; clear:none>' .
+						round($invoice['discount'], 2) . ':-
+					</>
+				</>';
+        }
+		$sumUp .='
 			<dimensions:525 21; padding: 3 10 3 10; font-size:10>
 				<dimensions:420 12; font-size:10; color:' . $themeColor .' ; text-align:right; clear:none>
 					Moms
@@ -163,7 +172,7 @@ class PdfController extends Zend_Controller_Action
 					Öresavrundning
 				</>
 				<dimensions:85 12; font-size:10; text-align:right; clear:none>' .
-					round(round($totalSum*1.25) - $totalSum*1.25, 2) . ':-
+					round(round($totalSum - $discount + $totalVat) - ($totalSum - $discount + $totalVat), 2) . ':-
 				</>
 			</>
 			<dimensions:525 0.5; background-color:#646363></>
@@ -172,7 +181,7 @@ class PdfController extends Zend_Controller_Action
 					Att betala
 				</>
 				<dimensions:85 12; font-size:10; text-align:right; clear:none>' .
-					round($totalSum + $totalVat) . ':-
+					round($totalSum - $discount + $totalVat) . ':-
 				</>
 			</>';
 
