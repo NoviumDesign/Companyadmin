@@ -92,7 +92,7 @@ class Form_AddInvoiceForm extends Emilk_Form
 			$products[$product['product_id']]->setAttr('class', 'decimal')
 						 					 ->setAttr('data-min', '0');
 
-			$priceIds[$product['product_id']] = new Emilk_Form_Element_Text('price[' . $product['product_id'] . ']');
+			$priceIds[$product['product_id']] = new Emilk_Form_Element_Hidden('price[' . $product['product_id'] . ']');
 			$priceIds[$product['product_id']]->setValue($product['price_id']);
 
 			if(isset($product['quantity'])) {
