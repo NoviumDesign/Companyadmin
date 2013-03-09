@@ -48,17 +48,21 @@ class BusinessController extends Zend_Controller_Action
                         'invoice_mail_content' => $form->getValue('invoiceMailContent')
                     ));
                 
-                # file
-                if(isset($form->getValue('logo')['name'])) {
+                // file
+                $file = $form->getValue('logo');
+                if($file['size']) {
+                    $company_id = Zend_Auth::getInstance()->getStorage()->read()->company;
 
-                    $fileName = $form->getValue('logo')['name'];
-                    $ext = pathinfo($fileName, PATHINFO_EXTENSION);
+                    $logotypesDir = APPLICATION_PATH . '/companies/' . $company_id . '/logotypes/';
+                    if(!file_exists($logotypesDir)) {
+                        mkdir($logotypesDir, 0777);
+                    }
 
+                    $ext = pathinfo($file['name'], PATHINFO_EXTENSION);
                     if($ext == 'jpg' || $ext == 'jpeg') {
-                        $company_id = Zend_Auth::getInstance()->getStorage()->read()->company;
-                        $path = APPLICATION_PATH . '/companies/' . $company_id . '/logotypes/' . $businessId . '.'. $ext;
+                        $path = $logotypesDir . $businessId . '.jpeg';
 
-                        move_uploaded_file($form->getValue('logo')['tmp_name'], $path);
+                        move_uploaded_file($file['tmp_name'], $path);
                     }
                 }
 
@@ -115,17 +119,21 @@ class BusinessController extends Zend_Controller_Action
                         'invoice_mail_content' => $form->getValue('invoiceMailContent')
                     ), 'business_id = "' . $businessId . '"');
 
-                # file
-                if(isset($form->getValue('logo')['name'])) {
+                // file
+                $file = $form->getValue('logo');
+                if($file['size']) {
+                    $company_id = Zend_Auth::getInstance()->getStorage()->read()->company;
 
-                    $fileName = $form->getValue('logo')['name'];
-                    $ext = pathinfo($fileName, PATHINFO_EXTENSION);
+                    $logotypesDir = APPLICATION_PATH . '/companies/' . $company_id . '/logotypes/';
+                    if(!file_exists($logotypesDir)) {
+                        mkdir($logotypesDir, 0777);
+                    }
 
+                    $ext = pathinfo($file['name'], PATHINFO_EXTENSION);
                     if($ext == 'jpg' || $ext == 'jpeg') {
-                        $company_id = Zend_Auth::getInstance()->getStorage()->read()->company;
-                        $path = APPLICATION_PATH . '/companies/' . $company_id . '/logotypes/' . $businessId . '.'. $ext;
+                        $path = $logotypesDir . $businessId . '.jpeg';
 
-                        move_uploaded_file($form->getValue('logo')['tmp_name'], $path);
+                        move_uploaded_file($file['tmp_name'], $path);
                     }
                 }
 
@@ -195,7 +203,6 @@ class BusinessController extends Zend_Controller_Action
                     $company_id = Zend_Auth::getInstance()->getStorage()->read()->company;
                     $path = APPLICATION_PATH . '/companies/' . $company_id . '/logotypes/' . $businessId . '.';
                     // tests both files
-                    unlink($path . 'jpg');
                     unlink($path . 'jpeg');
 
                     $this->_redirect('/businesses/view');

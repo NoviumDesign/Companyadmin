@@ -18,7 +18,7 @@ class Form_EditProductForm extends Emilk_Form
 		// get product data
 		$select = $db->select()
                      ->from('products', array('product_number', 'product', 'status', 'description', 'notes'))
-                     ->joinLeft('prices', 'products.price = prices.price_id', array('price', 'unit'))
+                     ->joinLeft('prices', 'products.price = prices.price_id', array('price', 'unit', 'vat'))
                      ->where('products.product_id = ' . $this->productId . ' AND products.business = ' . $_SESSION['business']);
         $result = $db->fetchAll($select);
 
@@ -31,27 +31,30 @@ class Form_EditProductForm extends Emilk_Form
 
 		$productNumber = new Emilk_Form_Element_Text('productNumber');
 		$productNumber->setAttr('required', '')
-				      ->setAttr('data-errortext', 'You can\'t add a new product without a product number')
 				      ->setValue($product['product_number']);
 
 
 		$productName = new Emilk_Form_Element_Text('productName');
-		$productName->setAttr('required', '')
-				    ->setAttr('data-errortext', 'You can\'t add a new product without a product name')
+		$productName->setAttr('required', '')	
 				    ->setValue($product['product']);
 
 
 		$price = new Emilk_Form_Element_Number('price');
 		$price->setAttr('required', '')
-			  ->setAttr('data-errortext', 'You can\'t add a new product without a price')
 		      ->setAttr('class', 'decimal')
 			  ->setAttr('data-min', '0')
 			  ->setValue($product['price']);
 
 
+		$vat = new Emilk_Form_Element_Number('vat');
+		$vat->setAttr('required', '')
+		    ->setAttr('class', 'decimal')
+			->setAttr('data-min', '0')
+			->setValue($product['vat']);
+
+
 		$unit = new Emilk_Form_Element_Text('unit');
 		$unit->setAttr('required', '')
-			 ->setAttr('data-errortext', 'You can\'t add a new product without a unit')
 			 ->setValue($product['unit']);
 
 
@@ -90,7 +93,8 @@ class Form_EditProductForm extends Emilk_Form
 			 	$status,
 			 	$description,
 			 	$notes,
-			 	$addProduct
+			 	$addProduct,
+			 	$vat
 			 ));
 	}
 }

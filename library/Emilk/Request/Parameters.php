@@ -9,7 +9,8 @@ class Emilk_Request_Parameters
 		$controller = Zend_Controller_Front::getInstance()->getRequest()->getControllerName();
 		$action = Zend_Controller_Front::getInstance()->getRequest()->getActionName();
 
-		$path = parse_url($_SERVER['REQUEST_URI'])['path'];
+		$path = parse_url($_SERVER['REQUEST_URI']);//['path'];
+		$path = $path['path'];
 
 		$parameters =  substr(str_replace('/' . $controller . '/' . $action, '', $path), 1);
 

@@ -11,6 +11,7 @@
             <th>Customer</th>
             <th>Invoice date</th>
             <th>Due date</th>
+            <th>Sum</th>
             <th>Status</th>
          </tr>
       </thead>
@@ -33,6 +34,7 @@
                <td><a href="/customer/view/<?= $invoice['customer_id'] ?>"><?= $invoice['name'] ?></td>
                <td><?= date('Y-m-d', $invoice['date']) /*ADD + 1 HOUR*/?></td>
                <td><?= date('Y-m-d', $invoice['due']) ?></td>
+               <td><?= $this->totSums[$invoice['invoice_id']] ?></td>
                <td><a href="#" class="changeInvoiceStatus" data-id="<?= $invoice['invoice_id'] ?>"><?= $invoice['status'] ?></a></td>
             </tr>
 

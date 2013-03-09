@@ -48,9 +48,9 @@ class OrderController extends Zend_Controller_Action
             foreach($_POST['item'] as $productId => $quantity) {
                 if($quantity > 0) {
 
-                    // get price
+                    // get data
                     $select = $db->select()
-                                 ->from('products', 'price')
+                                 ->from('products', array('price'))
                                  ->where('product_id = ' . $productId);
                     $result= $db->fetchAll($select);
                     $price = $result[0]['price'];
@@ -131,9 +131,9 @@ class OrderController extends Zend_Controller_Action
                             ), 'items.order = ' . $orderId . ' AND items.product = ' . $productId);
                     } else {
 
-                        // get price
+                        // get data
                         $select = $db->select()
-                                     ->from('products', 'price')
+                                     ->from('products', array('price'))
                                      ->where('product_id = ' . $productId);
                         $result= $db->fetchAll($select);
                         $price = $result[0]['price'];

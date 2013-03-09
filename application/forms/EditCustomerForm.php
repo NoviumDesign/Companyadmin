@@ -17,7 +17,7 @@ class Form_EditCustomerForm extends Emilk_Form
 
         // form data
         $select = $db->select()
-                     ->from('customers', array('registered', 'name', 'type', 'mail', 'phone', 'customer_adress', 'box', 'zip_code', 'city', 'country', 'notes'))
+                     ->from('customers', array('registered', 'name', 'type', 'mail', 'phone', 'customer_adress', 'box', 'zip_code', 'city', 'country', 'notes', 'reference'))
                      ->where('customers.customer_id = ' . $this->customerId);
         $result = $db->fetchAll($select);
         $customer = $result[0];
@@ -36,7 +36,6 @@ class Form_EditCustomerForm extends Emilk_Form
 				      'true',
 				      'false'
 				   ))
-			       ->setAttr('data-errortext', 'You must select something')
 			       ->setValue($customer['registered']);
 
 
@@ -46,50 +45,39 @@ class Form_EditCustomerForm extends Emilk_Form
 				'private',
 				'company'
 			 ))
-		     ->setAttr('data-errortext', 'You must select something')
 		     ->setValue($customer['type']);
 
 
 		$customerName = new Emilk_Form_Element_Text('customerName');
-		$customerName->setAttr('class', 'autocomplete')
-				     ->setAttr('required', '')
-				     ->setAttr('data-errortext', 'You can\'t add a new order without a customer name')
-				     ->setValue($customer['name']);				     
+		$customerName->setAttr('required', '')
+				     ->setValue($customer['name']);
+
+
+		$reference = new Emilk_Form_Element_Text('reference');
+		$reference->setValue($customer['reference']);
 
 
 		$phone = new Emilk_Form_Element_Text('phone');
-		$phone->setAttr('class', 'autocomplete')
-		      ->setValue($customer['phone']);
+		$phone->setValue($customer['phone']);
 
-
-		$mail = new Emilk_Form_Element_Text('mail');
-		$mail->setAttr('class', 'autocomplete')
-		     ->setValue($customer['mail']);
+		$mail = new Emilk_Form_Element_Email('mail');
+		$mail->setValue($customer['mail']);
 
 
 		$adress = new Emilk_Form_Element_Text('adress');
-		$adress->setAttr('class', 'autocomplete')
-		       ->setValue($customer['customer_adress']);
-
+		$adress->setValue($customer['customer_adress']);
 
 		$box = new Emilk_Form_Element_Text('box');
-		$box->setAttr('class', 'autocomplete')
-		    ->setValue($customer['box']);
-
+		$box->setValue($customer['box']);
 
 		$zipCode = new Emilk_Form_Element_Text('zipCode');
-		$zipCode->setAttr('class', 'autocomplete')
-		        ->setValue($customer['zip_code']);
-
+		$zipCode->setValue($customer['zip_code']);
 
 		$city = new Emilk_Form_Element_Text('city');
-		$city->setAttr('class', 'autocomplete')
-		     ->setValue($customer['city']);
-
+		$city->setValue($customer['city']);
 
 		$country = new Emilk_Form_Element_Text('country');
-		$country->setAttr('class', 'autocomplete')
-		        ->setValue($customer['country']);
+		$country->setValue($customer['country']);
 
 
 		$notes = new Emilk_Form_Element_Textarea('notes');
@@ -99,8 +87,8 @@ class Form_EditCustomerForm extends Emilk_Form
 
 		$editCustomer = new Emilk_Form_Element_Button('editCustomer');
 		$editCustomer->setAttr('class', 'submit green')
-				    ->setValue('submit')
-				    ->setText('Edit Customer');
+				     ->setValue('submit')
+				     ->setText('Edit Customer');
 
 
 		$this->setAttr('id', 'form')
@@ -119,7 +107,8 @@ class Form_EditCustomerForm extends Emilk_Form
 			 	$city,
 			 	$country,
 			 	$notes,
-			 	$editCustomer
+			 	$editCustomer,
+			 	$reference
 			 ));
 	}
 }

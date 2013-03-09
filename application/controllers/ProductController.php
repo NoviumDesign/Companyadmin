@@ -30,6 +30,7 @@ class ProductController extends Zend_Controller_Action
                 $priceId = $table->insert(array(
                         'price' => $form->getValue('price'),
                         'unit' => $form->getValue('unit'),
+                        'vat' => $form->getValue('vat'),
                         'date' => time()
                     ));
 
@@ -72,6 +73,7 @@ class ProductController extends Zend_Controller_Action
                 $priceId = $table->insert(array(
                         'price' => $form->getValue('price'),
                         'unit' => $form->getValue('unit'),
+                        'vat' => $form->getValue('vat'),
                         'date' => time()
                     ), '');
 

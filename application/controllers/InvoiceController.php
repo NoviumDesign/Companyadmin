@@ -56,11 +56,7 @@ class InvoiceController extends Zend_Controller_Action
                 if($quantity > 0) {
 
                     // get price
-                    $select = $db->select()
-                                 ->from('products', 'price')
-                                 ->where('product_id = ' . $productId);
-                    $result= $db->fetchAll($select);
-                    $price = $result[0]['price'];
+                    $price = $_POST['price'][$productId];
 
                     // insert
                     $table = new Model_Db_Items(array('db' => $db));
@@ -177,7 +173,7 @@ class InvoiceController extends Zend_Controller_Action
         // invoice
         $select = $db->select()
                      ->from('invoices', array('invoice_id', 'invoice_number', 'date', 'due', 'status', 'discount', 'notes', 'invoice_secret'))
-                     ->joinLeft('customers', 'invoices.customer = customers.customer_id', array('name as customer_name', 'customer_id', 'customer_adress', 'zip_code', 'city', 'country', 'mail'))
+                     ->joinLeft('customers', 'invoices.customer = customers.customer_id', array('name as customer_name', 'customer_id', 'customer_adress', 'zip_code', 'city', 'country', 'mail', 'type', 'reference'))
                      ->where('invoices.invoice_id = ' . $invoiceId . ' AND invoices.business = ' . $_SESSION['business']);
         $result = $db->fetchAll($select);
         $this->view->invoice = $result[0];
@@ -186,7 +182,7 @@ class InvoiceController extends Zend_Controller_Action
         $select = $db->select()
                      ->from('items', 'quantity')
                      ->joinLeft('products','items.product = products.product_id', array('product_id', 'product'))
-                     ->joinLeft('prices', 'prices.price_id = items.price', array('price', 'unit'))
+                     ->joinLeft('prices', 'prices.price_id = items.price', array('price', 'unit', 'vat'))
                      ->where('items.invoice = ' . $invoiceId . ' AND products.business = ' . $_SESSION['business'])
                      ->order('product ASC');
         $result = $db->fetchAll($select);
@@ -194,7 +190,7 @@ class InvoiceController extends Zend_Controller_Action
 
         // business company
         $select = $db->select()
-                     ->from('businesses', array('company_name', 'company_adress', 'company_zip_code', 'company_city', 'company_country', 'business_secret', 'invoice_prefix', 'invoice_mail_title', 'invoice_mail_content'))
+                     ->from('businesses', array('company_name', 'company_adress', 'company_zip_code', 'company_city', 'company_country', 'business_secret', 'invoice_prefix', 'invoice_mail_title', 'invoice_mail_content', 'invoice_detail', 'company_reference'))
                      ->where('businesses.business_id = ' . $_SESSION['business']);
         $result = $db->fetchAll($select);
         $this->view->businessComapny = $result[0];

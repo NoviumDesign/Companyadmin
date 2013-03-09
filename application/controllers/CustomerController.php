@@ -41,7 +41,8 @@ class CustomerController extends Zend_Controller_Action
                         'zip_code' => $form->getValue('zipCode'),
                         'city' => $form->getValue('city'),
                         'country' => $form->getValue('country'),
-                        'notes' => $form->getValue('notes')
+                        'notes' => $form->getValue('notes'),
+                        'reference' => $form->getValue('reference')
                     ), 'customers.customer_id = ' . $customerId . ' AND customers.business = ' . $_SESSION['business']);
 
                 $this->_redirect('/customers/view');
@@ -72,7 +73,8 @@ class CustomerController extends Zend_Controller_Action
                         'zip_code' => $form->getValue('zipCode'),
                         'city' => $form->getValue('city'),
                         'country' => $form->getValue('country'),
-                        'notes' => $form->getValue('notes')
+                        'notes' => $form->getValue('notes'),
+                        'reference' => $form->getValue('reference')
                     ));
 
                 $this->_redirect('/customers/view');

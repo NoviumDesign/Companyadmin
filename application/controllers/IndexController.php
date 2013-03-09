@@ -37,7 +37,7 @@ class IndexController extends Zend_Controller_Action
                      ->order('mail DESC');
         $result = $db->fetchAll($select);
 
-        $mails = [];
+        $mails = array();
         foreach($result as $i) {
             $mails[] = $i['mail'];
         }

@@ -103,7 +103,6 @@ class PdfController extends Zend_Controller_Action
         // items
         $_items = '';
         $totalSum = 0;
-        $totalVat = 0;
         foreach($items as $item) {
         	$product = strip_tags(html_entity_decode($item['product'], ENT_QUOTES, 'UTF-8'));
 
@@ -190,21 +189,21 @@ class PdfController extends Zend_Controller_Action
 <dimensions:595 842; padding:35>
 
 	<dimensions:525 35>
-		<dimensions:220 35; background-image:/companies/' . $this->companyId . '/logotypes/' . $this->businessId . '.jpg></>
+		<dimensions:220 35; background-image:/companies/' . $this->companyId . '/logotypes/' . $this->businessId . '.jpeg></>
 		<dimensions:305 35; clear:none; text-align:right; font-size:24>
 			Faktura
 		</>
 	</>
 
-	<dimensions:525 60; margin-top: 15;>
-		<dimensions:288 60; font-size:13>' . 
+	<dimensions:525 60; margin-top:50;>
+		<dimensions:315 60; font-size:13>' . 
 			strip_tags(html_entity_decode(ucfirst($company['company_name']), ENT_QUOTES, 'UTF-8')) . '<br>' .
 			strip_tags(html_entity_decode(ucfirst(($company['company_adress']? $company['company_adress']: $company['company_box'])), ENT_QUOTES, 'UTF-8')) . '<br>' .
 			strip_tags(html_entity_decode($company['company_zip_code'], ENT_QUOTES, 'UTF-8')) . ' ' .
 			strip_tags(html_entity_decode(ucfirst($company['company_city']), ENT_QUOTES, 'UTF-8')) . '<br>' .
 			strip_tags(html_entity_decode(ucfirst($company['company_country']), ENT_QUOTES, 'UTF-8')). '
 		</>
-		<dimensions:237 60; font-size:13; clear:none>' . 
+		<dimensions:200 60; font-size:13; clear:none>' . 
 			strip_tags(html_entity_decode(ucfirst($invoice['customer_name']), ENT_QUOTES, 'UTF-8')) . '<br>' .
 			strip_tags(html_entity_decode(ucfirst(($invoice['customer_adress']? $invoice['customer_adress']: $invoice['box'])), ENT_QUOTES, 'UTF-8')) . '<br>' .
 			strip_tags(html_entity_decode($invoice['zip_code'], ENT_QUOTES, 'UTF-8')) . ' ' .
@@ -213,8 +212,8 @@ class PdfController extends Zend_Controller_Action
 		</>
 	</>
 
-	<dimensions:525 542; margin-top:25>
-		<dimensions:525 90; padding-left:10>
+	<dimensions:525 507; margin-top:25>
+		<dimensions:525 70; padding-left:10>
 			<dimensions:525 0.1; margin:0 0 10 -10; background-color:#646363></>
 
 			<dimensions:68 30; color:' . $themeColor .' ; font-size:10; clear:none>
@@ -239,7 +238,7 @@ class PdfController extends Zend_Controller_Action
 			<dimensions:86 30; color:' . $themeColor .' ; font-size:10; clear:none>
 				Dröjsmålsränta
 				<dimensions:86 15; margin-top:3; font-size:10;>
-					9,5 %
+					9,5%
 				</>
 			</>
 			<dimensions:80 30; color:' . $themeColor .' ; font-size:10; clear:none>
@@ -281,8 +280,8 @@ class PdfController extends Zend_Controller_Action
 			<dimensions:525 105>
 				' . $sumUp . '
 			</>
-			<dimensions:525 128; margin-top:-72; padding:0 10 0 10>
-				<dimensions: 505 ' . ($invoice['discount'] > 0? 71: 71+15) . '; margin-top:' . ($invoice['discount'] > 0? 15: 0) . '; font-size:10>' .
+			<dimensions:525 106; margin-top:-72; padding:0 10 0 10>
+				<dimensions: 505 ' . ($invoice['discount'] > 0? 56: 56+15) . '; margin-top:' . ($invoice['discount'] > 0? 15: 0) . '; font-size:10>' .
 					strip_tags(html_entity_decode(ucfirst($invoice['notes']), ENT_QUOTES, 'UTF-8')) . '
 				</>
 

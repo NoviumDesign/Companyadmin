@@ -30,7 +30,7 @@ class Form_AddInvoiceForm extends Emilk_Form
 		        $select = $db->select()
 		                     ->from('products', array('product_id', 'product'))
 		                     ->joinLeft('items', 'items.product = products.product_id AND items.order = '. $this->orderId, 'quantity')
-		                     ->joinLeft('prices', 'prices.price_id = items.price', array(
+		                     ->joinLeft('prices', 'prices.price_id = items.price', array('price_id',
 		                     	'COALESCE(prices.price, (SELECT price FROM prices WHERE products.price = prices.price_id)) AS price',
 		                     	'COALESCE(prices.unit, (SELECT unit FROM prices WHERE products.price = prices.price_id)) AS unit'))
 		                     ->where('products.business = ' . $_SESSION['business'] . ' AND products.status <> "deleted"')
@@ -53,7 +53,7 @@ class Form_AddInvoiceForm extends Emilk_Form
 			// products
 	        $select = $db->select()
 	                     ->from('products', array('product_id', 'product'))
-	                     ->joinLeft('prices', 'prices.price_id = products.price', array('price', 'unit'))
+	                     ->joinLeft('prices', 'prices.price_id = products.price', array('price_id', 'price', 'unit'))
 	                     ->where('products.business = ' . $business . ' AND products.status <> "deleted"')
 	                     ->order('product ASC');
 	        $result = $db->fetchAll($select);
@@ -91,6 +91,9 @@ class Form_AddInvoiceForm extends Emilk_Form
 			$products[$product['product_id']] = new Emilk_Form_Element_Number('item[' . $product['product_id'] . ']');
 			$products[$product['product_id']]->setAttr('class', 'decimal')
 						 					 ->setAttr('data-min', '0');
+
+			$priceIds[$product['product_id']] = new Emilk_Form_Element_Text('price[' . $product['product_id'] . ']');
+			$priceIds[$product['product_id']]->setValue($product['price_id']);
 
 			if(isset($product['quantity'])) {
 				$products[$product['product_id']]->setValue($product['quantity']);
@@ -137,6 +140,7 @@ class Form_AddInvoiceForm extends Emilk_Form
 			 	$addInvoice,
 			 	$orderId
 			 ))
-			 ->add($products);
+			 ->add($products)
+			 ->add($priceIds);
 	}
 }

@@ -64,8 +64,8 @@ class AuthenticationController extends Zend_Controller_Action
 
             if($access) {
                 $_SESSION['business']  = $businessId;
+                $path = $path['path'];
 
-                $path = parse_url($_SERVER['HTTP_REFERER'])['path'];
                 $path = explode('/', $path);
 
                 $_url = '';

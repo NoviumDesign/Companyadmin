@@ -8,25 +8,27 @@ class Form_AddProductForm extends Emilk_Form
 
 
 		$productNumber = new Emilk_Form_Element_Text('productNumber');
-		$productNumber->setAttr('required', '')
-				      ->setAttr('data-errortext', 'You can\'t add a new product without a product number');
-
+		$productNumber->setAttr('required', '');
+				 
 
 		$productName = new Emilk_Form_Element_Text('productName');
-		$productName->setAttr('required', '')
-				    ->setAttr('data-errortext', 'You can\'t add a new product without a product name');
-
+		$productName->setAttr('required', '');
+			
 
 		$price = new Emilk_Form_Element_Number('price');
 		$price->setAttr('required', '')
-			  ->setAttr('data-errortext', 'You can\'t add a new product without a price')
 		      ->setAttr('class', 'decimal')
 			  ->setAttr('data-min', '0');
+			
+
+		$vat = new Emilk_Form_Element_Number('vat');
+		$vat->setAttr('required', '')
+		    ->setAttr('class', 'decimal')
+			->setAttr('data-min', '0');
 
 
 		$unit = new Emilk_Form_Element_Text('unit');
-		$unit->setAttr('required', '')
-			 ->setAttr('data-errortext', 'You can\'t add a new product without a unit');
+		$unit->setAttr('required', '');
 
 
 		$status = new Emilk_Form_Element_Radio('status');
@@ -61,7 +63,8 @@ class Form_AddProductForm extends Emilk_Form
 			 	$status,
 			 	$description,
 			 	$notes,
-			 	$addProduct
+			 	$addProduct,
+			 	$vat
 			 ));
 	}
 }

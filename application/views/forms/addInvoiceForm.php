@@ -62,6 +62,7 @@
 					kr/
 					<?= $product['unit']; ?>
 				</span>
+				<?= $this->element('price[' . $product['product_id'] . ']'); ?>
 			</div>
 		</section>
 

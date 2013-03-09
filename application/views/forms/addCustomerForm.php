@@ -21,6 +21,14 @@
 
         </div>
     </section>
+    <section>
+        <label for="customerName">If company, reference person</label>
+        <div>
+
+            <?= $this->element('reference'); ?>
+
+        </div>
+    </section>
 </fieldset>
 
 <fieldset>

@@ -32,6 +32,14 @@
 
 		</div>
 	</section>
+	<section>
+		<label for="price">Vat</label>
+		<div>
+
+			<?= $this->element('vat'); ?>
+
+		</div>
+	</section>
 </fieldset>
 
 <fieldset>
