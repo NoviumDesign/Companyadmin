@@ -188,14 +188,14 @@ class PdfController extends Zend_Controller_Action
 		$this->document = '
 <dimensions:595 842; padding:35>
 
-	<dimensions:525 35>
-		<dimensions:220 35; background-image:/companies/' . $this->companyId . '/logotypes/' . $this->businessId . '.jpeg></>
-		<dimensions:305 35; clear:none; text-align:right; font-size:24>
+	<dimensions:525 60>
+		<dimensions:220 60; background-image:/companies/' . $this->companyId . '/logotypes/' . $this->businessId . '.jpeg; background-color:#123123></>
+		<dimensions:305 60; clear:none; text-align:right; font-size:24>
 			Faktura
 		</>
 	</>
 
-	<dimensions:525 60; margin-top:50;>
+	<dimensions:525 60; margin-top:25;>
 		<dimensions:315 60; font-size:13>' . 
 			strip_tags(html_entity_decode(ucfirst($company['company_name']), ENT_QUOTES, 'UTF-8')) . '<br>' .
 			strip_tags(html_entity_decode(ucfirst(($company['company_adress']? $company['company_adress']: $company['company_box'])), ENT_QUOTES, 'UTF-8')) . '<br>' .
