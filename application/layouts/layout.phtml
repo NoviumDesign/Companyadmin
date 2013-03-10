@@ -29,6 +29,9 @@
 				// businesses
 				$db = Zend_Registry::get('db');
 
+				$today = strtotime(date('Y-m-d'));
+				$tomorrow = $today + 24*60*60;
+
 				$select = $db->select()
 							 ->from('businesses', 'business')
 							 ->joinLeft('user_access', 'businesses.business_id = user_access.business', 'business as business_id')
@@ -41,10 +44,8 @@
 				$numProducts = $db->fetchAll('SELECT COUNT(product_id) as "quantity" FROM products WHERE status <> "deleted" AND business = ' . $_SESSION['business']);
 				$numCustomers = $db->fetchAll('SELECT COUNT(customer_id) as "quantity" FROM customers WHERE business = ' . $_SESSION['business']);
 				$numInvoices = $db->fetchAll('SELECT COUNT(invoice_id) as "quantity" FROM invoices WHERE business = ' . $_SESSION['business'] . ' AND status = "unpaid"');
-				$numCrs = $db->fetchAll('SELECT COUNT(crs_id) as "quantity" FROM crs WHERE business = ' . $_SESSION['business'] . ' AND status = "active"');
+				$numCrs = $db->fetchAll('SELECT COUNT(crs_id) as "quantity" FROM crs WHERE business = ' . $_SESSION['business'] . ' AND status = "active" AND date < ' . $tomorrow);
 
-				$today = strtotime(date('Y-m-d'));
-				$tomorrow = $today + 24*60*60;
 				$select = $db->select()
 	                 ->from('orders', 'COUNT(order_id) as quantity')
 	                 ->where('orders.business = ' . $_SESSION['business'])
