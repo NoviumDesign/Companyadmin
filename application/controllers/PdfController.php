@@ -189,7 +189,7 @@ class PdfController extends Zend_Controller_Action
 <dimensions:595 842; padding:35>
 
 	<dimensions:525 60>
-		<dimensions:220 60; background-image:/companies/' . $this->companyId . '/logotypes/' . $this->businessId . '.jpeg; background-color:#123123></>
+		<dimensions:220 60; background-image:/companies/' . $this->companyId . '/logotypes/' . $this->businessId . '.jpeg></>
 		<dimensions:305 60; clear:none; text-align:right; font-size:24>
 			Faktura
 		</>
