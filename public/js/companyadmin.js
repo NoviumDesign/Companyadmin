@@ -46,7 +46,13 @@ $('.ui-autocomplete').live('click', function() {
 //
 // CLICK TABLE
 //
+var clickableThis = '';
 $('.clickable').live('mouseup', function(event) {
+
+	if($(event.srcElement).parents('.noClick').length) {
+		return;
+	}
+
 	var target = '_self'
 
 	if(event.which == 2 || event.which == 3 || event.ctrlKey || event.shiftKey) {
@@ -62,10 +68,12 @@ $('.clickable').live('mouseup', function(event) {
 		// link via link
 		return;
 	}
+	// event.preventDefault();
 
 	// if target contain link
 	if($targetTd.data('link')) {
 		// link via td
+		clickableThis = $targetTd;
 		redirect($targetTd.data('link'), target)
 		return;
 	}
@@ -73,13 +81,26 @@ $('.clickable').live('mouseup', function(event) {
 	// if parent td contain link
 	if($(this).data('link')) {
 		// link via td
+		clickableThis = $(this);
 		redirect($(this).data('link'), target)
 		return;
 	}
 
 });
 var redirect = function(url, target) {
-	window.open(url, target)
+	if(url.indexOf('function(') != 0) {
+		window.open(url, target)
+	} else {
+		func = url.substring('function('.length, url.length - 1)
+
+		if(func) {
+			//Create the function
+			var fn = window[func];
+			 
+			//Call the function
+			fn();
+		}
+	}
 }
 
 
@@ -174,7 +195,7 @@ $('.changeCrStatus').live('click', function(event) {
 });
 
 
-$('#deliveryDate').live('change', function() {
+$('#changeDeliveryDate').live('change', function() {
 	redirect('/deliveries/view/' + $(this).val(), '_self');
 });
 
@@ -186,3 +207,8 @@ $('#widget_mails textarea').live('focus', function() {
         return false;
 	})
 });
+
+function checkDelivery() {
+	var checkbox = clickableThis.find('td:first input');
+	checkbox.attr("checked", !checkbox.attr("checked"));
+}

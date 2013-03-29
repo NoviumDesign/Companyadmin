@@ -1,8 +1,10 @@
 <div class="g12">
    <h1><?php echo ($this->date? $this->date: 'Today') ?>'s deliveries</h1>
-   <table class="datatable">
+   <table id="deliveries" class="datatable">
       <thead>
          <tr>
+            <th style="width:23px"></th>
+            <th>Carrier</th>
          	<th>Order Number</th>
             <th>Customer</th>
             <th>Items</th>
@@ -29,15 +31,17 @@
             } 
          ?>
 
-            <tr class="clickable <?= $color ?>" data-link="/order/view/<?= $delivery['order_id'] ?>">
-               <td><?= $delivery['order_number'] ?></td>
+            <tr class="clickable <?= $color ?>" data-link="function(checkDelivery)">
+               <td class="noClick"><input type="checkbox"></td>
+               <td><?= (isset($delivery['carrier']) ? $delivery['carrier'] : '') ?></td>
+               <td><a href="/order/view/<?= $delivery['order_id'] ?>"><?= $delivery['order_number'] ?></a></td>
                <td><a href="/customer/view/<?= $delivery['customer_id'] ?>"><?= $delivery['name'] ?></a></td>
                <td><?= $delivery['items'] ?></td>
                <td><?= date('H:i', $delivery['delivery_date']) ?></td>
                <td>
-					<a target="_blank" href="http://maps.google.com/?q=<?= $delivery['delivery_adress'] ?>">
+					   <a target="_blank" href="http://maps.google.com/?q=<?= $delivery['delivery_adress'] ?>">
                     	<?= $delivery['delivery_adress'] ?>
-                  	</a>
+                  </a>
                </td>
                <td><?= ($delivery['notes'] ? 'yes' : '') ?></td>
                <td><a href="#" class="changeOrderStatus" data-id="<?= $delivery['order_id'] ?>"><?= $delivery['status'] ?></a></td>
@@ -51,5 +55,5 @@
 
 <div class="g12">
    <h1>Select specific date</h1>
-   <input type="text" id="deliveryDate" class="date" value="<?php echo ($this->date? $this->date: '') ?>">
+   <input type="text" id="changeDeliveryDate" class="date" value="<?php echo ($this->date? $this->date: '') ?>">
 </div>
