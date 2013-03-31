@@ -1,5 +1,5 @@
 <div class="g12">
-   <h1><?php echo ($this->date? $this->date: 'Today') ?>'s deliveries</h1>
+   <h1><?php echo ($this->date? $this->date: 'Today') ?>'s deliveries (<?= count($this->deliveries) ?>)</h1>
    <table id="deliveries" class="datatable">
       <thead>
          <tr>
@@ -20,20 +20,16 @@
             foreach($this->deliveries as $delivery) {
 
             $color = '';
-            if($delivery['status'] == 'new') {
+            if(isset($delivery['carrier'])) {
                $color = 'blue';
-            } elseif ($delivery['status'] == 'active') {
-               $color = 'yellow';
-            } elseif ($delivery['status'] == 'completed') {
-               $color = 'green';
-            } elseif ($delivery['status'] == 'invoice') {
-               $color = 'orange';
-            } 
+            } else  {
+               $color = 'red';
+            }
          ?>
 
-            <tr class="clickable <?= $color ?>" data-link="function(checkDelivery)">
-               <td class="noClick"><input type="checkbox"></td>
-               <td><?= (isset($delivery['carrier']) ? $delivery['carrier'] : '') ?></td>
+            <tr class="clickable <?= $color ?>" data-link="function(checkDelivery)" data-order-id="<?= $delivery['order_id'] ?>">
+               <td><input disabled type="checkbox" value="<?= $delivery['carrierId']?>"></td><!-- OBS!!! måste vara disabled -->
+               <td class="carrier"><?= (isset($delivery['carrier']) ? ucfirst($delivery['carrier']) : '') ?></td>
                <td><a href="/order/view/<?= $delivery['order_id'] ?>"><?= $delivery['order_number'] ?></a></td>
                <td><a href="/customer/view/<?= $delivery['customer_id'] ?>"><?= $delivery['name'] ?></a></td>
                <td><?= $delivery['items'] ?></td>
@@ -44,7 +40,7 @@
                   </a>
                </td>
                <td><?= ($delivery['notes'] ? 'yes' : '') ?></td>
-               <td><a href="#" class="changeOrderStatus" data-id="<?= $delivery['order_id'] ?>"><?= $delivery['status'] ?></a></td>
+               <td><?= $delivery['status'] ?></td>
             </tr>
 
          <?php } ?>
@@ -53,7 +49,26 @@
    </table>
 </div>
 
+
+<span id="selectAll">Select/deselect all</span>
+
+
 <div class="g12">
+   <h1>Add to <span id="numSelected"></span></h1>
+   <select id="carriers">
+      <option value="0">Select user</option>
+
+      <?php foreach($this->users as $user) { ?>
+
+         <option value="<?= $user['id'] ?>"><?= ucfirst($user['name']) ?></option>
+
+      <?php } ?>
+
+   </select>
+   <button id="removeCarrier" class="red">Remove carrier</button>
+</div>
+
+<div class="g4 fr" style="text-align:right">
    <h1>Select specific date</h1>
    <input type="text" id="changeDeliveryDate" class="date" value="<?php echo ($this->date? $this->date: '') ?>">
 </div>

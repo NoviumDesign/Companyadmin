@@ -208,7 +208,141 @@ $('#widget_mails textarea').live('focus', function() {
 	})
 });
 
+
+//
+//
+// DELIVERIES
+//
+//
 function checkDelivery() {
+	var event = window.event;
 	var checkbox = clickableThis.find('td:first input');
-	checkbox.attr("checked", !checkbox.attr("checked"));
+
+	if(event.shiftKey && checkDelivery.lastChecked) {
+		var row = clickableThis.data('order-id');
+		var deliveries = new Array();
+		var rows = $('table#deliveries tbody tr');
+
+		rows.map(function() {
+			deliveries.push(parseInt($(this).data('order-id')));
+		});
+
+		if(-1 < deliveries.indexOf(checkDelivery.lastChecked) &&  -1 < deliveries.indexOf(row)) {
+			var min = Math.min(deliveries.indexOf(checkDelivery.lastChecked), deliveries.indexOf(row));
+			var max = Math.max(deliveries.indexOf(checkDelivery.lastChecked), deliveries.indexOf(row));
+
+			rows.find('td:first input').attr('checked', false);
+			rows.slice(min, max + 1).each(function() {
+				$(this).find('td:first input').attr('checked', true);
+			});
+		}
+	} else {
+		checkbox.attr('checked', !checkbox.attr('checked'));
+		if(checkbox.attr('checked')) {
+			checkDelivery.lastChecked = checkbox.parents('tr').data('order-id');
+		} else {
+			checkDelivery.lastChecked = false;
+		}
+	}
+
+	currentDeliverier();
 }
+$('#selectAll').live('click', function() {
+	var status = $('table#deliveries tbody tr:first input').attr('checked');
+
+	$('table#deliveries tbody tr input').attr('checked', !status);
+
+	checkDelivery.lastChecked = false;
+});
+
+
+
+function currentDeliverier() {
+	var rows, value, id, content, i;
+
+	rows = $('table#deliveries tbody tr input:checked');
+
+	if(rows.length == 0) {
+		id = 0;
+	} else {
+		i = 0;
+		rows.map(function() {
+
+			if(i++ == 0) {
+				id = value = parseInt($(this).val());
+			} else {
+				if(value != parseInt($(this).val())) {
+					id = 0;
+					return;
+				}
+			} 
+		});
+	}
+
+	$('#carriers option').each(function() {
+		if(id == parseInt($(this).val())) {
+			content = $(this).attr('selected', 'selected').html();
+			return;
+		}
+	});
+	$('#carriers').prev('span').html(content);
+
+	$('#numSelected').html(rows.length ? '(' + rows.length + ')' : '');
+}
+
+function updateCarrier(id) {
+	var deliveries = new Array();
+	var rows = $('table#deliveries tbody tr input:checked');
+
+	if(!rows.length) {
+		return;
+	}
+
+	if(typeof id != 'number') {
+		id = parseInt($('#carriers').val());
+	}
+
+	if(!id) {
+		return;
+	} else if (id === -1) {
+		id = 0;
+	}
+
+	rows.map(function() {
+		deliveries.push(parseInt($(this).parents('tr').data('order-id')))
+	});
+
+	$.post(
+    	'/ajax/carrier',
+		{
+			'carrier': id,
+			'orders': deliveries
+		},
+		function(response){
+			if(response.success) {
+				$('table#deliveries tbody tr').each(function() {
+					var i = jQuery.inArray($(this).data('order-id'), response.updated);
+					if(-1 < i) {
+
+						var name = response.carrier.name.charAt(0).toUpperCase() + response.carrier.name.slice(1)
+
+						$(this).removeClass('red blue').addClass(response.carrier.id ? 'blue' : 'red');
+						$(this).find('input').val(response.carrier.id);
+						$(this).find('td.carrier').html(name);
+					}
+				});
+			}
+    	},
+    	'json'
+    );
+
+}
+$('#carriers').live('focus', function() {
+	$('#carriers').bind('change', updateCarrier);
+});
+$('#carriers').live('blur', function() {
+	$('#carriers').unbind('change', updateCarrier);
+});
+$('#removeCarrier').live('click', function() {
+	updateCarrier(-1)
+});

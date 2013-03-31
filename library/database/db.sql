@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Värd: 127.0.0.1
--- Skapad: 29 mars 2013 kl 01:46
+-- Skapad: 01 apr 2013 kl 00:55
 -- Serverversion: 5.5.27
 -- PHP-version: 5.4.7
 
@@ -185,7 +185,7 @@ CREATE TABLE IF NOT EXISTS `items` (
   `price` int(10) NOT NULL,
   PRIMARY KEY (`item_id`),
   KEY `order` (`order`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=24 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=25 ;
 
 --
 -- Dumpning av Data i tabell `items`
@@ -208,7 +208,8 @@ INSERT INTO `items` (`item_id`, `product`, `order`, `invoice`, `quantity`, `pric
 (14, 1, 0, 5, 2, 8),
 (23, 2, 0, 5, 1, 10),
 (19, 3, 0, 8, 1, 7),
-(20, 1, 0, 10, 1, 8);
+(20, 1, 0, 10, 1, 8),
+(24, 1, 5, 0, 1, 8);
 
 -- --------------------------------------------------------
 
@@ -236,7 +237,7 @@ CREATE TABLE IF NOT EXISTS `orders` (
   KEY `business` (`business`),
   KEY `order_number` (`order_number`),
   KEY `order_secret` (`order_secret`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=5 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=6 ;
 
 --
 -- Dumpning av Data i tabell `orders`
@@ -244,9 +245,10 @@ CREATE TABLE IF NOT EXISTS `orders` (
 
 INSERT INTO `orders` (`order_id`, `order_secret`, `order_number`, `date`, `business`, `delivery_adress`, `delivery`, `delivery_date`, `carrier`, `status`, `customer`, `notes`, `custom_1`, `custom_2`, `custom_3`) VALUES
 (2, '4dqskgikh5', 1, 1361672539, 2, '', 'approved', 1362277320, 0, 'active', 2, '', '', '', ''),
-(1, '5xhdjopkqy', 1, 1361672338, 1, '', 'approved', 1364597700, 12, 'new', 1, '', '', '', ''),
-(3, '1hg5iyc9am', 2, 1362231454, 1, '', 'none', 1364560200, 0, 'new', 1, '', '', '', ''),
-(4, '675wej6guh', 3, 1362236104, 1, 'Heimdalsv&auml;gen 12 norrk&ouml;ping', 'approved', 1364568840, 0, 'new', 1, 'd&ouml;b&ouml;g...', '', '', '');
+(1, '5xhdjopkqy', 1, 1361672338, 1, '', 'approved', 1364597700, 11, 'active', 1, '', '', '', ''),
+(3, '1hg5iyc9am', 2, 1362231454, 1, '', 'none', 1364560200, 11, 'active', 1, '', '', '', ''),
+(4, '675wej6guh', 3, 1362236104, 1, 'Heimdalsv&auml;gen 12 norrk&ouml;ping', 'approved', 1364568840, 10, 'active', 1, 'd&ouml;b&ouml;g...', '', '', ''),
+(5, 'asbv8annel', 4, 1364764394, 1, 'test', 'approved', 1364595120, 11, 'active', 1, '', '', '', '');
 
 -- --------------------------------------------------------
 
@@ -331,7 +333,10 @@ CREATE TABLE IF NOT EXISTS `user_access` (
 INSERT INTO `user_access` (`user`, `business`) VALUES
 (12, 1),
 (12, 2),
-(12, 3);
+(12, 3),
+(11, 2),
+(11, 1),
+(11, 3);
 --
 -- Databas: `companyadmin`
 --

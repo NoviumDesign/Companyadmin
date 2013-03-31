@@ -7,6 +7,9 @@ class AjaxController extends Zend_Controller_Action
     	// disable layout and view
         $this->_helper->layout()->disableLayout(); 
         $this->_helper->viewRenderer->setNoRender(true);
+
+        $acl = new Model_LibraryAcl;
+        $this->isAdmin = $acl->access(Zend_Auth::getInstance()->getStorage()->read()->role, 'order', 'add');
     }
     
     public function customerAction()
@@ -80,6 +83,57 @@ class AjaxController extends Zend_Controller_Action
         );
 
         echo $status;
+    }
+
+
+
+
+
+    public function carrierAction()
+    {
+        $db = Zend_Registry::get('db');
+        $dDb = Zend_Db_Table::getDefaultAdapter();
+
+        $carrier = $_POST['carrier'];
+        $orders = $_POST['orders'];
+
+        $where = 'business = ' . $_SESSION['business'] . ' AND ';
+
+        if(!$this->isAdmin) {
+            $myId = Zend_Auth::getInstance()->getStorage()->read()->id;
+            if($carrier == 0) {
+                $where .= ' carrier = ' . $myId . ' AND ';
+            } else {
+                $carrier = $myId;
+                $where .= ' carrier = 0 AND ';
+            }
+        }
+
+        $updated = [];
+        foreach($orders as $order) {
+            $table = new Model_Db_Orders(array('db' => $db));
+            $check = $table->update(array(
+                'carrier' => $carrier
+            ), $where . ' order_id = ' . $order);
+
+            if($check) {
+                $updated[] += $order;
+            }
+        }
+
+        $select = $dDb->select()
+                      ->from('users', array('id', 'name'))
+                      ->where('company = ?', Zend_Auth::getInstance()->getStorage()->read()->company)
+                      ->where('id = ?', $carrier);
+        $carrier = $dDb->fetchAll($select);
+
+        if(count($carrier)) {
+            $carrier = $carrier[0];
+        } else {
+            $carrier = ['id' => 0, 'name' => ''];
+        }
+
+        echo json_encode(['success' => true, 'carrier' => $carrier, 'updated' => $updated]);
     }
 }
 

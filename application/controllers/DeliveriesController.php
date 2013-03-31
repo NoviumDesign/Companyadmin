@@ -4,6 +4,8 @@ class DeliveriesController extends Zend_Controller_Action
 {
     public function init()
     {
+        $acl = new Model_LibraryAcl;
+        $this->isAdmin = $acl->access(Zend_Auth::getInstance()->getStorage()->read()->role, 'order', 'add');
     }
     
     public function viewAction()
@@ -31,6 +33,7 @@ class DeliveriesController extends Zend_Controller_Action
 	                 ->where('orders.business = ' . $_SESSION['business'])
 	                 ->where('orders.delivery_date >= "' . $today . '"')
 	                 ->where('orders.delivery_date < "' . $tomorrow . '"')
+	                 ->where('orders.status <> "new"')
 	                 ->where('orders.delivery <> "requested"');
 	    $deliveries = $db->fetchAll($select);
 
@@ -47,11 +50,19 @@ class DeliveriesController extends Zend_Controller_Action
 				$deliveries[$key]['carrier'] = $carrier[0]['name'];
 			}
 	    }
-
 	    $this->view->deliveries = $deliveries;
 
-    }
-
-
-    
+	    // if admin
+	    if($this->isAdmin) {
+		    $select = $dDb->select()
+					  	  ->from('users', array('id', 'name'))
+					  	  ->where('company = ?', Zend_Auth::getInstance()->getStorage()->read()->company)
+					  	  ->where('role <> ?', 'god')
+					  	  ->order('users.name DESC');
+			$this->view->users = $dDb->fetchAll($select);
+		} else {
+			$me = Zend_Auth::getInstance()->getStorage()->read();
+			$this->view->users = [['id' => $me->id, 'name' => $me->name]];
+		}
+    }  
 }

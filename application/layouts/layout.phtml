@@ -51,7 +51,8 @@
 	                 ->where('orders.business = ' . $_SESSION['business'])
 	                 ->where('orders.delivery_date >= "' . $today . '"')
 	                 ->where('orders.delivery_date < "' . $tomorrow . '"')
-	                 ->where('orders.delivery <> "requested"');
+	                 ->where('orders.delivery_date < "' . $tomorrow . '"')
+	                 ->where('orders.status <> "new"');
 	    		$numDeliveries = $db->fetchAll($select);
 
 
