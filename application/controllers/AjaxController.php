@@ -49,6 +49,24 @@ class AjaxController extends Zend_Controller_Action
         echo $status;
     }
 
+    public function deliverystatusAction()
+    {
+        $db = Zend_Registry::get('db');
+
+        $orderId = $_POST['id'];
+        $status = $_POST['status'];
+
+        // update order
+        $table = new Model_Db_Orders(array('db' => $db));
+        $table->update(array(
+                'delivery' => $status
+            ),
+            'order_id = ' . $orderId . ' AND  business = ' . $_SESSION['business']
+        );
+
+        echo $status;
+    }
+
     public function invoicestatusAction()
     {
         $db = Zend_Registry::get('db');

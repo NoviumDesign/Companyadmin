@@ -128,8 +128,10 @@ $('.changeOrderStatus').live('click', function(event) {
 
 			$that.html(response);
 
-			$that.parents('tr').removeClass(colors.join(' '))
-			$that.parents('tr').addClass(color)
+			if(!$that.is('.noColor')) {
+				$that.parents('tr').removeClass(colors.join(' '))
+				$that.parents('tr').addClass(color);
+			}
     	}
     );
 });
@@ -194,9 +196,46 @@ $('.changeCrStatus').live('click', function(event) {
     );
 });
 
+$('.changeDeliveryStatus').live('click', function(event) {
+	event.preventDefault();
+	var status, statuses, index, id, colors;
+
+	status = $(this).html();
+	statuses = ['approved', 'completed'];
+	colors = ['yellow', 'blue']
+	id = $(this).data('id');
+
+	index = (statuses.indexOf(status) + 1)%statuses.length
+
+	$that = $(this);
+	$.post(
+    	'/ajax/deliverystatus',
+		{
+			'id': id,
+			'status': statuses[index]
+		},
+		function(response){
+			index = statuses.indexOf(response)%statuses.length
+			color = colors[index]
+
+			$that.html(response);
+
+			if(!$that.is('.noColor')) {
+				$that.parents('tr').removeClass(colors.join(' '))
+				$that.parents('tr').addClass(color);
+			}
+    	}
+    );
+});
+
 
 $('#changeDeliveryDate').live('change', function() {
-	redirect('/deliveries/view/' + $(this).val(), '_self');
+	var action = 'view';
+	if($(this).is('.mine')) {
+		action = 'mine';
+	}
+
+	redirect('/deliveries/' + action + '/' + $(this).val(), '_self');
 });
 
 $('#widget_mails textarea').live('focus', function() {

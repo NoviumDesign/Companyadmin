@@ -47,13 +47,23 @@
 				$numCrs = $db->fetchAll('SELECT COUNT(crs_id) as "quantity" FROM crs WHERE business = ' . $_SESSION['business'] . ' AND status = "active" AND date < ' . $tomorrow);
 
 				$select = $db->select()
-	                 ->from('orders', 'COUNT(order_id) as quantity')
-	                 ->where('orders.business = ' . $_SESSION['business'])
-	                 ->where('orders.delivery_date >= "' . $today . '"')
-	                 ->where('orders.delivery_date < "' . $tomorrow . '"')
-	                 ->where('orders.delivery_date < "' . $tomorrow . '"')
-	                 ->where('orders.status <> "new"');
-	    		$numDeliveries = $db->fetchAll($select);
+	                		 ->from('orders', 'COUNT(order_id) as quantity')
+	                		 ->where('orders.business = ' . $_SESSION['business'])
+	                		 ->where('orders.delivery_date >= "' . $today . '"')
+	                		 ->where('orders.delivery_date < "' . $tomorrow . '"')
+	                		 ->where('orders.delivery <> ?', 'completed')
+	                		 ->where('orders.carrier = ?', $this->user->id);
+	    		$numMyDeliveries = $db->fetchAll($select);
+
+	    		$select = $db->select()
+	                		 ->from('orders', 'COUNT(order_id) as quantity')
+	                		 ->where('orders.business = ' . $_SESSION['business'])
+	                		 ->where('orders.delivery_date >= "' . $today . '"')
+	                		 ->where('orders.delivery_date < "' . $tomorrow . '"')
+	                		 ->where('orders.status <> "new"')
+	                		 ->where('orders.delivery = ?', 'approved')
+	                		 ->where('orders.carrier = ?', 0);
+	    		$numFreeDeliveries = $db->fetchAll($select);
 
 
 				include APPLICATION_PATH . '/views/layout/top.html';

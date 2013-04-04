@@ -80,14 +80,36 @@
 			</ul>
 		</li>
 		<li class="i_truck">
-			<a href="/deliveries/view">
+			<a>
 				<span>
 					Deliverys
 					<i class="fr">
-						<?= $numDeliveries[0]['quantity']; ?>
+						<?= $numMyDeliveries[0]['quantity']; ?>
 					</i>
 				</span>
 			</a>
+			<ul>
+				<li>
+					<a href="/deliveries/view">
+						<span>
+							Distribute
+							<i class="fr">
+								<?= $numFreeDeliveries[0]['quantity']; ?>
+							</i>
+						</span>
+					</a>
+				</li>
+				<li>
+					<a href="/deliveries/mine">
+						<span>
+							Mine
+							<i class="fr">
+								<?= $numMyDeliveries[0]['quantity']; ?>
+							</i>
+						</span>
+					</a>
+				</li>
+			</ul>
 		</li>
 		<li class="i_user_comment">
 			<a>
