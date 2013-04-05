@@ -37,7 +37,7 @@
 				<span>
 					<b><?= ($product['unit'] ? $product['unit'] : $product['momentary_unit']); ?></b>
 					á
-					<?= ($product['price'] ? $product['price'] : $product['momentary_price']); ?>
+					<?= ($product['price'] ? round($product['price'], 2): round($product['momentary_price'], 2)); ?>
 					kr/
 					<?= ($product['unit'] ? $product['unit'] : $product['momentary_unit']); ?>
 				</span>
@@ -54,17 +54,21 @@
 		<label for="delivery">Shall we deliver this order?</label>
 		<div>
 
-			<?= $this->element('delivery', 'approved'); ?>
+			<?= $this->element('delivery', 'none'); ?>
 
-			<label for="delivery">Approved</label>
+			<label for="delivery">None</label>
 
 			<?= $this->element('delivery', 'requested'); ?>
 
 			<label for="delivery">Requested</label>
 
-			<?= $this->element('delivery', 'none'); ?>
+			<?= $this->element('delivery', 'approved'); ?>
 
-			<label for="delivery">None</label>
+			<label for="delivery">Approved</label>
+
+			<?= $this->element('delivery', 'completed'); ?>
+
+			<label for="delivery">Completed</label>
 		</div>
 	</section>
 	<section>

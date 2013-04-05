@@ -4,6 +4,12 @@ class ErrorController extends Zend_Controller_Action
 {
     public function errorAction()
     {
+
+        if(APPLICATION_ENV != 'development') {
+            $this->_redirect('/');
+        }
+
+
         $errors = $this->_getParam('error_handler');
         
         if (!$errors || !$errors instanceof ArrayObject) {

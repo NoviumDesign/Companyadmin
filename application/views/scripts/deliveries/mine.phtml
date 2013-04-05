@@ -16,7 +16,7 @@
       <tbody>
 
          <?php
-            foreach($this->deliveries as $delivery) {
+            foreach($this->myDeliveries as $delivery) {
 
             $color = '';
             if($delivery['delivery'] == 'approved') {
@@ -30,7 +30,7 @@
                <td><?= $delivery['order_number'] ?></td>
                <td><a href="/customer/view/<?= $delivery['customer_id'] ?>"><?= $delivery['name'] ?></a></td>
                <td><?= $delivery['items'] ?></td>
-               <td><?= date('H:i', $delivery['delivery_date']) ?></td>
+               <td><?= $delivery['delivery_date'] ? date('H:i', $delivery['delivery_date']) : '' ?></td>
                <td>
 					   <a target="_blank" href="http://maps.google.com/?q=<?= $delivery['delivery_adress'] ?>">
                     	<?= $delivery['delivery_adress'] ?>

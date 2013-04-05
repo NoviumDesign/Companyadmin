@@ -55,7 +55,7 @@ class AuthenticationController extends Zend_Controller_Action
         $db = Zend_Registry::get('db');
 
         // sent from change business or login?
-        if($businessId > 1) {
+        if($businessId >= 1) {
             $select = $db->select()
                          ->from('user_access', 'COUNT(business) as access')
                          ->where('user = ' . $user->id . ' AND business = ' . $businessId);
@@ -64,7 +64,11 @@ class AuthenticationController extends Zend_Controller_Action
 
             if($access) {
                 $_SESSION['business']  = $businessId;
-                $path = $path['path'];
+                $path = $_SERVER['HTTP_REFERER'];
+
+                if(strpos($path, '//') > -1) {
+                    $path = substr($path, strpos($path, '//') + 2);
+                }
 
                 $path = explode('/', $path);
 

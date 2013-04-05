@@ -58,8 +58,12 @@
 
 				<tr class="clickable <?= $color ?>" data-link="/order/view/<?= $order['order_id'] ?>">
 					<td><?= $order['order_number'] ?></td>
-					<td><a href="/customer/view/<?= $order['customer_id'] ?>"><?= $order['name'] ?></a></td>
-					<td><?= $order['delivery'] ?></td>
+					<td>
+						<a href="/customer/view/<?= $order['customer_id'] ?>"><?= $order['name'] ?></a>
+					</td>
+					<td>
+						<a href="#" class="changeDeliveryStatus noColor" data-id="<?= $order['order_id'] ?>"><?= $order['delivery'] ?></a>
+					</td>
 					<td><?= ($order['delivery_date'] ? date('Y-m-d', $order['delivery_date']): '') ?></td>
 					<td><?= ($order['notes'] ? 'yes' : '') ?></td>
 					<td><?= $order['quantity'] ?></td>
@@ -84,7 +88,9 @@
 						}
 					?>
 
-					<td><a href="#" class="changeOrderStatus" data-id="<?= $order['order_id'] ?>"><?= $order['status'] ?></a></td>
+					<td>
+						<a href="#" class="changeOrderStatus" data-id="<?= $order['order_id'] ?>"><?= $order['status'] ?></a>
+					</td>
 
 				</tr>
 

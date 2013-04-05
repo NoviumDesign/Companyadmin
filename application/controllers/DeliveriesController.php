@@ -87,11 +87,12 @@ class DeliveriesController extends Zend_Controller_Action
         			 ->from('orders', array('order_id', 'order_number', 'orders.delivery_date', 'delivery_adress', 'status', 'notes', 'delivery'))
 	                 ->joinLeft('customers', 'customers.customer_id = orders.customer', array('customer_id', 'name'))
 	                 ->joinLeft('items', 'items.order = orders.order_id', 'SUM(items.quantity) AS items')
+	                 ->group('orders.order_id')
             		 ->where('orders.business = ' . $_SESSION['business'])
             		 ->where('orders.delivery_date >= "' . $today . '"')
             		 ->where('orders.delivery_date < "' . $tomorrow . '"')
             		 ->where('orders.carrier = ?', Zend_Auth::getInstance()->getStorage()->read()->id);
-		$this->view->deliveries = $db->fetchAll($select);
+		$this->view->myDeliveries = $db->fetchAll($select);
 
     }
 }

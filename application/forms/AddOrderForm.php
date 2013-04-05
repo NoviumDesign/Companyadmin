@@ -59,7 +59,8 @@ class Form_AddOrderForm extends Emilk_Form
 				 ->addChoises(array(
 					'approved',
 					'requested',
-					'none'
+					'none',
+					'completed'
 				 ));
 
 

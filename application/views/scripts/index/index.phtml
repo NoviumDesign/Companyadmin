@@ -12,7 +12,6 @@
 					<tr>
 						<th>Date</th>
 						<th>Orders</th>
-						<th>Items</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -22,7 +21,6 @@
 					<tr>
 						<td><?= ($date['delivery_date'] ? date('Y-m-d', $date['delivery_date']): ''); ?></td>
 						<td><?= $date['orders']; ?></td>
-						<td><?= $date['items']; ?></td>
 					</tr>
 
 					<?php } ?>

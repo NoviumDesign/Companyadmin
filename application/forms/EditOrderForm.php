@@ -88,7 +88,8 @@ class Form_EditOrderForm extends Emilk_Form
 				 ->addChoises(array(
 					'approved',
 					'requested',
-					'none'))
+					'none',
+					'completed'))
 				 ->setValue($order['delivery']);
 
 
