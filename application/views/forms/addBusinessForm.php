@@ -117,6 +117,14 @@
 
         </div>
     </section>
+    <section>
+        <label for="delivery">default days to invoice due</label>
+        <div>
+
+            <?= $this->element('invoiceDue'); ?>
+
+        </div>
+    </section>
 </fieldset>
 
 

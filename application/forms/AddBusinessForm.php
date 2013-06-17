@@ -59,6 +59,11 @@ class Form_AddBusinessForm extends Emilk_Form
 		$invoiceMailContent = new Emilk_Form_Element_Textarea('invoiceMailContent');
 		$invoiceMailContent->setAttr('data-autogrow', 'true')
 						   ->setAttr('required', '');
+
+		$invoiceDue = new Emilk_Form_Element_number('invoiceDue');
+		$invoiceDue->setAttr('class', 'integer')
+							 ->setAttr('data-min', '0')
+							 ->setValue(30);
 		
 
 		$addBusiness = new Emilk_Form_Element_Button('addBusiness');
@@ -96,7 +101,8 @@ class Form_AddBusinessForm extends Emilk_Form
 				$detail,
 				$companyReference,
 				$invoiceMailTitle,
-				$invoiceMailContent
+				$invoiceMailContent,
+				$invoiceDue
 			 ));
 	}
 }

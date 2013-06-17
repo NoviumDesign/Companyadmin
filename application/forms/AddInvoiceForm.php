@@ -16,6 +16,12 @@ class Form_AddInvoiceForm extends Emilk_Form
 		$db = Zend_Registry::get('db');
 		$business = $_SESSION['business'];
 
+		$select = $db->select()
+                 ->from('businesses', 'invoice_due')
+                 ->where('business_id = ?', $business);
+    list($result) = $db->fetchAll($select);
+    $daysToDue = $result['invoice_due'];
+
 
 		if($this->orderId) {
 
@@ -82,7 +88,7 @@ class Form_AddInvoiceForm extends Emilk_Form
 
 		$invoiceDue = new Emilk_Form_Element_Text('invoiceDue');
 		$invoiceDue->setAttr('class', 'date')
-				   ->setAttr('data-value', '+10');
+				   		 ->setAttr('data-value', '+' . $daysToDue);
 
 
 		$products = array();
@@ -140,7 +146,11 @@ class Form_AddInvoiceForm extends Emilk_Form
 			 	$addInvoice,
 			 	$orderId
 			 ))
-			 ->add($products)
-			 ->add($priceIds);
+			 ->add($products);
+
+		if (isset($priceIds)) {
+			$this->add($priceIds);
+		}
+			 
 	}
 }

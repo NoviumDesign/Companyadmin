@@ -45,7 +45,8 @@ class BusinessController extends Zend_Controller_Action
                         'custom_field_3' => $form->getValue('c3'),
 
                         'invoice_mail_title' => $form->getValue('invoiceMailTitle'),
-                        'invoice_mail_content' => $form->getValue('invoiceMailContent')
+                        'invoice_mail_content' => $form->getValue('invoiceMailContent'),
+                        'invoice_due' => $form->getValue('invoiceDue')
                     ));
                 
                 // file
@@ -116,7 +117,8 @@ class BusinessController extends Zend_Controller_Action
                         'custom_field_3' => $form->getValue('c3'),
 
                         'invoice_mail_title' => $form->getValue('invoiceMailTitle'),
-                        'invoice_mail_content' => $form->getValue('invoiceMailContent')
+                        'invoice_mail_content' => $form->getValue('invoiceMailContent'),
+                        'invoice_due' => $form->getValue('invoiceDue')
                     ), 'business_id = "' . $businessId . '"');
 
                 // file

@@ -33,7 +33,8 @@ class Form_EditBusinessForm extends Emilk_Form
 	                    'invoice_detail',
 	                    'company_reference',
 	                    'invoice_mail_title',
-	                    'invoice_mail_content'
+	                    'invoice_mail_content',
+	                    'invoice_due'
                      ))
                      ->where('business_id = "' . $businessId . '"');
         list($business) = $db->fetchAll($select);
@@ -126,6 +127,12 @@ class Form_EditBusinessForm extends Emilk_Form
 						   ->setValue($business['invoice_mail_content']);
 
 
+		$invoiceDue = new Emilk_Form_Element_number('invoiceDue');
+		$invoiceDue->setAttr('class', 'integer')
+							 ->setAttr('data-min', '0')
+							 ->setValue($business['invoice_due']);
+
+
 
 		$editBusiness = new Emilk_Form_Element_Button('editBusiness');
 		$editBusiness->setAttr('class', 'submit green')
@@ -161,7 +168,8 @@ class Form_EditBusinessForm extends Emilk_Form
 				$detail,
 				$companyReference,
 				$invoiceMailTitle,
-				$invoiceMailContent
+				$invoiceMailContent,
+				$invoiceDue
 			 ));
 	}
 }
