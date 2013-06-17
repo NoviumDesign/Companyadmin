@@ -38,7 +38,15 @@
 </fieldset>
 
 <fieldset>
-	<label>Invoice due</label>
+	<label>Dates</label>
+	<section>
+		<label for="invoiceDue">Invoice date</label>
+		<div>
+
+			<?= $this->element('invoiceDate'); ?>
+
+		</div>
+	</section>
 	<section>
 		<label for="invoiceDue">Invoice due</label>
 		<div>

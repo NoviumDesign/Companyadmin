@@ -90,6 +90,10 @@ class InvoiceController extends Zend_Controller_Action
         $parameters = new Emilk_Request_Parameters();
         list($invoiceId) = $parameters->get();
 
+        if(!$invoiceId) {
+            $this->_redirect('/invoices/view');
+        }
+
         $form = new Form_EditInvoiceForm($invoiceId);
         $this->view->form = $form;
 
@@ -102,6 +106,7 @@ class InvoiceController extends Zend_Controller_Action
                     'customer' => $form->getValue('customerId'),
                     'status' => $form->getValue('status'),
                     'due' => strtotime($form->getValue('invoiceDue')),
+                    'date' => strtotime($form->getValue('invoiceDate')),
                     'discount' => $form->getValue('discount'),
                     'notes' => $form->getValue('notes')
                     ),

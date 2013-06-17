@@ -16,6 +16,7 @@ class Form_EditOrderForm extends Emilk_Form
 	public function build()
 	{
         $db = Zend_Registry::get('db');
+      $dDb = Zend_Db_Table::getDefaultAdapter();
 		$id = $this->id;
 		$business = $_SESSION['business'];
 
@@ -23,17 +24,24 @@ class Form_EditOrderForm extends Emilk_Form
 
 		// order data
 		$select = $db->select()
-                     ->from('orders', array('order_id', 'order_number', 'delivery_adress', 'delivery', 'delivery_date', 'status', 'customer as customer_id', 'notes', 'custom_1', 'custom_2', 'custom_3'))
+                     ->from('orders', array('order_id', 'order_number', 'delivery_adress', 'delivery', 'delivery_date', 'status', 'customer as customer_id', 'carrier', 'notes', 'custom_1', 'custom_2', 'custom_3'))
                      ->joinLeft('customers', 'orders.customer = customers.customer_id', 'name as customer_name')
                      ->where('orders.order_id = ' . $id . ' AND orders.business = ' . $business);
         $result = $db->fetchAll($select);
         $this->order = $result[0];
 
-        if(!$this->order) {
-			header('Location: /orders/view');
-        }
-        
+      if(!$this->order) {
+			 header('Location: /orders/view');
+      }
+
         $order = $this->order;
+
+        $select = $dDb->select()
+                      ->from('users', array('id', 'name'))
+                      ->where('company = ?', Zend_Auth::getInstance()->getStorage()->read()->company)
+                      ->where('role <> ?', 'god')
+                      ->order('users.name DESC');
+        $carriers = $dDb->fetchAll($select);
 
         // products data
         $select = $db->select()
@@ -101,6 +109,16 @@ class Form_EditOrderForm extends Emilk_Form
 		$deliveryTime->setAttr('class', 'time');
 
 
+    $carrier = new Emilk_Form_Element_Select('carrier');
+    $carrier->addOption('')
+            ->addOptions($carriers);
+
+    if ($order['carrier']) {
+      $carrier->setValue($order['carrier']);
+    }
+
+
+
 		if($order['delivery_date']) {
 			$deliveryDate->setValue(date('Y-m-d', $order['delivery_date']));	// GMT?
 			$deliveryTime->setValue(date('H:i', $order['delivery_date']));		// GMT?
@@ -159,6 +177,7 @@ class Form_EditOrderForm extends Emilk_Form
 			 	$deliveryAdress,
 			 	$orderNotes,
 			 	$deliveryStatus,
+        $carrier,
 			 	$addOrder,
 			 	$custom1,
 			 	$custom2,

@@ -17,7 +17,7 @@ class Form_EditInvoiceForm extends Emilk_Form
 
 		// order data
 		$select = $db->select()
-                     ->from('invoices', array('invoice_id', 'invoice_number', 'customer', 'status', 'customer as customer_id', 'discount', 'due', 'notes'))
+                     ->from('invoices', array('invoice_id', 'invoice_number', 'customer', 'status', 'customer as customer_id', 'discount', 'due', 'date', 'notes'))
                      ->joinLeft('customers', 'invoices.customer = customers.customer_id', 'name as customer_name')
                      ->where('invoices.invoice_id = '. $this->invoiceId . ' AND invoices.business = ' . $business); 
         $result = $db->fetchAll($select);
@@ -67,9 +67,13 @@ class Form_EditInvoiceForm extends Emilk_Form
 				 ->setValue($invoice['customer_name']);
 
 
-		$invoiceDue = new Emilk_Form_Element_Text('invoiceDue');
-		$invoiceDue->setAttr('class', 'date')
-				   ->setValue(date('Y-m-d', $invoice['due']));
+    $invoiceDue = new Emilk_Form_Element_Text('invoiceDue');
+    $invoiceDue->setAttr('class', 'date')
+           ->setValue(date('Y-m-d', $invoice['due']));
+
+    $invoiceDate = new Emilk_Form_Element_Text('invoiceDate');
+    $invoiceDate->setAttr('class', 'date')
+           ->setValue(date('Y-m-d', $invoice['date']));
 
 
 		$products = array();
@@ -108,6 +112,7 @@ class Form_EditInvoiceForm extends Emilk_Form
 			 	$customerId,
 			 	$customer,
 			 	$invoiceDue,
+        $invoiceDate,
 			 	$status,
 			 	$discount,
 			 	$notes,
