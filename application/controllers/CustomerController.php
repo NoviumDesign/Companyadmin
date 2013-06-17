@@ -21,6 +21,11 @@ class CustomerController extends Zend_Controller_Action
 
         $parameters = new Emilk_Request_Parameters();
         list($customerId) = $parameters->get();
+
+        if(!$customerId) {
+            $this->_redirect('/customers/view');
+        }
+
         $this->view->customerId = $customerId; 
 
         $form = new Form_EditCustomerForm($customerId);

@@ -60,6 +60,12 @@ class ProductController extends Zend_Controller_Action
 
         $parameters = new Emilk_Request_Parameters();
         list($productId) = $parameters->get();
+
+
+        if(!$productId) {
+            $this->_redirect('/products/view');
+        }
+
         $this->view->productId = $productId;
 
         $form  = new Form_EditProductForm($productId);

@@ -34,6 +34,11 @@ class CrController extends Zend_Controller_Action
 
         $parameters = new Emilk_Request_Parameters();
         list($crId) = $parameters->get();
+
+        if(!$crId) {
+            $this->_redirect('/crs/view');
+        }
+
         $this->view->crId = $crId;
 
         $form = new Form_EditCrForm($crId);

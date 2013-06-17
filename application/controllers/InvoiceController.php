@@ -168,6 +168,11 @@ class InvoiceController extends Zend_Controller_Action
 
         $parameters = new Emilk_Request_Parameters();
         list($invoiceId) = $parameters->get();
+
+        if(!$invoiceId) {
+            $this->_redirect('/invoices/view');
+        }
+
         $this->view->invoiceId = $invoiceId;
 
         // invoice

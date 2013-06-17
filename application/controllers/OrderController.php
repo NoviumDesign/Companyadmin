@@ -82,6 +82,12 @@ class OrderController extends Zend_Controller_Action
 
         $parameters = new Emilk_Request_Parameters();
         list($orderId) = $parameters->get();
+
+
+        if(!$orderId) {
+            $this->_redirect('/orders/view');
+        }
+
         $this->view->orderId = $orderId;
 
         $form = new Form_EditOrderForm($orderId);
