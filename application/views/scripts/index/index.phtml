@@ -5,13 +5,13 @@
 <div class="g6 widgets">
 
 	<div class="widget" id="widget_order_date" data-icon="calendar">
-		<h3 class="handle">Delivery dates</h3>
+		<h3 class="handle">Utkörningsdatum</h3>
 		<div>
 			<table class="datatable">
 				<thead>
 					<tr>
-						<th>Date</th>
-						<th>Orders</th>
+						<th>Datum</th>
+						<th>Order</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -31,13 +31,13 @@
 	</div>
 
 	<div class="widget" id="widget_ordered_products" data-icon="abacus">
-		<h3 class="handle">Ordered products</h3>
+		<h3 class="handle">Beställda produkter</h3>
 		<div>
 			<table class="datatable">
 				<thead>
 					<tr>
-						<th>Product</th>
-						<th>Quantity</th>
+						<th>Produkt</th>
+						<th>Antal</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -57,10 +57,10 @@
 	</div>
 
 	<div class="widget" id="widget_mails" data-icon="mail">
-		<h3 class="handle">Mail adresses</h3>
+		<h3 class="handle">Epostadresser</h3>
 		<div>
 			<h5>
-				There's <i><?= $this->numMails ?></i> distinct mail adresses at this moment.
+				Vi har <i><?= $this->numMails ?></i> adresser i systemet.
 			</h5>
 			<textarea><?= $this->mails ?></textarea>
 		</div>

@@ -2,13 +2,13 @@
 	<ul id="nav">
 		<li class="i_house">
 			<a href="/">
-				<span>Dashboard</span>
+				<span>Översikt</span>
 			</a>
 		</li>
 		<li class="i_create_write">
 			<a>
 				<span>
-					Orders
+					Ordrar
 					<i class="fr">
 						<?= $numOrders[0]['quantity']; ?>
 					</i>
@@ -18,7 +18,7 @@
 				<li>
 					<a href="/orders/view/active">
 						<span>
-							Active
+							Aktiva
 							<i class="fr">
 								<?= $numOrders[0]['quantity']; ?>
 							</i>
@@ -27,7 +27,7 @@
 				</li>
 				<li>
 					<a href="/orders/view/completed">
-						<span>Completed</span>
+						<span>Slutförda</span>
 					</a>
 				</li>
 			</ul>
@@ -35,7 +35,7 @@
 		<li class="i_shopping_cart">
 			<a href="/products/view">
 				<span>
-					Products
+					Produkter
 					<i class="fr">
 						<?= $numProducts[0]['quantity']; ?>
 					</i>
@@ -45,7 +45,7 @@
 		<li class="i_user">
 			<a href="/customers/view">
 				<span>
-					Customers
+					Kunder
 					<i class="fr">
 						<?= $numCustomers[0]['quantity']; ?>
 					</i>
@@ -55,7 +55,7 @@
 		<li class="i_cash_register">
 			<a>
 				<span>
-					Invoices
+					Fakturor
 					<i class="fr">
 						<?= $numInvoices[0]['quantity']; ?>
 					</i>
@@ -65,7 +65,7 @@
 				<li>
 					<a href="/invoices/view/unpaid">
 						<span>
-							Unpaid
+							Obetalda
 							<i class="fr">
 								<?= $numInvoices[0]['quantity']; ?>
 							</i>
@@ -74,7 +74,7 @@
 				</li>
 				<li>
 					<a href="/invoices/view/paid">
-						<span>Paid</span>
+						<span>Betalda</span>
 					</a>
 				</li>
 			</ul>
@@ -82,7 +82,7 @@
 		<li class="i_truck">
 			<a>
 				<span>
-					Deliverys
+					Leveranser
 					<i class="fr">
 						<?= $numMyDeliveries[0]['quantity']; ?>
 					</i>
@@ -92,7 +92,7 @@
 				<li>
 					<a href="/deliveries/view">
 						<span>
-							Distribute
+							Fördela ut
 							<i class="fr">
 								<?= $numFreeDeliveries[0]['quantity']; ?>
 							</i>
@@ -102,7 +102,7 @@
 				<li>
 					<a href="/deliveries/mine">
 						<span>
-							Mine
+							Mina leveranser
 							<i class="fr">
 								<?= $numMyDeliveries[0]['quantity']; ?>
 							</i>
@@ -114,7 +114,7 @@
 		<li class="i_user_comment">
 			<a>
 				<span>
-					CRM
+					Ärendehantering
 					<i class="fr">
 						<?= $numCrs[0]['quantity']; ?>
 					</i>
@@ -124,7 +124,7 @@
 				<li>
 					<a href="/crs/view/active">
 						<span>
-							Active
+							Aktiva ärenden
 							<i class="fr">
 								<?= $numCrs[0]['quantity']; ?>
 							</i>
@@ -133,7 +133,7 @@
 				</li>
 				<li>
 					<a href="/crs/view/completed">
-						<span>Completed</span>
+						<span>Slutförda ärenden</span>
 					</a>
 				</li>
 			</ul>

@@ -1,20 +1,20 @@
 <div id="pageoptions">
 	<ul>
-		<li><a href="/authentication/logout">Logout</a></li>
-		<li><a href="/#" id="wl_config">Quick settings</a></li>
-		<li><a href="/user/view">Account</a></li>
+		<li><a href="/authentication/logout">Logga ut</a></li>
+		<li><a href="/#" id="wl_config">Byt verksamhet</a></li>
+		<li><a href="/user/view">Konto</a></li>
 
 		<?php if($roleVal >= $adminVal) { ?>
 		
-			<li class="fl"><a href="/system">System configuration</a></li>
+			<li class="fl"><a href="/system">Systeminställningar</a></li>
 
 		<?php } ?>
 
 	</ul>
 	<div>
-		<h3>Quick settings</h3>
+		<h3>Välj verksamhet</h3>
 		<p>
-			<h5>Choose company to admin</h5>
+			<h5>Vilken verksamhet vill du hantera?</h5>
 			<ul>
 				
 				<?php
