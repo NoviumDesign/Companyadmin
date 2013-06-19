@@ -32,7 +32,7 @@ class AuthenticationController extends Zend_Controller_Action
 
                     $this->_redirect('/authentication/business');
                 } else {
-                    $this->view->invalidLogin = 'Invalid mail or password';
+                    $this->view->invalidLogin = 'Felaktiga inloggningsuppgifter';
                 }
             }
         }

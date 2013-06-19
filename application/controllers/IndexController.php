@@ -6,6 +6,8 @@ class IndexController extends Zend_Controller_Action
     {
         $db = Zend_Registry::get('db');
 
+        $today = strtotime(date('Y-m-d'));
+
     	// delivery dates
     	$select = $db->select()
                      ->from('orders', array('orders.delivery_date', 'COUNT(*) AS orders'))
@@ -41,6 +43,38 @@ class IndexController extends Zend_Controller_Action
         }
         $this->view->numMails = count($mails);
         $this->view->mails = join($mails, ', ');
+
+
+        // new orders
+        $select = $db->select()
+                     ->from('orders', 'count(*) as num_orders')
+                     ->where('orders.status = "new"')
+                     ->where('orders.business = ?', $_SESSION['business']);
+        list($this->view->unconfirmedOrders) = $db->fetchAll($select);
+
+
+        // crm
+        $select = $db->select()
+                     ->from('crs', 'COUNT(*) as today')
+                     ->where('crs.business = ' . $_SESSION['business'])
+                     ->where('crs.date = "' . $today . '"');
+        list($crmToday) = $db->fetchAll($select);
+        $select = $db->select()
+                     ->from('crs', 'COUNT(*) as active')
+                     ->where('crs.business = ' . $_SESSION['business'])
+                     ->where('crs.status = "active"');
+        list($crmActive) = $db->fetchAll($select);
+        $this->view->crm = array_merge($crmToday, $crmActive);
+
+
+        // overdue invoices
+        $select = $db->select()
+                     ->from('invoices', array('invoice_id', 'invoice_number', 'due', 'customer'))
+                     ->joinLeft('customers', 'customers.customer_id = invoices.customer', 'name')
+                     ->where('invoices.status = "unpaid"')
+                     ->where('invoices.due < ?', $today)
+                     ->where('invoices.business = ?', $_SESSION['business']);
+        $this->view->overdueInvoices = $db->fetchAll($select);
 
     }
 }

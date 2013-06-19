@@ -81,7 +81,9 @@ class Model_LibraryAcl extends Emilk_Acl_Library
 					'add' => 'admin',
 					'view' => 'user',
 					'delete' => 'admin'
-				)
+				),
+
+			'request-order' => 'none'
 
 
 		);

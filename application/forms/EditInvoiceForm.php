@@ -34,7 +34,7 @@ class Form_EditInvoiceForm extends Emilk_Form
                         '(SELECT unit FROM prices WHERE products.price = prices.price_id) as momentary_unit'))
                      ->joinLeft('items', 'items.product = products.product_id AND items.invoice = '. $this->invoiceId, 'quantity')
                      ->joinLeft('prices', 'prices.price_id = items.price', array('price', 'unit'))
-                     ->where('products.business = ' . $business . ' AND products.status <> "deleted"')
+                     ->where('products.business = ' . $business . ' AND (items.invoice = ' . $this->invoiceId. ' OR products.status <> "deleted")')
                      ->order('product ASC');
         $result = $db->fetchAll($select);
 		$this->products = $result;
