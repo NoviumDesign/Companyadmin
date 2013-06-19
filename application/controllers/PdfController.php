@@ -109,6 +109,49 @@ class PdfController extends Zend_Controller_Action
 
     }
 
+    public function creditInvoiceAction()
+    {
+        $db = $this->db;
+
+        // customer and invoice info
+        $select = $db->select()
+                     ->from('invoices', array('invoice_id', 'invoice_number', 'date', 'status', 'discount', 'notes'))
+                     ->joinLeft('customers', 'invoices.customer = customers.customer_id', array('name as customer_name', 'customer_id', 'customer_adress', 'zip_code', 'city', 'country', 'box', 'reference', 'type'))
+                     ->where('invoices.invoice_secret = "' . $this->secret . '" AND invoices.business = ' . $this->businessId);
+        $result = $db->fetchAll($select);
+        $invoice = $result[0];
+
+        // items
+        $select = $db->select()
+                     ->from('items', 'quantity')
+                     ->joinLeft('products','items.product = products.product_id', array('product_id', 'product'))
+                     ->joinLeft('prices', 'prices.price_id = items.price', array('price', 'unit', 'vat'))
+                     ->where('items.invoice = ' . $invoice['invoice_id'] . ' AND products.business = ' . $this->businessId)
+                     ->order('product ASC');
+        $items = $db->fetchAll($select);
+
+        // business company
+        $select = $db->select()
+                     ->from('businesses', array('company_name', 'company_adress', 'company_zip_code', 'company_city', 'company_country', 'company_mail', 'company_phone', 'company_site', 'company_bank', 'company_orgnr', 'company_color', 'invoice_prefix', 'invoice_detail', 'company_reference', 'company_box'))
+                     ->where('businesses.business_id = ' . $this->businessId);
+        $result = $db->fetchAll($select);
+        $company = $result[0];
+
+        // theme color
+        $themeColor = '#' . $company['company_color'];
+
+        // file name
+        $this->fileName = strip_tags(html_entity_decode($company['invoice_prefix'], ENT_QUOTES, 'UTF-8')) . $invoice['invoice_number'];
+
+
+        if (count($items) > 10) {
+            require(APPLICATION_PATH . '/views/pdf/multiplePageCreditInvoice.php');
+        } else {
+            require(APPLICATION_PATH . '/views/pdf/onePageCreditInvoice.php');
+        }
+
+    }
+
     private function dbConnection()
     {
         // select company

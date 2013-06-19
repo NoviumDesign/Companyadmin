@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 3.5.1
+-- version 3.5.2.2
 -- http://www.phpmyadmin.net
 --
--- Värd: localhost
--- Skapad: 18 jun 2013 kl 10:33
--- Serverversion: 5.5.25
--- PHP-version: 5.4.4
+-- Värd: 127.0.0.1
+-- Skapad: 19 jun 2013 kl 23:49
+-- Serverversion: 5.5.27
+-- PHP-version: 5.4.7
 
 SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -28,7 +28,7 @@ USE `company_1`;
 -- Tabellstruktur `businesses`
 --
 
-CREATE TABLE `businesses` (
+CREATE TABLE IF NOT EXISTS `businesses` (
   `business_id` int(11) NOT NULL AUTO_INCREMENT,
   `business_secret` varchar(10) NOT NULL,
   `business` text NOT NULL,
@@ -77,7 +77,7 @@ INSERT INTO `businesses` (`business_id`, `business_secret`, `business`, `custom_
 -- Tabellstruktur `crs`
 --
 
-CREATE TABLE `crs` (
+CREATE TABLE IF NOT EXISTS `crs` (
   `crs_id` int(11) NOT NULL AUTO_INCREMENT,
   `crs_secret` varchar(10) NOT NULL,
   `customer` int(11) NOT NULL,
@@ -103,7 +103,7 @@ INSERT INTO `crs` (`crs_id`, `crs_secret`, `customer`, `status`, `date`, `task`,
 -- Tabellstruktur `customers`
 --
 
-CREATE TABLE `customers` (
+CREATE TABLE IF NOT EXISTS `customers` (
   `customer_id` int(11) NOT NULL AUTO_INCREMENT,
   `customer_secret` varchar(200) DEFAULT NULL,
   `business` int(10) NOT NULL,
@@ -356,7 +356,7 @@ INSERT INTO `customers` (`customer_id`, `customer_secret`, `business`, `register
 (307, NULL, 2, 'true', 'BSP Event sponsring', 'company', '', '', 'Armfeltsgatan 18', '', 's-115 34', 'Stockholm', '', '', 'Daniel Bengtsdahl'),
 (308, NULL, 2, 'true', 'Brf. Handboken 3', 'company', 'larsgoran.kraft@bredband.net', '', 'Abrahamsbergsv&auml;gen 19', '', '16830', 'Bromma', '', '', 'Lars-G&ouml;ran Kraft'),
 (309, NULL, 2, 'true', 'Sollentuna F&ouml;rsamling', 'company', '', '08-505 513 00', 'Box 13,', 'Box 13', '191 21', 'Sollentuna', '', '', ''),
-(310, NULL, 7, 'true', '&Aring;hlin Service AB', 'company', '', '0706664647', 'Kila klippan 1', '', '611 90', '&Aring;lberga', '', '', 'Andreas &Aring;hlin'),
+(310, NULL, 7, 'true', '&Aring;hlin Service AB', 'company', 'test@test.se', '0706664647', 'Kila klippan 1', '', '611 90', '&Aring;lberga', '', '', 'Andreas &Aring;hlin'),
 (311, NULL, 7, 'true', 'Thomo Lobino individuali imone', 'company', '', '', ' Smelio str. 4', '', 'Lt-89219', ' Mazeikiai', 'Republic of Lithuania', '', 'Thomas Lobinas'),
 (312, NULL, 7, 'true', 'AB Gas och V&auml;rmeteknik i Billeberga', 'company', '', '070-9775566', 'Kustv&auml;gen 19', '', '261 75 ', 'Asmundtorp', '', '', 'Torbj&ouml;rn Nilsson'),
 (313, NULL, 7, 'true', 'Torbj&ouml;rn Nilsson', 'private', '', '0709775566', 'Kustv&auml;gen 19', '', '261 75', 'Asmundtorp', '', '', ''),
@@ -370,8 +370,9 @@ INSERT INTO `customers` (`customer_id`, `customer_secret`, `business`, `register
 -- Tabellstruktur `invoices`
 --
 
-CREATE TABLE `invoices` (
+CREATE TABLE IF NOT EXISTS `invoices` (
   `invoice_id` int(11) NOT NULL AUTO_INCREMENT,
+  `type` varchar(20) NOT NULL,
   `invoice_secret` varchar(10) NOT NULL,
   `invoice_number` int(11) NOT NULL,
   `business` int(11) NOT NULL,
@@ -383,77 +384,80 @@ CREATE TABLE `invoices` (
   `notes` text NOT NULL,
   PRIMARY KEY (`invoice_id`),
   KEY `customer` (`customer`),
-  KEY `invoice_secret` (`invoice_secret`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=73 ;
+  KEY `invoice_secret` (`invoice_secret`),
+  KEY `type` (`type`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=78 ;
 
 --
 -- Dumpning av Data i tabell `invoices`
 --
 
-INSERT INTO `invoices` (`invoice_id`, `invoice_secret`, `invoice_number`, `business`, `customer`, `status`, `date`, `due`, `discount`, `notes`) VALUES
-(6, 'u7485zvz4e', 1, 1, 261, 'unpaid', 1359759600, 1364598000, 0, ''),
-(10, 'f9khwtqvsr', 3, 3, 193, 'paid', 1362572107, 1363910400, 0, ''),
-(11, '52dznmv3hl', 2, 3, 283, 'paid', 1362668464, 1363910400, 0, ''),
-(12, 'jbuoe9xh0p', 1, 3, 282, 'paid', 1362668567, 1363824000, 0, ''),
-(13, '9ynbvynrf8', 4, 3, 281, 'paid', 1362668688, 1363910400, 0, ''),
-(14, 'yqj5s7qcfe', 5, 3, 247, 'paid', 1362668760, 1363996800, 0, ''),
-(15, 'znkpmoly82', 6, 3, 69, 'paid', 1362668908, 1363996800, 0, ''),
-(16, 'uzb838km9x', 7, 3, 73, 'paid', 1362669032, 1363910400, 0, ''),
-(17, 'menlcawdiw', 8, 3, 102, 'paid', 1362669116, 1363910400, 0, ''),
-(18, 'h6dkywdlgp', 9, 3, 280, 'paid', 1362669177, 1363910400, 0, ''),
-(19, '52lmg6hycp', 10, 3, 279, 'paid', 1362669261, 1363910400, 0, ''),
-(20, 'ahqigmnkq8', 11, 3, 194, 'paid', 1362669320, 1363910400, 0, ''),
-(21, '1lwriwzqok', 12, 3, 278, 'paid', 1362669395, 1363910400, 0, ''),
-(22, 'jqgzuy8ef6', 13, 3, 277, 'paid', 1362669482, 1363910400, 0, ''),
-(23, '14r94xpro3', 14, 3, 122, 'paid', 1362669575, 1363910400, 0, ''),
-(24, 'bol3iy8l6c', 15, 3, 276, 'paid', 1362669635, 1363910400, 0, ''),
-(25, '3whpc5j3oz', 16, 3, 275, 'paid', 1362669785, 1363910400, 0, ''),
-(26, 'py5x2s8wux', 17, 3, 274, 'paid', 1362669841, 1363910400, 0, ''),
-(27, 'xehqfqi5kv', 18, 3, 273, 'paid', 1362669940, 1363910400, 0, ''),
-(28, 'qvoxm6s8ea', 19, 3, 174, 'paid', 1362670001, 1363910400, 0, ''),
-(29, '9ugrcpsc8l', 20, 3, 127, 'paid', 1362670105, 1363910400, 0, ''),
-(30, 'eui1vk6thy', 21, 3, 272, 'paid', 1362670166, 1363910400, 0, ''),
-(31, 'gyn7mh4shw', 22, 3, 271, 'paid', 1362670232, 1363910400, 0, ''),
-(32, '67mvhyo51a', 23, 3, 270, 'paid', 1362670289, 1363910400, 0, ''),
-(33, 'abgyik0g2k', 24, 3, 269, 'paid', 1362670352, 1363910400, 0, ''),
-(34, '337yqb9i6h', 25, 3, 268, 'unpaid', 1362092400, 1363906800, 0, ''),
-(35, 's3tt6sb5yl', 26, 3, 165, 'paid', 1362670581, 1363910400, 0, ''),
-(36, '20oj0kotdb', 27, 3, 267, 'paid', 1362670702, 1363910400, 0, ''),
-(37, 'uh65f4y9fj', 28, 3, 266, 'paid', 1362670915, 1363910400, 80, ''),
-(38, '7hnavd67h4', 29, 3, 265, 'paid', 1362671048, 1363910400, 0, ''),
-(39, 'c82gjl93ek', 30, 3, 210, 'paid', 1362671103, 1363910400, 320, ''),
-(40, '01nhgivhol', 31, 3, 264, 'paid', 1362671217, 1363910400, 0, ''),
-(41, 'b12vqxu4ub', 32, 3, 193, 'unpaid', 1362671336, 1363910400, 960, ''),
-(42, 'us002q59ga', 33, 3, 263, 'paid', 1362671407, 1363910400, 0, ''),
-(43, 'rov9a15fxf', 1, 6, 284, 'paid', 1362678079, 1363910400, 0, ''),
-(44, 'a7ibbtqkle', 34, 3, 2, 'paid', 1362696220, 1363478400, 1, 'Notes'),
-(45, 'eur97hmxvz', 2, 1, 0, 'unpaid', 1362734081, 1363564800, 0, ''),
-(46, '59lhiocc6n', 3, 1, 285, 'unpaid', 1362734737, 1363564800, 0, ''),
-(47, 'y8xabv7dmu', 4, 1, 0, 'paid', 1362737070, 1363564800, 0, ''),
-(49, 'tkzre9y1hq', 1, 7, 286, 'paid', 1363002596, 1363824000, 0, ''),
-(50, 'pu9inb64at', 1, 2, 291, 'paid', 1363168366, 1364515200, 0, ''),
-(51, 'r3kz2tljw7', 2, 2, 292, 'paid', 1363168470, 1364515200, 500, ''),
-(52, 't3fexhm6rp', 3, 2, 293, 'unpaid', 1363168969, 1364515200, 0, ''),
-(53, '13bqj88ut7', 4, 2, 294, 'paid', 1363169357, 1364515200, 0, ''),
-(54, 'eud0if2crl', 5, 2, 295, 'unpaid', 1363169782, 1364515200, 0, ''),
-(55, 'n23smka0fe', 6, 2, 302, 'unpaid', 1363176786, 1364515200, 0, ''),
-(56, 'vpkem7uato', 9, 2, 307, 'paid', 1363177819, 1364515200, 0, ''),
-(57, 'disa0qjndy', 8, 2, 304, 'unpaid', 1363178485, 1364515200, 0, ''),
-(58, 'k1469m14sv', 7, 2, 306, 'unpaid', 1363179321, 1364515200, 1935, ''),
-(59, 'vaxd9l3m5w', 10, 2, 308, 'unpaid', 1363185023, 1364515200, 0, ''),
-(60, 's617dwwj8c', 11, 2, 287, 'paid', 1363186305, 1364515200, 1000, ''),
-(61, 'qkm68u15ud', 12, 2, 309, 'unpaid', 1363187326, 1364515200, 0, ''),
-(62, '3nzpn4ictr', 13, 2, 290, 'paid', 1363187579, 1364515200, 0, ''),
-(63, '1cobfzsmtw', 2, 7, 310, 'unpaid', 1363589819, 1364428800, 4270, ''),
-(64, 'v3hud2yjfp', 3, 7, 310, 'unpaid', 1363728708, 1364515200, 0, ''),
-(65, 'j59wjqy38q', 4, 7, 310, 'unpaid', 1363728777, 1365292800, 0, ''),
-(66, 'm4v532d5s0', 5, 7, 312, 'paid', 1363768928, 1366416000, 0, ''),
-(67, 'rpe3yktqf1', 6, 7, 314, 'unpaid', 1367251900, 1368057600, 0, ''),
-(68, 'dui5tro3i3', 7, 7, 312, 'paid', 1367904261, 1368748800, 0, ''),
-(69, 'cih1d59fox', 8, 7, 312, 'paid', 1369327200, 1369958400, 0, ''),
-(70, 'sohzvehy3k', 9, 7, 315, 'paid', 1369646406, 1370476800, 0, ''),
-(71, 'vx2e03y45q', 10, 7, 310, 'unpaid', 1369653870, 1370476800, 0, ''),
-(72, 't51g3sccma', 11, 7, 316, 'unpaid', 1370974669, 1371772800, 0, '');
+INSERT INTO `invoices` (`invoice_id`, `type`, `invoice_secret`, `invoice_number`, `business`, `customer`, `status`, `date`, `due`, `discount`, `notes`) VALUES
+(6, 'credit invoice', 'u7485zvz4e', 1, 1, 261, 'unpaid', 1359759600, 1364598000, 0, ''),
+(10, 'credit invoice', 'f9khwtqvsr', 3, 3, 193, 'paid', 1362572107, 1363910400, 0, ''),
+(11, 'invoice', '52dznmv3hl', 2, 3, 283, 'paid', 1362668464, 1363910400, 0, ''),
+(12, 'invoice', 'jbuoe9xh0p', 1, 3, 282, 'paid', 1362668567, 1363824000, 0, ''),
+(13, 'invoice', '9ynbvynrf8', 4, 3, 281, 'paid', 1362668688, 1363910400, 0, ''),
+(14, 'invoice', 'yqj5s7qcfe', 5, 3, 247, 'paid', 1362668760, 1363996800, 0, ''),
+(15, 'invoice', 'znkpmoly82', 6, 3, 69, 'paid', 1362668908, 1363996800, 0, ''),
+(16, 'invoice', 'uzb838km9x', 7, 3, 73, 'paid', 1362669032, 1363910400, 0, ''),
+(17, 'invoice', 'menlcawdiw', 8, 3, 102, 'paid', 1362669116, 1363910400, 0, ''),
+(18, 'invoice', 'h6dkywdlgp', 9, 3, 280, 'paid', 1362669177, 1363910400, 0, ''),
+(19, 'invoice', '52lmg6hycp', 10, 3, 279, 'paid', 1362669261, 1363910400, 0, ''),
+(20, 'invoice', 'ahqigmnkq8', 11, 3, 194, 'paid', 1362669320, 1363910400, 0, ''),
+(21, 'invoice', '1lwriwzqok', 12, 3, 278, 'paid', 1362669395, 1363910400, 0, ''),
+(22, 'invoice', 'jqgzuy8ef6', 13, 3, 277, 'paid', 1362669482, 1363910400, 0, ''),
+(23, 'invoice', '14r94xpro3', 14, 3, 122, 'paid', 1362669575, 1363910400, 0, ''),
+(24, 'invoice', 'bol3iy8l6c', 15, 3, 276, 'paid', 1362669635, 1363910400, 0, ''),
+(25, 'invoice', '3whpc5j3oz', 16, 3, 275, 'paid', 1362669785, 1363910400, 0, ''),
+(26, 'invoice', 'py5x2s8wux', 17, 3, 274, 'paid', 1362669841, 1363910400, 0, ''),
+(27, 'invoice', 'xehqfqi5kv', 18, 3, 273, 'paid', 1362669940, 1363910400, 0, ''),
+(28, 'invoice', 'qvoxm6s8ea', 19, 3, 174, 'paid', 1362670001, 1363910400, 0, ''),
+(29, 'invoice', '9ugrcpsc8l', 20, 3, 127, 'paid', 1362670105, 1363910400, 0, ''),
+(30, 'invoice', 'eui1vk6thy', 21, 3, 272, 'paid', 1362670166, 1363910400, 0, ''),
+(31, 'invoice', 'gyn7mh4shw', 22, 3, 271, 'paid', 1362670232, 1363910400, 0, ''),
+(32, 'invoice', '67mvhyo51a', 23, 3, 270, 'paid', 1362670289, 1363910400, 0, ''),
+(33, 'invoice', 'abgyik0g2k', 24, 3, 269, 'paid', 1362670352, 1363910400, 0, ''),
+(34, 'invoice', '337yqb9i6h', 25, 3, 268, 'unpaid', 1362092400, 1363906800, 0, ''),
+(35, 'invoice', 's3tt6sb5yl', 26, 3, 165, 'paid', 1362670581, 1363910400, 0, ''),
+(36, 'invoice', '20oj0kotdb', 27, 3, 267, 'paid', 1362670702, 1363910400, 0, ''),
+(37, 'invoice', 'uh65f4y9fj', 28, 3, 266, 'paid', 1362670915, 1363910400, 80, ''),
+(38, 'invoice', '7hnavd67h4', 29, 3, 265, 'paid', 1362671048, 1363910400, 0, ''),
+(39, 'invoice', 'c82gjl93ek', 30, 3, 210, 'paid', 1362671103, 1363910400, 320, ''),
+(40, 'invoice', '01nhgivhol', 31, 3, 264, 'paid', 1362671217, 1363910400, 0, ''),
+(41, 'invoice', 'b12vqxu4ub', 32, 3, 193, 'unpaid', 1362671336, 1363910400, 960, ''),
+(42, 'invoice', 'us002q59ga', 33, 3, 263, 'paid', 1362671407, 1363910400, 0, ''),
+(43, 'invoice', 'rov9a15fxf', 1, 6, 284, 'paid', 1362678079, 1363910400, 0, ''),
+(44, 'invoice', 'a7ibbtqkle', 34, 3, 2, 'paid', 1362696220, 1363478400, 1, 'Notes'),
+(45, 'invoice', 'eur97hmxvz', 2, 1, 0, 'unpaid', 1362734081, 1363564800, 0, ''),
+(46, 'invoice', '59lhiocc6n', 3, 1, 285, 'unpaid', 1362734737, 1363564800, 0, ''),
+(47, 'invoice', 'y8xabv7dmu', 4, 1, 0, 'paid', 1362737070, 1363564800, 0, ''),
+(49, 'invoice', 'tkzre9y1hq', 1, 7, 286, 'paid', 1363002596, 1363824000, 0, ''),
+(50, 'invoice', 'pu9inb64at', 1, 2, 291, 'paid', 1363168366, 1364515200, 0, ''),
+(51, 'invoice', 'r3kz2tljw7', 2, 2, 292, 'paid', 1363168470, 1364515200, 500, ''),
+(52, 'invoice', 't3fexhm6rp', 3, 2, 293, 'unpaid', 1363168969, 1364515200, 0, ''),
+(53, 'invoice', '13bqj88ut7', 4, 2, 294, 'paid', 1363169357, 1364515200, 0, ''),
+(54, 'invoice', 'eud0if2crl', 5, 2, 295, 'unpaid', 1363169782, 1364515200, 0, ''),
+(55, 'invoice', 'n23smka0fe', 6, 2, 302, 'unpaid', 1363176786, 1364515200, 0, ''),
+(56, 'invoice', 'vpkem7uato', 9, 2, 307, 'paid', 1363177819, 1364515200, 0, ''),
+(57, 'invoice', 'disa0qjndy', 8, 2, 304, 'unpaid', 1363178485, 1364515200, 0, ''),
+(58, 'invoice', 'k1469m14sv', 7, 2, 306, 'unpaid', 1363179321, 1364515200, 1935, ''),
+(59, 'invoice', 'vaxd9l3m5w', 10, 2, 308, 'unpaid', 1363185023, 1364515200, 0, ''),
+(60, 'invoice', 's617dwwj8c', 11, 2, 287, 'paid', 1363186305, 1364515200, 1000, ''),
+(61, 'invoice', 'qkm68u15ud', 12, 2, 309, 'unpaid', 1363187326, 1364515200, 0, ''),
+(62, 'invoice', '3nzpn4ictr', 13, 2, 290, 'paid', 1363187579, 1364515200, 0, ''),
+(63, 'invoice', '1cobfzsmtw', 2, 7, 310, 'unpaid', 1363589819, 1364428800, 4270, ''),
+(64, 'invoice', 'v3hud2yjfp', 3, 7, 310, 'paid', 1363647600, 1364511600, 234, 'asd'),
+(66, 'invoice', 'm4v532d5s0', 5, 7, 312, 'paid', 1363768928, 1366416000, 0, ''),
+(68, 'invoice', 'dui5tro3i3', 7, 7, 312, 'paid', 1367904261, 1368748800, 0, ''),
+(69, 'invoice', 'cih1d59fox', 8, 7, 312, 'paid', 1369327200, 1369958400, 0, ''),
+(71, 'credit-invoice', 'vx2e03y45q', 10, 7, 310, 'unpaid', 1369653870, 1370476800, 0, ''),
+(72, 'credit-invoice', 't51g3sccma', 11, 7, 316, 'unpaid', 1370974669, 1371772800, 0, ''),
+(73, 'invoice', 'fw59c6xy0r', 12, 7, 286, 'paid', 1371676798, 0, 32, ''),
+(74, 'invoice', 'xn2c1dzhc7', 13, 7, 316, 'paid', 1371592800, -3600, -23487200, ''),
+(75, 'invoice', 'njkex3y85p', 14, 7, 312, 'unpaid', 1371677038, 0, 23486800000, ''),
+(76, 'credit-invoice', '9rwmlegwjd', 15, 7, 311, 'unpaid', 1371592800, 0, 12, 'v'),
+(77, 'invoice', 'sgvga4tiso', 16, 7, 312, 'unpaid', 1371592800, 1372456800, 23547000, 'fcgbhs g sfgs');
 
 -- --------------------------------------------------------
 
@@ -461,7 +465,7 @@ INSERT INTO `invoices` (`invoice_id`, `invoice_secret`, `invoice_number`, `busin
 -- Tabellstruktur `items`
 --
 
-CREATE TABLE `items` (
+CREATE TABLE IF NOT EXISTS `items` (
   `item_id` int(11) NOT NULL AUTO_INCREMENT,
   `product` int(10) NOT NULL,
   `order` int(10) NOT NULL,
@@ -470,7 +474,7 @@ CREATE TABLE `items` (
   `price` int(10) NOT NULL,
   PRIMARY KEY (`item_id`),
   KEY `order` (`order`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=410 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=415 ;
 
 --
 -- Dumpning av Data i tabell `items`
@@ -724,12 +728,11 @@ INSERT INTO `items` (`item_id`, `product`, `order`, `invoice`, `quantity`, `pric
 (351, 44, 0, 63, 31, 124),
 (356, 46, 0, 64, 33.5, 132),
 (355, 47, 0, 64, 37, 131),
-(360, 52, 0, 65, 1, 138),
+(410, 101, 0, 73, 1, 197),
 (364, 53, 0, 68, 98, 141),
 (362, 53, 0, 66, 67, 141),
-(363, 54, 0, 67, 1, 142),
 (361, 28, 265, 0, 1, 98),
-(366, 55, 0, 70, 4, 143),
+(411, 101, 0, 74, 1, 197),
 (367, 60, 0, 71, 2, 148),
 (368, 69, 0, 71, 2, 157),
 (369, 67, 0, 71, 8, 155),
@@ -772,7 +775,10 @@ INSERT INTO `items` (`item_id`, `product`, `order`, `invoice`, `quantity`, `pric
 (406, 99, 0, 71, 10, 193),
 (407, 100, 0, 71, 27, 196),
 (408, 101, 0, 72, 1, 197),
-(409, 4, 266, 0, 3.5, 83);
+(409, 4, 266, 0, 3.5, 83),
+(412, 101, 0, 75, 1, 197),
+(413, 101, 0, 76, 2, 197),
+(414, 101, 0, 77, 6, 197);
 
 -- --------------------------------------------------------
 
@@ -780,7 +786,7 @@ INSERT INTO `items` (`item_id`, `product`, `order`, `invoice`, `quantity`, `pric
 -- Tabellstruktur `orders`
 --
 
-CREATE TABLE `orders` (
+CREATE TABLE IF NOT EXISTS `orders` (
   `order_id` int(11) NOT NULL AUTO_INCREMENT,
   `order_secret` varchar(10) NOT NULL,
   `order_number` int(10) DEFAULT NULL,
@@ -989,7 +995,7 @@ INSERT INTO `orders` (`order_id`, `order_secret`, `order_number`, `date`, `busin
 -- Tabellstruktur `prices`
 --
 
-CREATE TABLE `prices` (
+CREATE TABLE IF NOT EXISTS `prices` (
   `price_id` int(11) NOT NULL AUTO_INCREMENT,
   `price` float NOT NULL,
   `unit` text NOT NULL,
@@ -1207,7 +1213,7 @@ INSERT INTO `prices` (`price_id`, `price`, `unit`, `vat`, `date`) VALUES
 -- Tabellstruktur `products`
 --
 
-CREATE TABLE `products` (
+CREATE TABLE IF NOT EXISTS `products` (
   `product_id` int(11) NOT NULL AUTO_INCREMENT,
   `product_secret` varchar(10) NOT NULL,
   `product_number` varchar(30) NOT NULL DEFAULT '0',
@@ -1336,7 +1342,7 @@ INSERT INTO `products` (`product_id`, `product_secret`, `product_number`, `busin
 -- Tabellstruktur `user_access`
 --
 
-CREATE TABLE `user_access` (
+CREATE TABLE IF NOT EXISTS `user_access` (
   `user` int(10) NOT NULL,
   `business` int(10) NOT NULL,
   KEY `user` (`user`)
@@ -1375,7 +1381,7 @@ USE `companyadmin`;
 -- Tabellstruktur `companies`
 --
 
-CREATE TABLE `companies` (
+CREATE TABLE IF NOT EXISTS `companies` (
   `company_id` int(11) NOT NULL AUTO_INCREMENT,
   `company_secret` varchar(10) NOT NULL,
   `company` varchar(30) NOT NULL,
@@ -1400,7 +1406,7 @@ INSERT INTO `companies` (`company_id`, `company_secret`, `company`) VALUES
 -- Tabellstruktur `users`
 --
 
-CREATE TABLE `users` (
+CREATE TABLE IF NOT EXISTS `users` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `secret` varchar(10) NOT NULL,
   `mail` varchar(50) NOT NULL,

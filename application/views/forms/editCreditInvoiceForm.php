@@ -1,7 +1,13 @@
-<?= $this->element('orderId'); ?>
-
 <fieldset>
-	<label>Invoice status</label>
+	<label>Invoice number</label>
+	<section>
+		<label for="invoiceNumber">Invoice number</label>
+		<div>
+
+			<?= $this->element('invoiceNumber'); ?>
+
+		</div>
+	</section>
 	<section>
 		<label for="status">status</label>
 		<div>
@@ -32,16 +38,17 @@
 </fieldset>
 
 <fieldset>
-	<label>Invoice due</label>
+	<label>Dates</label>
 	<section>
-		<label for="invoiceDue">Invoice due</label>
+		<label for="invoiceDue">Invoice date</label>
 		<div>
 
-			<?= $this->element('invoiceDue'); ?>
+			<?= $this->element('invoiceDate'); ?>
 
 		</div>
 	</section>
 </fieldset>
+
 
 <fieldset>
 	<label>Products</label>
@@ -55,13 +62,12 @@
 				<?= $this->element('item[' . $product['product_id'] . ']'); ?>
 
 				<span>
-					<b><?= $product['unit']; ?></b>
+					<b><?= ($product['unit'] ? $product['unit'] : $product['momentary_unit']); ?></b>
 					á
-					<?= $product['price']; ?>
+					<?= ($product['price'] ? $product['price'] : $product['momentary_price']); ?>
 					kr/
-					<?= $product['unit']; ?>
+					<?= ($product['unit'] ? $product['unit'] : $product['momentary_unit']); ?>
 				</span>
-				<?= $this->element('price[' . $product['product_id'] . ']'); ?>
 			</div>
 		</section>
 

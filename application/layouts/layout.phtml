@@ -43,7 +43,7 @@
 				$numOrders = $db->fetchAll('SELECT COUNT(order_id) as "quantity" FROM orders WHERE business = ' . $_SESSION['business'] . ' AND (orders.status = "new" OR orders.status = "active")');
 				$numProducts = $db->fetchAll('SELECT COUNT(product_id) as "quantity" FROM products WHERE status <> "deleted" AND business = ' . $_SESSION['business']);
 				$numCustomers = $db->fetchAll('SELECT COUNT(customer_id) as "quantity" FROM customers WHERE business = ' . $_SESSION['business']);
-				$numInvoices = $db->fetchAll('SELECT COUNT(invoice_id) as "quantity" FROM invoices WHERE business = ' . $_SESSION['business'] . ' AND status = "unpaid"');
+				$numInvoices = $db->fetchAll('SELECT COUNT(invoice_id) as "quantity" FROM invoices WHERE business = ' . $_SESSION['business'] . ' AND status = "unpaid" AND type= "invoice"');
 				$numCrs = $db->fetchAll('SELECT COUNT(crs_id) as "quantity" FROM crs WHERE business = ' . $_SESSION['business'] . ' AND status = "active" AND date < ' . $tomorrow);
 
 				$select = $db->select()

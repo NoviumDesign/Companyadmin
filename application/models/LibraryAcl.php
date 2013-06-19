@@ -54,6 +54,15 @@ class Model_LibraryAcl extends Emilk_Acl_Library
 					'delete' => 'admin'
 				),
 
+			'credit-invoices' => 'user',
+			'credit-invoice' => array
+				(
+					'view' => 'user',
+					'add' => 'admin',
+					'edit' => 'admin',
+					'delete' => 'admin'
+				),
+
 			'ajax' => 'user',
 
 			'request' => 'none',

@@ -1,0 +1,188 @@
+<div class="g11">
+   
+   <?php if($this->isAdmin) { ?>
+
+      <a href="/credit-invoice/edit/<?= $this->invoice['invoice_id'] ?>">
+         <button class="i_create_write icon">Edit credit invoice</button>
+      </a>
+      <a href="/credit-invoice/delete/<?= $this->invoice['invoice_id'] ?>">
+         <button class="red">Delete credit invoice</button>
+      </a>
+
+   <?php } ?>
+
+   <a href="/pdf/credit-invoice/<?= $this->pdfLink ?>" target="_blank">
+      <button>PDF</button>
+   </a>
+
+   <?php if($this->invoice['mail'] && $this->isAdmin) { ?>
+
+      <a href="<?= $this->mailTo ?>" target="_blank">
+         <button>Mail PDF</button>
+      </a>
+
+   <?php } ?>
+      
+   <h1>Invoice <?= $this->businessComapny['invoice_prefix'] . $this->invoice['invoice_number']; ?></h1>
+</div>
+<div class="g3 from">
+	<h6>From</h6>
+      <span><strong><?= ucfirst($this->businessComapny['company_name']); ?></strong></span>
+      <span><?= ucfirst($this->businessComapny['company_adress']); ?></span>
+      <span><?= $this->businessComapny['company_zip_code']; ?> <?= ucfirst($this->businessComapny['company_city']); ?>,</span>
+      <span><?= ucfirst($this->businessComapny['company_country']); ?></span>
+   </p>
+</div>
+<div class="g3 to">
+   <a href="/customer/view/<?= $this->invoice['customer_id']; ?>">
+   	<h6>To</h6>
+   	<span><strong><?= ucfirst($this->invoice['customer_name']); ?></strong></span>
+   	<span><?= ucfirst($this->invoice['customer_adress']); ?></span>
+   	<span><?= $this->invoice['zip_code']; ?> <?= ucfirst($this->invoice['city']); ?>,</span>
+   	<span><?= ucfirst($this->invoice['country']); ?></span>
+   </a>
+</div>
+<div class="g5">
+	<table class="table-unstyled">
+		<tbody>
+			<tr>
+				<th class="align-right">Invoice no.</th>
+				<td class="align-left"><?= $this->businessComapny['invoice_prefix'] . $this->invoice['invoice_number']; ?></td>
+			</tr>
+         <tr>
+            <th class="align-right">Your reference</th>
+            <td class="align-left">
+               <?= ($this->invoice['type'] == 'company'? ucfirst($this->invoice['reference']): ucfirst($this->invoice['customer_name'])) ?></td>
+         </tr>
+         <tr>
+            <th class="align-right">Our reference</th>
+            <td class="align-left"><?= ucfirst($this->businessComapny['company_reference']) ?></td>
+         </tr>
+         <tr>
+            <th class="align-right">Invoice date</th>
+            <td class="align-left"><?= date('Y-m-d', $this->invoice['date']);?></td>
+         </tr>
+		</tbody>
+	</table>
+</div>
+
+<div class="g11">
+
+   <table class="invoice-table table-unstyled">
+       <tbody>
+
+         <tr class="header">
+            <th width="70%">Item</th>
+            <th width="8%">Qantity</th>
+            <th width="11%">Price per unit</th>
+            <th width="11%" class="invoice-column-price">Total Price</th>
+         </tr>
+
+         <?php
+            $totPrice = 0;
+            foreach ($this->items as $item) {
+               $totPrice += ((float)$item['price']*(float)$item['quantity']);
+         ?>
+
+            <tr class="invoice-item">
+               <td class="invoice-column-desc">
+                  <?= $item['product']; ?>
+               </td>
+               <td class="invoice-column-quantity">
+                  <?= $item['quantity']; ?> <?= $item['unit']; ?>
+               </td>
+               <td class="invoice-column-price">
+                  <?= round($item['price'], 2) ?>:-
+               </td>
+               <td class="invoice-column-total">
+                  <?= round((float)$item['price']*(float)$item['quantity'], 2) ?>:-
+               </td>
+            </tr>
+
+         <?php
+            }
+
+            $discount = (float)$this->invoice['discount'];
+            $totVat = 0;
+            foreach($this->items as $item) {
+               $price = (float)$item['price'];
+               $quantity = (float)$item['quantity'];
+               $vat = (0.01*(float)$item['vat']);
+
+               $totVat += $quantity*$price*(1 - $discount/$totPrice)*$vat;
+            }
+         ?>
+
+         <tr class="space">
+            <td colspan="4"></td>
+         </tr>
+
+         <tr>
+            <td colspan="2"></td>
+            <td>
+               <strong>Sum</strong>
+            </td>
+            <td>
+               <?= round($totPrice, 2) ?>:-
+            </td>
+         </tr>
+
+         <?php if($discount > 0) { ?>
+
+            <tr>
+               <td colspan="2"></td>
+               <td>
+                  <strong>Discount</strong>
+               </td>
+               <td>
+                  <?= round($discount, 2) ?>:-
+               </td>
+            </tr>
+
+         <?php } ?>
+
+         <tr>
+            <td colspan="2"></td>
+            <td>
+               <strong>VAT</strong>
+            </td>
+            <td>
+               <?= round($totVat, 2) ?>:-
+            </td>
+         </tr>
+
+         <tr>
+            <td colspan="2"></td>
+            <td>
+               <strong>Rounding</strong>
+            </td>
+            <td>
+               <?= round(round($totPrice - $discount + $totVat) - ($totPrice - $discount + $totVat), 2) ?>:-
+            </td>
+         </tr>
+
+         <tr class="total">
+            <td colspan="2"></td>
+            <td>
+               <strong>To recieve</strong>
+            </td>
+            <td>
+               <strong><?= round($totPrice - $discount + $totVat) ?>:-</strong>
+            </td>
+         </tr>
+       
+      </tbody>
+   </table>
+
+   <?php if($this->invoice['notes'] || $this->businessComapny['invoice_detail']) { ?>
+
+      <p>
+         <strong>Notes: </strong>
+         <br>
+
+         <?= nl2br($this->invoice['notes']) ?>
+      </p>
+
+   <?php } ?>
+
+</div>

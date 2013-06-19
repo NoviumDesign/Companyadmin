@@ -72,6 +72,7 @@ class IndexController extends Zend_Controller_Action
                      ->from('invoices', array('invoice_id', 'invoice_number', 'due', 'customer'))
                      ->joinLeft('customers', 'customers.customer_id = invoices.customer', 'name')
                      ->where('invoices.status = "unpaid"')
+                     ->where('invoices.type = "invoice"')
                      ->where('invoices.due < ?', $today)
                      ->where('invoices.business = ?', $_SESSION['business']);
         $this->view->overdueInvoices = $db->fetchAll($select);

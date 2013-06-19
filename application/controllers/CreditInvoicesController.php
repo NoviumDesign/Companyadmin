@@ -1,6 +1,6 @@
 <?php
 
-class InvoicesController extends Zend_Controller_Action
+class CreditInvoicesController extends Zend_Controller_Action
 {  
     public function viewAction()
     {
@@ -11,18 +11,10 @@ class InvoicesController extends Zend_Controller_Action
         
         // select
         $select = $db->select()
-                     ->from('invoices', array('invoice_id', 'invoice_number', 'date', 'due', 'status', 'discount'))
+                     ->from('invoices', array('invoice_id', 'invoice_number', 'date', 'status', 'discount'))
                      ->joinLeft('customers', 'invoices.customer = customers.customer_id', array('name', 'customer_id'))
-                     ->where('invoices.type = "invoice"')
+                     ->where('invoices.type = "credit-invoice"')
                      ->where('invoices.business = ' . $_SESSION['business']);
-
-        if($paid == 'paid') {
-            $this->view->paid = 'paid';
-
-            $select->where('invoices.status = "paid"');
-        } else {
-            $select->where('invoices.status = "unpaid"');
-        }
 
         $invoices = $db->fetchAll($select);
 

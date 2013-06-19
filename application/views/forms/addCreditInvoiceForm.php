@@ -31,17 +31,6 @@
 	</section>
 </fieldset>
 
-<fieldset>
-	<label>Invoice due</label>
-	<section>
-		<label for="invoiceDue">Invoice due</label>
-		<div>
-
-			<?= $this->element('invoiceDue'); ?>
-
-		</div>
-	</section>
-</fieldset>
 
 <fieldset>
 	<label>Products</label>

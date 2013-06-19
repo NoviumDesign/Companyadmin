@@ -1,6 +1,6 @@
 <?php
 
-class Form_EditInvoiceForm extends Emilk_Form
+class Form_EditCreditInvoiceForm extends Emilk_Form
 {	
 	public $invoiceId = 0;
 
@@ -17,15 +17,15 @@ class Form_EditInvoiceForm extends Emilk_Form
 
 		// order data
 		$select = $db->select()
-                     ->from('invoices', array('invoice_id', 'invoice_number', 'customer', 'status', 'customer as customer_id', 'discount', 'due', 'date', 'notes'))
+                     ->from('invoices', array('invoice_id', 'invoice_number', 'customer', 'status', 'customer as customer_id', 'discount', 'date', 'notes'))
                      ->joinLeft('customers', 'invoices.customer = customers.customer_id', 'name as customer_name')
-                     ->where('invoices.type = "invoice"')
+                     ->where('invoices.type = "credit-invoice"')
                      ->where('invoices.invoice_id = '. $this->invoiceId . ' AND invoices.business = ' . $business); 
         $result = $db->fetchAll($select);
         $invoice = $result[0];
 
         if(!$invoice) {
-			header('Location: /invoices/view');
+			header('Location: /credit-invoices/view');
         }
 
 		// products
@@ -68,10 +68,6 @@ class Form_EditInvoiceForm extends Emilk_Form
 				 ->setValue($invoice['customer_name']);
 
 
-    $invoiceDue = new Emilk_Form_Element_Text('invoiceDue');
-    $invoiceDue->setAttr('class', 'date')
-           ->setValue(date('Y-m-d', $invoice['due']));
-
     $invoiceDate = new Emilk_Form_Element_Text('invoiceDate');
     $invoiceDate->setAttr('class', 'date')
            ->setValue(date('Y-m-d', $invoice['date']));
@@ -107,13 +103,12 @@ class Form_EditInvoiceForm extends Emilk_Form
 		$this->setAttr('id', 'form')
 			 ->setAttr('method', 'post')
 			 ->setAttr('autocomplete', 'off')
-			 ->setAttr('action', '/invoice/edit/' . $this->invoiceId)
+			 ->setAttr('action', '/credit-invoice/edit/' . $this->invoiceId)
 			 ->add(array(
 			 	$invoiceNumber,
 			 	$customerId,
 			 	$customer,
-			 	$invoiceDue,
-        $invoiceDate,
+        		$invoiceDate,
 			 	$status,
 			 	$discount,
 			 	$notes,

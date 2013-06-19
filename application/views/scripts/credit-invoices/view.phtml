@@ -1,0 +1,42 @@
+<?php if($this->isAdmin) { ?>
+   <a href="/credit-invoice/add"><button>Add credit invoice</button></a>
+<?php } ?>
+
+<div class="g12">
+   <h1>Credit invoices</h1>
+   <table class="datatable">
+      <thead>
+         <tr>
+            <th>Invoice number</th>
+            <th>Customer</th>
+            <th>Invoice date</th>            <th>Sum</th>
+            <th>Status</th>
+         </tr>
+      </thead>
+      <tbody>
+
+         <?php 
+            foreach($this->invoices as $invoice) {
+
+            $color = '';
+            if($invoice['status'] == 'paid') {
+               $color = 'green';
+            } elseif ($invoice['status'] == 'unpaid') {
+               $color = 'yellow';
+            }
+
+         ?>
+
+            <tr class="clickable <?= $color ?>" data-link="/credit-invoice/view/<?= $invoice['invoice_id'] ?>">
+               <td><?= $invoice['invoice_number'] ?></td>
+               <td><a href="/customer/view/<?= $invoice['customer_id'] ?>"><?= $invoice['name'] ?></td>
+               <td><?= date('Y-m-d', $invoice['date']) /*ADD + 1 HOUR*/?></td>
+               <td><?= $this->totSums[$invoice['invoice_id']] ?></td>
+               <td><a href="#" class="changeInvoiceStatus" data-id="<?= $invoice['invoice_id'] ?>"><?= $invoice['status'] ?></a></td>
+            </tr>
+
+         <?php } ?>
+
+      </tbody>
+   </table>
+</div>

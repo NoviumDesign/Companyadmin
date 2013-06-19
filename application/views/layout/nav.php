@@ -138,5 +138,12 @@
 				</li>
 			</ul>
 		</li>
+		<li class="i_cash_register">
+			<a href="/credit-invoices/view">
+				<span>
+					Kreditfakturor
+				</span>
+			</a>
+		</li>
 	</ul>
 </nav>

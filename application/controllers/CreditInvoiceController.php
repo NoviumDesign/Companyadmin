@@ -1,6 +1,6 @@
 <?php
 
-class InvoiceController extends Zend_Controller_Action
+class CreditInvoiceController extends Zend_Controller_Action
 {
     public function init()
     {
@@ -23,7 +23,7 @@ class InvoiceController extends Zend_Controller_Action
         $parameters = new Emilk_Request_Parameters();
         list($orderId) = $parameters->get();
 
-        $form = new Form_AddInvoiceForm($orderId);
+        $form = new Form_AddCreditInvoiceForm($orderId);
         $this->view->form = $form;
 
         if($form->isValid() === true) {
@@ -46,10 +46,9 @@ class InvoiceController extends Zend_Controller_Action
                     'customer' => $form->getValue('customerId'),
                     'status' => $form->getValue('status'),
                     'date' => time(),
-                    'due' => strtotime($form->getValue('invoiceDue')),
                     'discount' => $form->getValue('discount'),
                     'notes' => $form->getValue('notes'),
-                    'type' => 'invoice'
+                    'type' => 'credit-invoice'
                 ));
 
             // create items
@@ -80,7 +79,7 @@ class InvoiceController extends Zend_Controller_Action
                 );
             }
 
-            $this->_redirect('/invoice/view/' . $invoiceId);
+            $this->_redirect('/credit-invoice/view/' . $invoiceId);
         }
     }
 
@@ -92,10 +91,10 @@ class InvoiceController extends Zend_Controller_Action
         list($invoiceId) = $parameters->get();
 
         if(!$invoiceId) {
-            $this->_redirect('/invoices/view');
+            $this->_redirect('/credit-invoices/view');
         }
 
-        $form = new Form_EditInvoiceForm($invoiceId);
+        $form = new Form_EditCreditInvoiceForm($invoiceId);
         $this->view->form = $form;
 
         if($form->isValid() === true) {
@@ -106,7 +105,6 @@ class InvoiceController extends Zend_Controller_Action
                     'invoice_number' => $form->getValue('invoiceNumber'),
                     'customer' => $form->getValue('customerId'),
                     'status' => $form->getValue('status'),
-                    'due' => strtotime($form->getValue('invoiceDue')),
                     'date' => strtotime($form->getValue('invoiceDate')),
                     'discount' => $form->getValue('discount'),
                     'notes' => $form->getValue('notes')
@@ -163,7 +161,7 @@ class InvoiceController extends Zend_Controller_Action
                     }
                 }
             }
-            $this->_redirect('/invoice/view/' . $invoiceId);
+            $this->_redirect('/credit-invoice/view/' . $invoiceId);
         }
         
     }
@@ -176,22 +174,22 @@ class InvoiceController extends Zend_Controller_Action
         list($invoiceId) = $parameters->get();
 
         if(!$invoiceId) {
-            $this->_redirect('/invoices/view');
+            $this->_redirect('/credit-invoices/view');
         }
 
         $this->view->invoiceId = $invoiceId;
 
         // invoice
         $select = $db->select()
-                     ->from('invoices', array('invoice_id', 'invoice_number', 'date', 'due', 'status', 'discount', 'notes', 'invoice_secret'))
+                     ->from('invoices', array('invoice_id', 'invoice_number', 'date', 'status', 'discount', 'notes', 'invoice_secret'))
                      ->joinLeft('customers', 'invoices.customer = customers.customer_id', array('name as customer_name', 'customer_id', 'customer_adress', 'zip_code', 'city', 'country', 'mail', 'type', 'reference'))
-                     ->where('invoices.type = "invoice"')
+                     ->where('invoices.type = "credit-invoice"')
                      ->where('invoices.invoice_id = ' . $invoiceId . ' AND invoices.business = ' . $_SESSION['business']);
         $result = $db->fetchAll($select);
         $this->view->invoice = $result[0];
 
         if (!count($result)) {
-            $this->_redirect('/invoices/view');
+            $this->_redirect('/credit-invoices/view');
         }
 
         // items
@@ -224,10 +222,7 @@ class InvoiceController extends Zend_Controller_Action
         // mailto
         $mailAdress = $this->view->invoice['mail'];
         $invoiceLink = 'http://companyadmins.elasticbeanstalk.com/' . $this->view->pdfLink;
-        $title = urlencode(html_entity_decode($this->view->businessComapny['invoice_mail_title'], ENT_QUOTES, 'UTF-8'));
-        $body = urlencode(str_replace('<invoice>', $invoiceLink, html_entity_decode($this->view->businessComapny['invoice_mail_content'], ENT_QUOTES, 'UTF-8')));
-
-        $mail = 'mailto:' . $mailAdress . '?subject=' . $title . '&body=' . $body;
+        $mail = 'mailto:' . $mailAdress . '?subject=Kreditfaktura&body=' . $invoiceLink;
 
         $this->view->mailTo = $mail;
     }
@@ -240,13 +235,13 @@ class InvoiceController extends Zend_Controller_Action
         list($invoiceId) = $parameters->get();
 
         $table = new Model_Db_Invoices(array('db' => $db));
-        $result = $table->delete('invoices.invoice_id = ' . $invoiceId . ' AND invoices.type = "invoice" AND invoices.business = ' . $_SESSION['business']);
+        $result = $table->delete('invoices.invoice_id = ' . $invoiceId . ' AND invoices.type = "credit-invoice" AND invoices.business = ' . $_SESSION['business']);
 
         if($result) {
             $table = new Model_Db_Items(array('db' => $db));
             $table->delete('items.invoice = ' . $invoiceId);
         }
 
-        $this->_redirect('/invoices/view/');
+        $this->_redirect('/credit-invoices/view/');
     }
 }
