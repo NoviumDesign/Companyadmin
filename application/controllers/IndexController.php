@@ -5,6 +5,8 @@ class IndexController extends Zend_Controller_Action
     public function indexAction()
     {
         $db = Zend_Registry::get('db');
+        $dDb = Zend_Db_Table::getDefaultAdapter();
+        $user = Zend_Auth::getInstance()->getStorage()->read();
 
         $today = strtotime(date('Y-m-d'));
 
@@ -77,6 +79,20 @@ class IndexController extends Zend_Controller_Action
                      ->where('invoices.business = ?', $_SESSION['business']);
         $this->view->overdueInvoices = $db->fetchAll($select);
 
+
+
+        // order link
+        $select = $dDb->select()
+                      ->from('companies', 'company_secret')
+                      ->where('company_id = ?', $user->company);
+        list($result) = $dDb->fetchAll($select);
+        $this->view->companySecret = $result['company_secret'];
+
+        $select = $db->select()
+                      ->from('businesses', 'business_secret')
+                      ->where('business_id = ?', $_SESSION['business']);
+        list($result) = $db->fetchAll($select);
+        $this->view->businessSecret = $result['business_secret'];
     }
 }
 

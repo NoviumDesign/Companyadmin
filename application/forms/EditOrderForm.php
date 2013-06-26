@@ -16,7 +16,7 @@ class Form_EditOrderForm extends Emilk_Form
 	public function build()
 	{
         $db = Zend_Registry::get('db');
-      $dDb = Zend_Db_Table::getDefaultAdapter();
+      	$dDb = Zend_Db_Table::getDefaultAdapter();
 		$id = $this->id;
 		$business = $_SESSION['business'];
 

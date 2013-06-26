@@ -7,11 +7,11 @@ class Form_AddOrderForm extends Emilk_Form
 
 	public function build()
 	{
-      $dDb = Zend_Db_Table::getDefaultAdapter();
+    	$dDb = Zend_Db_Table::getDefaultAdapter();
         $db = Zend_Registry::get('db');
 		$business = $_SESSION['business'];
 
-    $select = $dDb->select()
+    	$select = $dDb->select()
                       ->from('users', array('id', 'name'))
                       ->where('company = ?', Zend_Auth::getInstance()->getStorage()->read()->company)
                       ->where('role <> ?', 'god')
@@ -86,9 +86,9 @@ class Form_AddOrderForm extends Emilk_Form
 
 
 
-    $carrier = new Emilk_Form_Element_Select('carrier');
-    $carrier->addOption('')
-            ->addOptions($carriers);
+	    $carrier = new Emilk_Form_Element_Select('carrier');
+	    $carrier->addOption('')
+	            ->addOptions($carriers);
 
 
 		$orderNotes = new Emilk_Form_Element_Textarea('orderNotes');

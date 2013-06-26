@@ -1,0 +1,242 @@
+<?php include('layout-top.php'); ?>
+
+<div class="row">
+	<div class="col-lg-8">
+		<h1>Beställning</h1>
+		<p>
+			För att göra en beställning, vänligen fyll i sammtliga fält markerade med en <span class="required">*</span>.
+		</p>
+	</div>
+</div>
+
+
+<form class="form-horizontal orderform" action="/request-order/add/<?= $this->formAction?>" method="post">
+
+	<div class="row">
+		<div class="col-offset-2 col-lg-10">
+			<h2>Produkter</h2>
+		</div>
+	</div>
+
+	<div class="row">
+	  <label for="inputProducts" class="col-lg-2 control-label">Produkter</label>
+	  <div class="col-lg-10">
+	    <select id="product-list" multiple="multiple">
+
+	    	<?php foreach ($this->products as $product) { ?>
+
+	    		<option value="<?= $product['product_secret'] ?>" class="id-<?= $product['product_secret'] ?>"><?= $product['product'] ?></option>
+
+	    	<?php } ?>
+
+	    </select>
+	  </div>
+	</div>
+
+	<div class="row">
+	  <label for="inputProducts" class="col-lg-2 control-label">
+	  	Valda produkter
+	  	<span class="required"> *</span>
+	  </label>
+	  <div class="col-lg-10">
+	    <table id="product-basket"  class="table table-striped table-hover">
+	      <tr>
+	        <th>Produkt</th>
+	        <th>Pris</th>
+	        <th>Antal</th>
+	        <th></th>
+	      </tr>
+
+	    	<?php foreach ($this->products as $product) { ?>
+
+		    	<tr class="hidden id-<?= $product['product_secret'] ?>">
+		        <td><?= $product['product'] ?></td>
+		        <td><?= $product['price'] ?> :- / <?= $product['unit'] ?></td>
+		        <td>
+		    			<input class="col-lg-3 products" type="number" name="items[<?= $product['product_secret'] ?>]" id="<?= $product['product_secret'] ?>" placeholder="Antal" step="any" min="0">
+						</td>
+		        <td><a class="glyphicon glyphicon-remove remove"></a></td>
+		      </tr>
+
+	    	<?php } ?>
+
+	    </table>
+	  </div>
+	</div>
+
+	<?php foreach ($this->customFields as $key => $field) { ?>
+
+		<div class="row">
+		  <label class="col-lg-2 control-label" required>
+		  	<?= $field ?>
+		  </label>
+		  <div class="col-lg-10">
+		    <input type="text" name="customFields[<?= $key ?>]" placeholder="<?= $field ?>">
+		  </div>
+		</div>
+
+	<?php } ?>
+
+	<?php if ($this->delivery == 'true') { ?>
+
+		<div class="row">
+			<div class="col-offset-2 col-lg-10">
+				<h2>Leverans</h2>
+			</div>
+		</div>
+
+		<div class="row">
+		  <label class="col-lg-2 control-label" required>
+		  	Leveransadress
+		  	<span class="required"> *</span>
+		  </label>
+		  <div class="col-lg-10">
+		    <input type="text" name="deliveryAdress" placeholder="Leveransadress">
+		  </div>
+		</div>
+
+		<div class="row">
+		  <label class="col-lg-2 control-label" required>
+		  	Datum
+		  	<span class="required"> *</span>
+		  </label>
+		  <div class="col-lg-10">
+		    <input type="text" name="deliveryDate" placeholder="dd/mm/yyyy">
+		  </div>
+		</div>
+
+		<div class="row">
+		  <label class="col-lg-2 control-label" required>Tid</label>
+		  <div class="col-lg-10">
+		    <input type="text" name="deliveryTime" placeholder="hh:mm">
+		  </div>
+		</div>
+
+	<?php } ?>
+
+	<div class="row">
+		<div class="col-offset-2 col-lg-10">
+			<h2>Kundinformation</h2>
+		</div>
+	</div>
+
+	<div class="row">
+	  <label class="col-lg-2 control-label">
+	  	Typ
+	  	<span class="required"> *</span>
+	  </label>
+	  <div class="col-lg-10">
+	  	<input class="type" type="radio" name="type" value="private" checked>Privatperson
+		<input class="type" type="radio" name="type" value="company">Företag
+	  </div>
+	</div>
+
+	<div class="row">
+	  <label class="col-lg-2 control-label">
+	  	<span class="company hidden">Företagsnamn</span>
+	  	<span class="private">Namn</span>
+	  	<span class="required"> *</span>
+	  </label>
+	  <div class="col-lg-10">
+	    <input type="text" name="name" placeholder="Namn" required>
+	  </div>
+	</div>
+
+	<div class="row company hidden">
+	  <label class="col-lg-2 control-label">
+	  	Referens
+	  </label>
+	  <div class="col-lg-10">
+	    <input type="text" name="reference" id="reference" placeholder="Referens">
+	  </div>
+	</div>
+
+	<div class="row">
+	  <label class="col-lg-2 control-label">
+	  	Telefon
+	  	<span class="required"> *</span>
+	  </label>
+	  <div class="col-lg-10">
+	    <input type="text" name="phone" placeholder="Telefonnr" required>
+	  </div>
+	</div>
+
+	<div class="row">
+	  <label class="col-lg-2 control-label">
+	  	Epost
+	  	<span class="required"> *</span>
+	  </label>
+	  <div class="col-lg-10">
+	    <input type="email" name="email" placeholder="Epostadress" required>
+	  </div>
+	</div>
+
+	<div class="row">
+	  <label class="col-lg-2 control-label">
+	  	Postadress
+	  </label>
+	  <div class="col-lg-4">
+	    <input type="text" id="adress" name="adress" placeholder="Postadress">
+	  </div>
+
+	  <span class="col-lg-2" style="text-align:center; padding-top:6px">
+	  	Eller
+	  </span>
+
+	  <label class="col-lg-1 control-label">Box</label>
+	  <div class="col-lg-3">
+	    <input type="text" id="box" name="box" placeholder="Boxadress">
+	  </div>
+	</div>
+
+	<div class="row">
+	  <label class="col-lg-2 control-label" required>
+	  	Postnr
+	  	<span class="required"> *</span>
+	  </label>
+	  <div class="col-lg-10">
+	    <input type="number" name="zip" placeholder="Postnr">
+	  </div>
+	</div>
+
+	<div class="row">
+	  <label class="col-lg-2 control-label">
+	  	Ort
+	  	<span class="required"> *</span>
+	  </label>
+	  <div class="col-lg-10">
+	    <input type="text" name="city" placeholder="Ort" required>
+	  </div>
+	</div>
+
+	<div class="row">
+	  <label class="col-lg-2 control-label">
+	  	Land
+	  	<span class="required"> *</span>
+	  </label>
+	  <div class="col-lg-10">
+	    <input type="text" name="country" placeholder="Land" required>
+	  </div>
+	</div>
+
+	<div class="row">
+		<div class="col-offset-2 col-lg-10">
+			<h2>Övrig information</h2>
+		</div>
+	</div>
+
+	<div class="row">
+	  <div class="col-offset-2 col-lg-10">
+	    <textarea name="notes"></textarea>
+	  </div>
+	</div>
+
+	<div class="row">
+	  <div class="col-lg-10 col-offset-2" style="margin-bottom:20px">
+	    <button type="submit" id="submit" class="btn btn-primary btn-large">Beställ</button>
+	  </div>
+	</div>
+
+</form>
+
+<?php include('layout-bottom.php'); ?>

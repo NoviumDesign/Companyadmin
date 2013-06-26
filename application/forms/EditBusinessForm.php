@@ -34,7 +34,10 @@ class Form_EditBusinessForm extends Emilk_Form
 	                    'company_reference',
 	                    'invoice_mail_title',
 	                    'invoice_mail_content',
-	                    'invoice_due'
+	                    'invoice_due',
+	                    'delivery',
+                        'order_mail_title',
+                        'order_mail_content'
                      ))
                      ->where('business_id = "' . $businessId . '"');
         list($business) = $db->fetchAll($select);
@@ -127,10 +130,30 @@ class Form_EditBusinessForm extends Emilk_Form
 						   ->setValue($business['invoice_mail_content']);
 
 
-		$invoiceDue = new Emilk_Form_Element_number('invoiceDue');
+		$invoiceDue = new Emilk_Form_Element_Number('invoiceDue');
 		$invoiceDue->setAttr('class', 'integer')
 							 ->setAttr('data-min', '0')
 							 ->setValue($business['invoice_due']);
+
+
+
+
+
+		$delivery = new Emilk_Form_Element_Radio('delivery');
+		$delivery->setAttr('required', '')
+			   	 ->addChoises(array(
+			    	'true',
+			    	'false'
+			     ))
+			     ->setValue($business['delivery']);
+
+		$orderMailTitle = new Emilk_Form_Element_Text('orderMailTitle');
+		$orderMailTitle->setAttr('required', '')
+					   ->setValue($business['order_mail_title']);
+
+		$orderMailContent = new Emilk_Form_Element_Textarea('orderMailContent');
+		$orderMailContent->setAttr('data-autogrow', 'true')
+						 ->setValue($business['order_mail_content']);
 
 
 
@@ -169,7 +192,10 @@ class Form_EditBusinessForm extends Emilk_Form
 				$companyReference,
 				$invoiceMailTitle,
 				$invoiceMailContent,
-				$invoiceDue
+				$invoiceDue,
+				$delivery,
+				$orderMailTitle,
+				$orderMailContent
 			 ));
 	}
 }

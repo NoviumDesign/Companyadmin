@@ -41,7 +41,23 @@ class Form_AddBusinessForm extends Emilk_Form
 		$companyPhone = new Emilk_Form_Element_Text('companyPhone');
 		
 		$companySite = new Emilk_Form_Element_Text('companySite');
-		
+
+
+		$delivery = new Emilk_Form_Element_Radio('delivery');
+		$delivery->setAttr('required', '')
+			   	 ->addChoises(array(
+			    	'true',
+			    	'false'
+			     ))
+			     ->setValue('no');
+
+		$orderMailTitle = new Emilk_Form_Element_Text('orderMailTitle');
+		$orderMailTitle->setAttr('required', '');
+
+		$orderMailContent = new Emilk_Form_Element_Textarea('orderMailContent');
+		$orderMailContent->setAttr('data-autogrow', 'true')
+						   ->setAttr('required', '');
+
 
 		$confirmationMail = new Emilk_Form_Element_Textarea('confirmationMail');
 		$confirmationMail->setAttr('data-autogrow', 'true');
@@ -60,7 +76,7 @@ class Form_AddBusinessForm extends Emilk_Form
 		$invoiceMailContent->setAttr('data-autogrow', 'true')
 						   ->setAttr('required', '');
 
-		$invoiceDue = new Emilk_Form_Element_number('invoiceDue');
+		$invoiceDue = new Emilk_Form_Element_Number('invoiceDue');
 		$invoiceDue->setAttr('class', 'integer')
 							 ->setAttr('data-min', '0')
 							 ->setValue(30);
@@ -102,7 +118,10 @@ class Form_AddBusinessForm extends Emilk_Form
 				$companyReference,
 				$invoiceMailTitle,
 				$invoiceMailContent,
-				$invoiceDue
+				$invoiceDue,
+				$delivery,
+				$orderMailTitle,
+				$orderMailContent
 			 ));
 	}
 }

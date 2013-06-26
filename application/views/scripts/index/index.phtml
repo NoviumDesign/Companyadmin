@@ -77,6 +77,13 @@
 			<span><?= $this->unconfirmedOrders['num_orders'] ?></span>
 		</div>
 	</div>
+		
+	<div class="widget" id="widget_link_to_order" data-icon="create_write">
+		<h3 class="handle">Länk till ordersida</h3>
+		<div>
+			<a href="request-order/start/<?= $this->companySecret . '/' . $this->businessSecret ?>"><span>Till ordersida</span></a>
+		</div>
+	</div>
 
 
 	<div class="widget number-widget" id="widget_CRM" data-icon="folder_love">

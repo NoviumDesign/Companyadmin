@@ -65,6 +65,41 @@
 
 
 <fieldset>
+    <label>Order details</label>
+    <section>
+        <label for="delivery">Delivery</label>
+        <div>
+
+            <?= $this->element('delivery', 'false'); ?>
+
+            <label for="deliverystatus">No</label>
+
+            <?= $this->element('delivery', 'true'); ?>
+
+            <label for="deliverystatus">Yes</label>
+
+        </div>
+    </section>
+    <section>
+        <label for="delivery">Order mail title</label>
+        <div>
+
+            <?= $this->element('orderMailTitle'); ?>
+
+        </div>
+    </section>
+    <section>
+        <label for="delivery">Order mail content</label>
+        <div>
+
+            <?= $this->element('orderMailContent'); ?>
+
+        </div>
+    </section>
+</fieldset>
+
+
+<fieldset>
     <label>Invoice details</label>
     <section>
         <label for="logo">Company logo</label>

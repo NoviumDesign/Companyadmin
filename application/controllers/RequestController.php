@@ -163,7 +163,7 @@ class RequestController extends Zend_Controller_Action
 
         if(!isset($this->output['error'])) {
             $secret = substr(str_shuffle('abcdefghijlkmnopqrstuvwxyz1234567890abcdefghijlkmnopqrstuvwxyz1234567890abcdefghijlkmnopqrstuvwxyz1234567890'), 0, 10);
-
+z
             if(!$orderCustomer) {
                 // insert new customer
                 $table = new Model_Db_Customers(array('db' => $this->db));
