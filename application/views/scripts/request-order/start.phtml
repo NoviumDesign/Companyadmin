@@ -21,15 +21,19 @@
 	<div class="row">
 	  <label for="inputProducts" class="col-lg-2 control-label">Produkter</label>
 	  <div class="col-lg-10">
-	    <select id="product-list" multiple="multiple">
+	    <ul id="product-list" multiple="multiple">
 
 	    	<?php foreach ($this->products as $product) { ?>
 
-	    		<option value="<?= $product['product_secret'] ?>" class="id-<?= $product['product_secret'] ?>"><?= $product['product'] ?></option>
+	    		<li>
+		    		<a data-secret="<?= $product['product_secret'] ?>" class="id-<?= $product['product_secret'] ?>">
+		    			<?= $product['product'] ?>
+		    		</a>
+	    		</li>
 
 	    	<?php } ?>
 
-	    </select>
+	    </ul>
 	  </div>
 	</div>
 
@@ -49,7 +53,7 @@
 
 	    	<?php foreach ($this->products as $product) { ?>
 
-		    	<tr class="hidden id-<?= $product['product_secret'] ?>">
+		    	<tr class="hidden id-<?= $product['product_secret'] ?>" data-secret="<?= $product['product_secret'] ?>">
 		        <td><?= $product['product'] ?></td>
 		        <td><?= $product['price'] ?> :- / <?= $product['unit'] ?></td>
 		        <td>

@@ -149,7 +149,10 @@ class RequestOrderController extends Zend_Controller_Action
 
         $data = $this->treat($_POST);
         $items = $this->treat($_POST['items']);
-        $customFields = $this->treat($_POST['customFields']);
+        
+        if(isset($_POST['customFields'])) {
+            $customFields = $this->treat($_POST['customFields']);
+        }
 
         if( 
             !(isset($data['name']) &&
@@ -166,11 +169,6 @@ class RequestOrderController extends Zend_Controller_Action
             echo 'error';
             exit();
         }
-
-
-        print_r($data);
-        print_r($items);
-        print_r($customFields);
 
         $secret = substr(str_shuffle('abcdefghijlkmnopqrstuvwxyz1234567890abcdefghijlkmnopqrstuvwxyz1234567890abcdefghijlkmnopqrstuvwxyz1234567890'), 0, 10);
 
@@ -227,14 +225,17 @@ class RequestOrderController extends Zend_Controller_Action
         }
 
 
+        include('../application/configs/smtp_mail.php');
+
+        $transport = new Zend_Mail_Transport_Smtp('smtp.mandrillapp.com', $config);
+
         // mail
         $mail = new Zend_Mail('UTF-8');
-        $mail->setBodyText($this->orderMailContent);
+        $mail->setBodyText(html_entity_decode($this->orderMailContent, ENT_QUOTES, 'UTF-8'));
         $mail->setFrom($this->companyMail, $this->companySite);
         $mail->addTo($data['email'], $data['name']);
-        $mail->setSubject($this->orderMailTitle);
-        $mail->send();
-
+        $mail->setSubject(html_entity_decode($this->orderMailTitle, ENT_QUOTES, 'UTF-8'));
+        $mail->send($transport);
 
         $this->_redirect('/request-order/complete/' . $this->path);
     }
