@@ -43,3 +43,11 @@ $('.type').click(function () {
 		$('#reference').val('');
 	}
 });
+
+// jQuery datepicker opt-in.
+$(function() {
+	$( "#datepicker" ).datepicker();
+});
+
+// jQuery timepicker opt-in.
+$('#timepicker').timepicker();

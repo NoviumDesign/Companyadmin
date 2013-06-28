@@ -21,15 +21,19 @@
 	<div class="row">
 	  <label for="inputProducts" class="col-lg-2 control-label">Produkter</label>
 	  <div class="col-lg-10">
-	    <select id="product-list" multiple="multiple">
+	    <ul id="product-list" class="list-unstyled">
 
 	    	<?php foreach ($this->products as $product) { ?>
 
-	    		<option value="<?= $product['product_secret'] ?>" class="id-<?= $product['product_secret'] ?>"><?= $product['product'] ?></option>
+	    		<li>
+		    		<a data-secret="<?= $product['product_secret'] ?>" class="id-<?= $product['product_secret'] ?>">
+		    			<?= $product['product'] ?>
+		    		</a>
+	    		</li>
 
 	    	<?php } ?>
 
-	    </select>
+	    </ul>
 	  </div>
 	</div>
 
@@ -49,7 +53,7 @@
 
 	    	<?php foreach ($this->products as $product) { ?>
 
-		    	<tr class="hidden id-<?= $product['product_secret'] ?>">
+		    	<tr class="hidden id-<?= $product['product_secret'] ?>" data-secret="<?= $product['product_secret'] ?>">
 		        <td><?= $product['product'] ?></td>
 		        <td><?= $product['price'] ?> :- / <?= $product['unit'] ?></td>
 		        <td>
@@ -101,14 +105,14 @@
 		  	<span class="required"> *</span>
 		  </label>
 		  <div class="col-lg-10">
-		    <input type="text" name="deliveryDate" placeholder="dd/mm/yyyy">
+		    <input id="datepicker" type="text" name="deliveryDate" placeholder="dd/mm/yyyy">
 		  </div>
 		</div>
 
 		<div class="row">
 		  <label class="col-lg-2 control-label" required>Tid</label>
 		  <div class="col-lg-10">
-		    <input type="text" name="deliveryTime" placeholder="hh:mm">
+		    <input id="timepicker" type="text" name="deliveryTime" placeholder="hh:mm">
 		  </div>
 		</div>
 
@@ -126,8 +130,8 @@
 	  	<span class="required"> *</span>
 	  </label>
 	  <div class="col-lg-10">
-	  	<input class="type" type="radio" name="type" value="private" checked>Privatperson
-		<input class="type" type="radio" name="type" value="company">Företag
+	  	<input class="type" type="radio" name="type" value="private" checked> Privatperson
+		<input class="type" type="radio" name="type" value="company"> Företag
 	  </div>
 	</div>
 

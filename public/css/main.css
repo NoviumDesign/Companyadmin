@@ -4537,7 +4537,8 @@ td.hidden-lg {
   src: url('../fonts/cheltenhamstd-ultracondit.eot');
   src: url('../fonts/cheltenhamstd-ultracondit.eot') format('embedded-opentype'), url('../fonts/cheltenhamstd-ultracondit.woff') format('woff'), url('../fonts/cheltenhamstd-ultracondit.ttf') format('truetype'), url('../fonts/cheltenhamstd-ultracondit.svg#CheltenhamStd') format('svg');
 }
-h1 {
+h1,
+h2 {
   font-family: CheltenhamStd, serif;
 }
 .navbar {
@@ -4576,6 +4577,9 @@ a.glyphicon-remove:hover {
 }
 .orderform {
   margin-top: 30px;
+}
+.orderform a {
+  cursor: pointer;
 }
 /* ### SIZE DEPENDENT STYLES ### */
 /* ### Min 768px ### */
