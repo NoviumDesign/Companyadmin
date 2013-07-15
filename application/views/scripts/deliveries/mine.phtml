@@ -1,16 +1,16 @@
 <div class="g12">
-   <h1>My deliveries <?php echo ($this->date? $this->date: 'Today') ?> (<?= count($this->deliveries) ?>)</h1>
+   <h1>Mina leveranser <?php echo ($this->date? $this->date: 'Today') ?> (<?= count($this->deliveries) ?>)</h1>
    <table id="deliveries" class="datatable">
       <thead>
          <tr>
-         	<th style="width:40px">Order Number</th>
-            <th>Customer</th>
-            <th>Items</th>
-            <th>Time</th>
-            <th>Delivery adress</th>
-            <th>Notes</th>
-            <th>Order status</th>
-            <th>Delivery status</th>
+         	<th style="width:40px">Ordernr</th>
+            <th>Kund</th>
+            <th>Produkt</th>
+            <th>Tid</th>
+            <th>Leveransadress</th>
+            <th>Anteckningar</th>
+            <th>Orderstatus</th>
+            <th>leveransstatus</th>
          </tr>
       </thead>
       <tbody>
@@ -48,6 +48,6 @@
 </div>
 
 <div class="g4 fr" style="text-align:right">
-   <h1>Select specific date</h1>
+   <h1>Granska leveranser den:</h1>
    <input type="text" id="changeDeliveryDate" class="date mine" value="<?php echo ($this->date? $this->date: '') ?>">
 </div>

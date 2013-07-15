@@ -8,6 +8,31 @@
         <script src="/js/main.js"></script>
         <script src="/js/request-order.js"></script>
 
+        <script>
+            // jQuery datepicker opt-in.
+            $("#datepicker").datepicker({
+                beforeShowDay: function(date) {
+                    var day = date.getDay();
+                    return [(day != 1 && day != 6 && day != 2 && day != 0), ''];
+                }
+            });
+
+            // jQuery timepicker opt-in.
+            $('#timepicker').timepicker({
+                hourMin: 8,
+                hourMax: 17,
+                stepMinute: 15,
+                currentText: 'Aktuell tid',
+                closeText: 'Klar',
+                timeOnlyTitle: 'Önskad leveranstid',
+                timeText: 'Tid',
+                hourText: 'Timma',
+                minuteText: 'Minut'
+            });
+        </script>
+
+
+
 
         <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
         <script>

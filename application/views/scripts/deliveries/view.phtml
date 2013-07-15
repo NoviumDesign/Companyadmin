@@ -1,16 +1,16 @@
 <div class="g12">
-   <h1><?php echo ($this->date? $this->date: 'Today') ?>'s deliveries (<?= count($this->deliveries) ?>)</h1>
+   <h1><?php echo ($this->date? $this->date: 'Dagens') ?> leveranser (<?= count($this->deliveries) ?>)</h1>
    <table id="deliveries" class="datatable">
       <thead>
          <tr>
             <th style="width:23px"></th>
-            <th>Carrier</th>
-         	<th>Order Number</th>
-            <th>Customer</th>
-            <th>Items</th>
-            <th>Time</th>
-            <th>Delivery adress</th>
-            <th>Notes</th>
+            <th>Bud</th>
+         	<th>Ordernr</th>
+            <th>Kund</th>
+            <th>Produkter</th>
+            <th>Tid</th>
+            <th>Leveransadress</th>
+            <th>Anteckningar</th>
             <th>Status</th>
          </tr>
       </thead>
@@ -47,16 +47,15 @@
 
       </tbody>
    </table>
+
+   <span id="selectAll">Markera/avmarkera alla</span>
 </div>
 
 
-<span id="selectAll">Select/deselect all</span>
-
-
 <div class="g12">
-   <h1>Add to <span id="numSelected"></span></h1>
+   <h1>Välj bud <span id="numSelected"></span></h1>
    <select id="carriers">
-      <option value="0">Select user</option>
+      <option value="0">Välj vem som kör budet</option>
 
       <?php foreach($this->users as $user) { ?>
 
@@ -65,10 +64,10 @@
       <?php } ?>
 
    </select>
-   <button id="removeCarrier" class="red">Remove carrier</button>
+   <!-- <button id="removeCarrier" class="red">Ta bort</button> -->
 </div>
 
 <div class="g4 fr" style="text-align:right">
-   <h1>Select specific date</h1>
+   <h1>Granska uykörningar den:</h1>
    <input type="text" id="changeDeliveryDate" class="date view" value="<?php echo ($this->date? $this->date: '') ?>">
 </div>

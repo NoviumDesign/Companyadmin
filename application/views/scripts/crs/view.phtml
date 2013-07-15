@@ -1,15 +1,15 @@
 <?php if($this->isAdmin) { ?>
-   <a href="/cr/add"><button>Add task</button></a>
+   <a href="/cr/add"><button>Lägg till uppgift</button></a>
 <?php } ?>
 
 <div class="g12">
-   <h1><?= (isset($this->completed)? 'Completed ': 'Active ') ?>customer realtion tasks</h1>
+   <h1><?= (isset($this->completed)? 'Completed ': 'Active ') ?>Uppgifter</h1>
    <table class="datatable">
       <thead>
          <tr>
-            <th>Customer</th>
-            <th>Date</th>
-            <th>status</th>
+            <th>Kund</th>
+            <th>Datum</th>
+            <th>Status</th>
          </tr>
       </thead>
       <tbody>

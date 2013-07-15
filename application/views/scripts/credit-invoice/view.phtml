@@ -3,10 +3,10 @@
    <?php if($this->isAdmin) { ?>
 
       <a href="/credit-invoice/edit/<?= $this->invoice['invoice_id'] ?>">
-         <button class="i_create_write icon">Edit credit invoice</button>
+         <button class="i_create_write icon">Redigera kreditfaktura</button>
       </a>
       <a href="/credit-invoice/delete/<?= $this->invoice['invoice_id'] ?>">
-         <button class="red">Delete credit invoice</button>
+         <button class="red">Radera kreditfaktura</button>
       </a>
 
    <?php } ?>
@@ -18,7 +18,7 @@
    <?php if($this->invoice['mail'] && $this->isAdmin) { ?>
 
       <a href="<?= $this->mailTo ?>" target="_blank">
-         <button>Mail PDF</button>
+         <button>Eposta PDF</button>
       </a>
 
    <?php } ?>
@@ -26,7 +26,7 @@
    <h1>Invoice <?= $this->businessComapny['invoice_prefix'] . $this->invoice['invoice_number']; ?></h1>
 </div>
 <div class="g3 from">
-	<h6>From</h6>
+	<h6>Från</h6>
       <span><strong><?= ucfirst($this->businessComapny['company_name']); ?></strong></span>
       <span><?= ucfirst($this->businessComapny['company_adress']); ?></span>
       <span><?= $this->businessComapny['company_zip_code']; ?> <?= ucfirst($this->businessComapny['company_city']); ?>,</span>
@@ -35,7 +35,7 @@
 </div>
 <div class="g3 to">
    <a href="/customer/view/<?= $this->invoice['customer_id']; ?>">
-   	<h6>To</h6>
+   	<h6>Till</h6>
    	<span><strong><?= ucfirst($this->invoice['customer_name']); ?></strong></span>
    	<span><?= ucfirst($this->invoice['customer_adress']); ?></span>
    	<span><?= $this->invoice['zip_code']; ?> <?= ucfirst($this->invoice['city']); ?>,</span>
@@ -46,20 +46,20 @@
 	<table class="table-unstyled">
 		<tbody>
 			<tr>
-				<th class="align-right">Invoice no.</th>
+				<th class="align-right">Fakturanr.</th>
 				<td class="align-left"><?= $this->businessComapny['invoice_prefix'] . $this->invoice['invoice_number']; ?></td>
 			</tr>
          <tr>
-            <th class="align-right">Your reference</th>
+            <th class="align-right">Er referens</th>
             <td class="align-left">
                <?= ($this->invoice['type'] == 'company'? ucfirst($this->invoice['reference']): ucfirst($this->invoice['customer_name'])) ?></td>
          </tr>
          <tr>
-            <th class="align-right">Our reference</th>
+            <th class="align-right">Vår referens</th>
             <td class="align-left"><?= ucfirst($this->businessComapny['company_reference']) ?></td>
          </tr>
          <tr>
-            <th class="align-right">Invoice date</th>
+            <th class="align-right">Fakturadatum</th>
             <td class="align-left"><?= date('Y-m-d', $this->invoice['date']);?></td>
          </tr>
 		</tbody>
@@ -72,10 +72,10 @@
        <tbody>
 
          <tr class="header">
-            <th width="70%">Item</th>
-            <th width="8%">Qantity</th>
-            <th width="11%">Price per unit</th>
-            <th width="11%" class="invoice-column-price">Total Price</th>
+            <th width="70%">Produkt</th>
+            <th width="8%">Antal</th>
+            <th width="11%">Pris per enhet</th>
+            <th width="11%" class="invoice-column-price">Totalpris</th>
          </tr>
 
          <?php
@@ -120,7 +120,7 @@
          <tr>
             <td colspan="2"></td>
             <td>
-               <strong>Sum</strong>
+               <strong>Summa</strong>
             </td>
             <td>
                <?= round($totPrice, 2) ?>:-
@@ -132,7 +132,7 @@
             <tr>
                <td colspan="2"></td>
                <td>
-                  <strong>Discount</strong>
+                  <strong>Rabatt</strong>
                </td>
                <td>
                   <?= round($discount, 2) ?>:-
@@ -144,7 +144,7 @@
          <tr>
             <td colspan="2"></td>
             <td>
-               <strong>VAT</strong>
+               <strong>Moms</strong>
             </td>
             <td>
                <?= round($totVat, 2) ?>:-
@@ -154,7 +154,7 @@
          <tr>
             <td colspan="2"></td>
             <td>
-               <strong>Rounding</strong>
+               <strong>Öresavrundning</strong>
             </td>
             <td>
                <?= round(round($totPrice - $discount + $totVat) - ($totPrice - $discount + $totVat), 2) ?>:-
@@ -164,7 +164,7 @@
          <tr class="total">
             <td colspan="2"></td>
             <td>
-               <strong>To recieve</strong>
+               <strong>Att erhålla</strong>
             </td>
             <td>
                <strong><?= round($totPrice - $discount + $totVat) ?>:-</strong>
@@ -177,7 +177,7 @@
    <?php if($this->invoice['notes'] || $this->businessComapny['invoice_detail']) { ?>
 
       <p>
-         <strong>Notes: </strong>
+         <strong>Anteckningar: </strong>
          <br>
 
          <?= nl2br($this->invoice['notes']) ?>
